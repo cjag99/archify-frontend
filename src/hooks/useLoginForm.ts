@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { authService } from "@/core/api/auth.service";
+import { useAuth } from "@/core/context/AuthContext";
 
 export const useLoginForm = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const { login } = useAuth();
+    
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {    
         e.preventDefault();
@@ -15,7 +18,7 @@ export const useLoginForm = () => {
         try {
             const formData = new FormData(e.currentTarget);
             const data = Object.fromEntries(formData.entries());
-            await authService.login({
+            await login({
                 email: data.email as string,
                 password: data.password as string
             });

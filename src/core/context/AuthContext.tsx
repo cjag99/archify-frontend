@@ -1,15 +1,14 @@
 "use client";
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { authService } from "../api/auth.service";
-import { User, AuthResponse } from "../types/auth";
-
+import { User, AuthResponse, LoginCredentials } from "../types/auth";
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   loading: boolean;
-  login: (credentials: any) => Promise<void>; // Agregado
+  login: (credentials: LoginCredentials) => Promise<void>; // Agregado
   logout: () => void; // Agregado
 }
 
@@ -21,12 +20,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
   // Función logout definida antes para poder usarla en el useEffect
-  const logout = () => {
+  const logout = useCallback(() => {
     Cookies.remove("auth_token");
     Cookies.remove("user_data");
     setUser(null);
     router.replace("/");
-  };
+  }, [router]);
 
   useEffect(() => {
     const loadStorageData = () => {
@@ -41,21 +40,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           logout();
         }
       }
-      setLoading(false); // Movido fuera del bloque if para que siempre deje de cargar
+      setLoading(false); 
     };
 
     loadStorageData();
-  }, []);
+  }, [logout]);
 
-  const login = async (credentials: any) => {
+  const login = async (credentials: LoginCredentials) => {
     try {
       const data: AuthResponse = await authService.login(credentials);
 
       // Guardamos el token y el usuario en cookies
-      Cookies.set("auth_token", data.token, { expires: 7, sameSite: 'lax' });
-      Cookies.set("user_data", JSON.stringify(data.user), { expires: 7, sameSite: 'lax' });
+      Cookies.set("auth_token", data.access_token, { expires: 7, sameSite: 'lax' });
+      Cookies.set("user_data", JSON.stringify(data.profile), { expires: 7, sameSite: 'lax' });
 
-      setUser(data.user);
+      setUser(data.profile);
       router.push("/dashboard");
     } catch (error) {
       console.error("Error en AuthContext - Login:", error);
@@ -64,15 +63,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider 
-      value={{ 
-        user, 
-        isAuthenticated: !!user, 
-        loading, 
-        login, 
-        logout 
-      }}
-    >
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
