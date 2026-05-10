@@ -6,11 +6,11 @@ import type { FC } from "react";
 import { NavMenu } from "../molecules/NavMenu";
 import { RegisterForm } from "./RegisterForm";
 import { LoginForm } from "./LoginForm";
-import Link from "next/link";
+
 
 export const Navbar: FC = () => {
   const [modalType, setModalType] = useState<"login" | "register" | null>(null);
-  const { isAuthenticated, user, logout, loading } = useAuth();
+  const { isAuthenticated, logout, loading } = useAuth();
   if (loading) return <nav className="p-4 bg-gray-800 text-white">Cargando...</nav>;
 
   const closeModal = () => setModalType(null);
@@ -33,8 +33,6 @@ export const Navbar: FC = () => {
         <div className="flex items-center gap-4">
           {isAuthenticated ? (
             <>
-            <span>Bienvenido, <strong>{user?.username}</strong></span>
-            <Link href="/dashboard" className="hover:text-blue-400">Dashboard</Link>
             <button
               onClick={logout}
               className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded transition"

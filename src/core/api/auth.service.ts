@@ -11,7 +11,9 @@ export const authService = {
         });
         const data = await response.json();
         if (!response.ok) {
-            throw new Error(data.detail || data.message || "Error al iniciar sesión");
+           if (data.detail && Array.isArray(data.detail)) {
+                throw new Error(data.detail[0].msg || "Error al iniciar sesión");
+            }
         }
         return data as AuthResponse;
     },

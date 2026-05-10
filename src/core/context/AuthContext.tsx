@@ -55,6 +55,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       Cookies.set("user_data", JSON.stringify(data.profile), { expires: 7, sameSite: 'lax' });
 
       setUser(data.profile);
+      if (data.profile.is_authorized) {
+        router.push("/admin");
+        return;
+      }
       router.push("/dashboard");
     } catch (error) {
       console.error("Error en AuthContext - Login:", error);
