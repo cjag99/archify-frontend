@@ -3,9 +3,11 @@ import type { FC, ReactNode } from 'react';
 export const NavLink: FC<{
   href: string;
   children: ReactNode;
-}> = ({ href, children }) => (
+  onClick?: () => void;
+}> = ({ href, children, onClick }) => (
   <a 
     href={href} 
+    onClick={onClick}
     className="relative py-1 text-black font-medium transition-colors duration-300 hover:text-brand group"
   >
     {children}

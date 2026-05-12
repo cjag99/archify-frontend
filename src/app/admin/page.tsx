@@ -1,10 +1,12 @@
 "use client";
-import { AdminNavBar } from "@/components/atoms/AdminNavBar";
-import { useAuth } from "@/core/context/AuthContext";
+import { AdminNavBar } from "@/components/organisms/AdminNavBar";
 import { ProtectedRoute } from "@/components/organisms/ProtectedRoute";
+import { AdminTable } from "@/components/organisms/AdminTable";
+import { useAuth } from "@/core/context/AuthContext";
 
 export default function AdminPage() {
     const { user } = useAuth();
+
     return (
         <ProtectedRoute>
             <div className="min-h-screen grid grid-cols-12 gap-4 bg-linear-to-br from-slate-50 to-slate-100">
@@ -12,8 +14,7 @@ export default function AdminPage() {
                     <AdminNavBar />
                 </div>
                 <div className="col-span-9">
-                    <h1 className="text-4xl font-bold mb-4">Welcome to your Admin Dashboard, {user?.username}!</h1>
-                    <p className="text-lg text-gray-600">This is a protected page that only authenticated users can access.</p>
+                    <AdminTable />
                 </div>
             </div>
         </ProtectedRoute>
