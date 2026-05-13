@@ -2,27 +2,20 @@
 
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
-export const useAdminTable = () => {
-    const apiRoutes = [
-        "users",
-        "patterns",
-        "architectures",
-        "projects",
-        "images",
-        "code_languages",
-        "pattern_codes"
-    ];
-    const [currentTable, setCurrentTable] = useState(apiRoutes[0]);
+export const useAdminTable = (tableName?: string) => {
+    const router = useRouter();
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     const fetchData = async () => {
+        if (!tableName) return;
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`http://localhost:8000/${currentTable}`, {
+            const response = await fetch(`http://localhost:8000/${tableName}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -35,23 +28,23 @@ export const useAdminTable = () => {
             }
 
             const result = await response.json();
-            setData(result);
+            setData(Array.isArray(result) ? result : []);
         } catch (err) {
             setError(err instanceof Error ? err.message : "Error desconocido");
             console.error("Fetch error:", err);
+            setData([]); // Reset data on error
         } finally {
             setLoading(false);
         }
     }
 
     const changeTable = (table: string) => {
-        if (table === currentTable) return;
-        setCurrentTable(table);
+        router.push(`/admin/tables/${table}`);
     };
 
     useEffect(() => {
         fetchData();
-    }, [currentTable]);
+    }, [tableName]);
 
-    return { currentTable, changeTable, data, loading, error };
+    return { currentTable: tableName, changeTable, data, loading, error };
 }
