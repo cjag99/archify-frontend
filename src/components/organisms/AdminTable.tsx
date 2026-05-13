@@ -2,6 +2,7 @@
 import { FC } from "react";
 import { useAdminTable } from "@/hooks/useAdminTable";
 import { useParams } from "next/navigation";
+import { Button } from "../atoms/Button";
 
 export const AdminTable: FC = () => {
     const { tablename } = useParams();
@@ -35,6 +36,13 @@ export const AdminTable: FC = () => {
                                 {row.map((cell: any, j: number) => (
                                     <td key={j} className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                         {cell?.toString() || "-"}
+                                        {
+                                            j === row.length - 1 &&
+                                            <div className="flex gap-2">
+                                                <button onClick={() => console.log("Editar")} className="text-blue-500 hover:text-blue-700">Editar</button>
+                                                <button onClick={() => console.log("Eliminar")} className="text-red-500 hover:text-red-700">Eliminar</button>
+                                            </div>
+                                        }
                                     </td>
                                 ))}
                             </tr>
