@@ -22,13 +22,13 @@ export const useLoginForm = () => {
                 email: data.email as string,
                 password: data.password as string
             });
-            alert("Login exitoso");
+            alert("Login successful");
 
         } catch (err: Error | unknown) {
            if (err instanceof Error) {
                 setError(err.message);
            } else {
-                setError("Error desconocido");
+                setError("Unknown error");
            }
         } finally {
             setLoading(false);

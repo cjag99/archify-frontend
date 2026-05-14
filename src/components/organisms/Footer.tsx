@@ -8,7 +8,7 @@ export const Footer: FC = () => {
       <div className="border-b border-slate-50">
         <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-center gap-6 lg:gap-12">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
-            Potenciado por
+            Powered by
           </span>
 
           <div className="flex flex-wrap justify-center items-center gap-8">
@@ -34,41 +34,41 @@ export const Footer: FC = () => {
               </span>
             </div>
             <p className="text-sm text-slate-500 leading-relaxed">
-              Estandarizando el diseño de software para la próxima generación de
-              arquitectos.
+              Standardizing software design for the next generation of
+              architects.
             </p>
           </div>
 
           <div>
             <h4 className="text-sm font-bold text-slate-900 mb-6 uppercase tracking-wider">
-              Producto
+              Product
             </h4>
             <ul className="space-y-4 text-sm text-slate-500">
               <li className="hover:text-brand cursor-pointer transition-colors">
-                Características
+                Features
               </li>
               <li className="hover:text-brand cursor-pointer transition-colors">
-                Patrones
+                Patterns
               </li>
               <li className="hover:text-brand cursor-pointer transition-colors">
-                Precios
+                Pricing
               </li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-sm font-bold text-slate-900 mb-6 uppercase tracking-wider">
-              Recursos
+              Resources
             </h4>
             <ul className="space-y-4 text-sm text-slate-500">
               <li className="hover:text-brand cursor-pointer transition-colors">
-                Documentación
+                Documentation
               </li>
               <li className="hover:text-brand cursor-pointer transition-colors">
-                Blog de Arquitectura
+                Architecture Blog
               </li>
               <li className="hover:text-brand cursor-pointer transition-colors">
-                Soporte
+                Support
               </li>
             </ul>
           </div>
@@ -79,10 +79,10 @@ export const Footer: FC = () => {
             </h4>
             <ul className="space-y-4 text-sm text-slate-500">
               <li className="hover:text-brand cursor-pointer transition-colors">
-                Privacidad
+                Privacy
               </li>
               <li className="hover:text-brand cursor-pointer transition-colors">
-                Términos
+                Terms
               </li>
               <li className="hover:text-brand cursor-pointer transition-colors">
                 Cookies
@@ -93,7 +93,7 @@ export const Footer: FC = () => {
 
         <div className="mt-16 pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-slate-400">
-            © 2026 Archify. Todos los derechos reservados.
+            © 2026 Archify. All rights reserved.
           </p>
           <div className="flex gap-6 text-slate-400">
             <span className="text-xs hover:text-brand cursor-pointer">

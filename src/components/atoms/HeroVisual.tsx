@@ -7,7 +7,7 @@ export const HeroVisual: FC = () => {
       <div className="absolute -inset-4 bg-brand/20 rounded-full blur-3xl animate-pulse" />
 
       <div className="absolute -top-10 -left-10 w-48 bg-white p-4 rounded-xl shadow-xl border border-slate-100 hidden sm:block animate-bounce-slow">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Patrón</p>
+        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Pattern</p>
         <div className="flex items-center gap-2 mb-2">
           <div className="w-3 h-3 rounded-full bg-brand" />
           <span className="text-xs font-semibold text-slate-700">Hexagonal Arch</span>
@@ -27,27 +27,27 @@ export const HeroVisual: FC = () => {
         </div>
 
         <div className="p-6 font-mono text-sm">
-            <div className="flex gap-4">
+          <div className="flex gap-4">
             <div className="w-[42%] border-r border-slate-800 pr-2 space-y-1.5 text-slate-400">
-                <div className="flex items-center gap-1.5 text-emerald-400">
-                    <span className="text-[10px]">▼</span> <span className="text-[11px] font-bold">src</span>
-                </div>
-                <div className="pl-3 flex items-center gap-1.5">
-                    <span className="text-[10px]">▼</span> <span className="text-[11px] text-brand-light font-medium">domain</span>
-                </div>
-                
-                <div className="pl-7 text-[10px] hover:text-white cursor-pointer transition-colors whitespace-nowrap opacity-80">
-                    UserService.ts
-                </div>
-                <div className="pl-7 text-[10px] hover:text-white cursor-pointer transition-colors whitespace-nowrap opacity-80">
-                    UserEntity.ts
-                </div>
-                <div className="pl-3 flex items-center gap-1.5 opacity-60">
-                    <span className="text-[10px]">▶</span> <span className="text-[11px]">infra</span>
-                </div>
-                <div className="mt-4 pt-4 border-t border-slate-800 text-[10px] flex items-center gap-2 italic opacity-50">
-                    <span>#</span> README.md
-                </div>
+              <div className="flex items-center gap-1.5 text-emerald-400">
+                <span className="text-[10px]">▼</span> <span className="text-[11px] font-bold">src</span>
+              </div>
+              <div className="pl-3 flex items-center gap-1.5">
+                <span className="text-[10px]">▼</span> <span className="text-[11px] text-brand-light font-medium">domain</span>
+              </div>
+
+              <div className="pl-7 text-[10px] hover:text-white cursor-pointer transition-colors whitespace-nowrap opacity-80">
+                UserService.ts
+              </div>
+              <div className="pl-7 text-[10px] hover:text-white cursor-pointer transition-colors whitespace-nowrap opacity-80">
+                UserEntity.ts
+              </div>
+              <div className="pl-3 flex items-center gap-1.5 opacity-60">
+                <span className="text-[10px]">▶</span> <span className="text-[11px]">infra</span>
+              </div>
+              <div className="mt-4 pt-4 border-t border-slate-800 text-[10px] flex items-center gap-2 italic opacity-50">
+                <span>#</span> README.md
+              </div>
             </div>
 
 
@@ -60,15 +60,15 @@ export const HeroVisual: FC = () => {
                 <div className="h-1 w-32 bg-slate-700 rounded" />
               </div>
               <div className="h-32 w-full border border-dashed border-slate-700 rounded-lg flex items-center justify-center relative overflow-hidden group">
-                 <div className="w-20 h-10 bg-brand rounded flex items-center justify-center text-[10px] text-white font-bold shadow-lg shadow-brand/40 group-hover:scale-110 transition-transform">
-                    DOMAIN
-                 </div>
-                 <div className="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
-                    <svg className="w-full h-full" viewBox="0 0 100 100">
-                      <path d="M10,50 Q50,10 90,50" fill="none" stroke="white" strokeWidth="0.5" />
-                      <path d="M10,50 Q50,90 90,50" fill="none" stroke="white" strokeWidth="0.5" />
-                    </svg>
-                 </div>
+                <div className="w-20 h-10 bg-brand rounded flex items-center justify-center text-[10px] text-white font-bold shadow-lg shadow-brand/40 group-hover:scale-110 transition-transform">
+                  DOMAIN
+                </div>
+                <div className="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
+                  <svg className="w-full h-full" viewBox="0 0 100 100">
+                    <path d="M10,50 Q50,10 90,50" fill="none" stroke="white" strokeWidth="0.5" />
+                    <path d="M10,50 Q50,90 90,50" fill="none" stroke="white" strokeWidth="0.5" />
+                  </svg>
+                </div>
               </div>
             </div>
           </div>

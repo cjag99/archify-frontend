@@ -17,7 +17,7 @@ export const useRegisterForm = () => {
 
             const passwordIsValid = () => data.password === data.confirmPassword;
             if (!passwordIsValid()) {
-                setError("Las contraseñas no coinciden");
+                setError("Passwords do not match");
                 return;
             }
             setLoading(true);
@@ -33,7 +33,7 @@ export const useRegisterForm = () => {
             if (err instanceof Error) {
                 setError(err.message);
             } else {
-                setError("Error desconocido");
+                setError("Unknown error");
             }
         } finally {
             setLoading(false);

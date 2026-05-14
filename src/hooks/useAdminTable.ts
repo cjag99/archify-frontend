@@ -30,7 +30,7 @@ export const useAdminTable = (tableName?: string) => {
             const result = await response.json();
             setData(Array.isArray(result) ? result : []);
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Error desconocido");
+            setError(err instanceof Error ? err.message : "Unknown error");
             console.error("Fetch error:", err);
             setData([]); // Reset data on error
         } finally {

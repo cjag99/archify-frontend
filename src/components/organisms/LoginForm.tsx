@@ -12,19 +12,19 @@ export const LoginForm = ({ onSwitch }: LoginFormProps) => {
     return (
         <form onSubmit={handleLogin} className="w-full space-y-4">
             <Input label="Email" name="email" type="email" error={error || ""} />
-            <Input label="Contraseña" name="password" type="password" error={error || ""} />
+            <Input label="Password" name="password" type="password" error={error || ""} />
             <Button type="submit" variant="primary" isLoading={loading} fullWidth>
-                Iniciar sesión
+                Log in
             </Button>
             {onSwitch && (
                 <p className="text-sm text-slate-600 mt-4 text-center">
-                    ¿No tienes una cuenta?{" "}
+                    Don't have an account?{" "}
                     <button
                         type="button"
                         onClick={onSwitch}
                         className="text-brand font-medium hover:text-brand-dark transition-colors"
                     >
-                        Regístrate aquí
+                        Register here
                     </button>
                 </p>
             )}

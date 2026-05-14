@@ -2,7 +2,7 @@
 import { FC } from "react";
 import { useAdminTable } from "@/hooks/useAdminTable";
 import { useParams } from "next/navigation";
-import { Button } from "../atoms/Button";
+import { EmptyTable } from "./EmptyTable";
 
 export const AdminTable: FC = () => {
     const { tablename } = useParams();
@@ -10,9 +10,9 @@ export const AdminTable: FC = () => {
     let columns: string[] = [];
     let rows: any[] = [];
 
-    if (loading) return <div className="text-center p-10">Cargando datos...</div>;
-    if (error) return <div className="text-red-500 p-10">Error: {error}</div>;
-    if (!data || data.length === 0) return <div className="text-center p-10">No hay datos disponibles para la tabla {currentTable}.</div>;
+    if (loading) return <div className="text-center p-10">Loading data...</div>;
+    if (error) return <EmptyTable />;
+    if (!data || data.length === 0) return <EmptyTable />;
     columns = Object.keys(data[0]);
     rows = data.map((item: any) => Object.values(item));
 
@@ -39,8 +39,8 @@ export const AdminTable: FC = () => {
                                         {
                                             j === row.length - 1 &&
                                             <div className="flex gap-2">
-                                                <button onClick={() => console.log("Editar")} className="text-blue-500 hover:text-blue-700">Editar</button>
-                                                <button onClick={() => console.log("Eliminar")} className="text-red-500 hover:text-red-700">Eliminar</button>
+                                                <button onClick={() => console.log("Editar")} className="text-blue-500 hover:text-blue-700">Edit</button>
+                                                <button onClick={() => console.log("Eliminar")} className="text-red-500 hover:text-red-700">Delete</button>
                                             </div>
                                         }
                                     </td>

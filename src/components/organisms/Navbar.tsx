@@ -11,7 +11,7 @@ import { LoginForm } from "./LoginForm";
 export const Navbar: FC = () => {
   const [modalType, setModalType] = useState<"login" | "register" | null>(null);
   const { isAuthenticated, logout, loading } = useAuth();
-  if (loading) return <nav className="p-4 bg-gray-800 text-white">Cargando...</nav>;
+  if (loading) return <nav className="p-4 bg-gray-800 text-white">Loading...</nav>;
 
   const closeModal = () => setModalType(null);
   return (
@@ -37,7 +37,7 @@ export const Navbar: FC = () => {
               onClick={logout}
               className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded transition"
             >
-              Cerrar Sesión
+              Log out
             </button>
           </>
         ) : (
@@ -46,13 +46,13 @@ export const Navbar: FC = () => {
             onClick={() => setModalType("login")}
             className="hidden sm:block text-slate-600 font-medium hover:text-brand transition-colors"
           >
-            Iniciar sesión
+            Log in
           </button>
           <button
             onClick={() => setModalType("register")}
             className="bg-brand hover:bg-brand-dark text-white px-6 py-2.5 rounded-full font-semibold shadow-lg shadow-brand/25 transition-all hover:-translate-y-0.5 active:scale-95"
           >
-            Empezar gratis
+            Start for free
           </button>
           <Modal isOpen={modalType !== null} onClose={closeModal}>
             {modalType === "login" && (

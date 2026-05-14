@@ -12,7 +12,7 @@ export const authService = {
         const data = await response.json();
         if (!response.ok) {
            if (data.detail && Array.isArray(data.detail)) {
-                throw new Error(data.detail[0].msg || "Error al iniciar sesión");
+                throw new Error(data.detail[0].msg || "Error logging in");
             }
         }
         return data as AuthResponse;
@@ -28,7 +28,7 @@ export const authService = {
         });
         const data = await response.json();
         if (!response.ok) {
-            throw new Error(data.detail || data.message || "Error al registrar");
+            throw new Error(data.detail || data.message || "Error registering");
         }
         return data as AuthResponse;
     }

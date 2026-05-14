@@ -13,49 +13,49 @@ export const RegisterForm = ({ onSwitch }: RegisterFormProps) => {
     <form onSubmit={handleRegister} className="w-full space-y-3">
       <div className="grid grid-cols-2 gap-3">
         <Input
-          label="Nombre"
+          label="First name"
           name="first_name"
           type="text"
           error={error || ""}
         />
         <Input
-          label="Apellido"
+          label="Last name"
           name="last_name"
           type="text"
           error={error || ""}
         />
       </div>
       <Input
-        label="Nombre de usuario"
+        label="Username"
         name="username"
         type="text"
         error={error || ""}
       />
       <Input label="Email" name="email" type="email" error={error || ""} />
       <Input
-        label="Contraseña"
+        label="Password"
         name="password"
         type="password"
         error={error || ""}
       />
       <Input
-        label="Confirmar Contraseña"
+        label="Confirm Password"
         name="confirmPassword"
         type="password"
         error={error || ""}
       />
       <Button type="submit" variant="primary" isLoading={loading} fullWidth>
-        Registrarse
+        Sign up
       </Button>
       {onSwitch && (
         <p className="text-sm text-slate-600 mt-4 text-center">
-          ¿Ya tienes una cuenta?{" "}
+          Already have an account?{" "}
           <button
             type="button"
             onClick={onSwitch}
             className="text-brand font-medium hover:text-brand-dark transition-colors"
           >
-            Inicia sesión aquí
+            Log in here
           </button>
         </p>
       )}

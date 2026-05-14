@@ -6,11 +6,11 @@ export const StepSection: FC = () => {
         {/* Cabecera de la sección */}
         <div className="text-center mb-16">
           <h2 className="text-3xl lg:text-5xl font-bold text-slate-900 mb-4">
-            Diseña tu sistema en 3 pasos
+            Design your system in 3 steps
           </h2>
           <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-            De la idea al código estructurado sin perderte en configuraciones
-            iniciales.
+            From idea to structured code without getting lost in initial
+            configurations.
           </p>
         </div>
 
@@ -22,12 +22,12 @@ export const StepSection: FC = () => {
               1
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-3">
-              Elige tu Patrón
+              Choose your Pattern
             </h3>
             <p className="text-slate-600 leading-relaxed">
-              Selecciona entre <b>Clean Architecture</b>, <b>Hexagonal</b> o{" "}
-              <b>DDD</b>. Archify prepara las capas y reglas de dependencia
-              automáticamente.
+              Select between <b>Clean Architecture</b>, <b>Hexagonal</b> or{" "}
+              <b>DDD</b>. Archify prepares the layers and dependency rules
+              automatically.
             </p>
           </div>
 
@@ -37,11 +37,11 @@ export const StepSection: FC = () => {
               2
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-3">
-              Define el Dominio
+              Define the Domain
             </h3>
             <p className="text-slate-600 leading-relaxed">
-              Navega por el mapa visual y añade tus entidades y servicios. Es
-              aquí donde <b>diseñas la lógica</b> de tu aplicación.
+              Navigate the visual map and add your entities and services. This is
+              where you <b>design the logic</b> of your application.
             </p>
           </div>
 
@@ -51,11 +51,11 @@ export const StepSection: FC = () => {
               3
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-3">
-              Exporta el Scaffolding
+              Export the Scaffolding
             </h3>
             <p className="text-slate-600 leading-relaxed">
-              Recibe un proyecto listo para <b>picar código</b>, con todas las
-              carpetas, interfaces y boilerplate configurados según el estándar.
+              Receive a project ready for <b>coding</b>, with all folders,
+              interfaces and boilerplate configured according to the standard.
             </p>
           </div>
         </div>

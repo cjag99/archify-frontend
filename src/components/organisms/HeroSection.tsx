@@ -10,14 +10,14 @@ export const HeroSection: FC = () => {
       <section className="min-h-[85vh] grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-16 lg:gap-24 items-center max-w-7xl mx-auto px-6 py-20">
         <div className="flex flex-col items-start text-left z-10">
           <h1 className="text-5xl lg:text-6xl font-extrabold mb-6 text-slate-900 leading-[1.1] tracking-tight">
-            Tu arquitectura, <br />
-            <span className="text-[#8C03EF]">lista para programar.</span>
+            Your architecture, <br />
+            <span className="text-[#8C03EF]">ready to code.</span>
           </h1>
 
           <p className="text-xl text-slate-600 mb-8 max-w-xl leading-relaxed">
-            La mejor programación empieza con un gran diseño. Elige tu patrón
-            arquitectónico, aterriza tu dominio y materializa un scaffolding
-            profesional en segundos.
+            Great programming starts with great design. Choose your architectural
+            pattern, define your domain and generate a professional scaffolding
+            in seconds.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 items-center">
@@ -25,7 +25,7 @@ export const HeroSection: FC = () => {
               variant="primary"
               className="px-12 py-8 text-xl shadow-2xl shadow-brand/20 group inline-flex items-center justify-center"
             >
-              Empieza a diseñar ahora
+              Start designing now
               <span className="ml-3 transition-transform duration-300 ease-in-out group-hover:translate-x-2 leading-none flex items-cente relative top-0.5">
                 <svg
                   className="w-5 h-5"
