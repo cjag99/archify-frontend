@@ -1,21 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/core/context/AuthContext";
 
-export const useAdminTable = (tableName?: string) => {
-    const router = useRouter();
-    const [data, setData] = useState<any[]>([]);
+export const useProject = () => {
+    const { user } = useAuth();
+    const [projects, setProjects] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchData = async () => {
-        if (!tableName) return;
+    const fetchProjects = async () => {
+        if (!user) return;
         setLoading(true);
         setError(null);
         try {
-            const response = await fetch(`http://localhost:8000/${tableName}`, {
+            const response = await fetch(`http://localhost:8000/projects/${user.id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -28,23 +28,19 @@ export const useAdminTable = (tableName?: string) => {
             }
 
             const result = await response.json();
-            setData(Array.isArray(result) ? result : []);
+            setProjects(Array.isArray(result) ? result : []);
         } catch (err) {
             setError(err instanceof Error ? err.message : "Unknown error");
             console.error("Fetch error:", err);
-            setData([]);
+            setProjects([]);
         } finally {
             setLoading(false);
         }
     }
 
-    const changeTable = (table: string) => {
-        router.push(`/admin/tables/${table}`);
-    };
-
     useEffect(() => {
-        fetchData();
-    }, [tableName]);
+        fetchProjects();
+    }, [user]);
 
-    return { currentTable: tableName, changeTable, data, loading, error };
+    return { projects, loading, error };
 }
