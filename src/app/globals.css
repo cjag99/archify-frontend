@@ -13,3 +13,41 @@
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
+
+@utility glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 4px 30px rgba(0, 0, 0, 0.02),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+@utility glass-card-hover {
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(140, 3, 239, 0.15);
+    transform: translateY(-4px);
+    box-shadow: 
+      0 20px 40px rgba(140, 3, 239, 0.04),
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.8);
+  }
+}
+
+@utility refraction-gradient {
+  background: linear-gradient(135deg, #8C03EF 0%, #4F46E5 50%, #EC4899 100%);
+}
+
+@utility refraction-gradient-hover {
+  background: linear-gradient(135deg, #8C03EF 0%, #4F46E5 50%, #EC4899 100%);
+  background-size: 200% 200%;
+  transition: background-position 0.8s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+
+  &:hover {
+    background-position: right center;
+    box-shadow: 0 12px 30px rgba(140, 3, 239, 0.25);
+  }
+}

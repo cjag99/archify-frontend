@@ -22,7 +22,7 @@ export const Button = ({
   
 
   const variants = {
-    primary: "bg-brand text-white hover:bg-brand-dark shadow-lg shadow-brand/20 transition-all",
+    primary: "refraction-gradient-hover text-white",
     secondary: "bg-slate-100 text-slate-900 hover:bg-slate-200",
     outline: "border-2 border-slate-200 text-slate-600 hover:border-brand hover:text-brand transition-colors"
   };

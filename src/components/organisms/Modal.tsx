@@ -25,7 +25,7 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
         className="absolute inset-0 bg-slate-900/40 backdrop-blur-md transition-opacity"
         onClick={onClose} 
       />
-      <div className="relative bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+      <div className="relative glass-card w-full max-w-md rounded-[2.5rem] overflow-hidden animate-in fade-in zoom-in duration-300">
 
         <button 
           onClick={onClose}

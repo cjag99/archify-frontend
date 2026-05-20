@@ -37,7 +37,7 @@ export const AdminTable: FC = () => {
                 </div>
             </div>
 
-            <div className="overflow-hidden border border-slate-100 rounded-3xl bg-white shadow-xs">
+            <div className="overflow-hidden glass-card rounded-3xl">
                 <div className="overflow-x-auto">
                     <table className="w-full border-collapse">
                         <thead>

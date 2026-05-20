@@ -32,7 +32,7 @@ export const AdminMenu: FC = () => {
     ];
 
     return (
-        <nav className="flex flex-col gap-1.5 p-4 bg-white rounded-3xl border border-slate-100 shadow-xs w-full" >
+        <nav className="flex flex-col gap-1.5 p-4 glass-card rounded-3xl w-full" >
             <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 mb-2">
                 Tables
             </p>

@@ -47,7 +47,7 @@ export default function DashboardPage() {
               <p className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-6">Loading projects...</p>
               <div className="grid grid-cols-12 gap-6">
                 {[1, 2, 3].map((n) => (
-                  <div key={n} className="col-span-12 md:col-span-6 lg:col-span-4 bg-white rounded-3xl border border-slate-100 p-6 space-y-4 animate-pulse">
+                  <div key={n} className="col-span-12 md:col-span-6 lg:col-span-4 glass-card rounded-3xl p-6 space-y-4 animate-pulse">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-2xl bg-slate-100" />
                       <div className="space-y-2 flex-1">
@@ -65,7 +65,7 @@ export default function DashboardPage() {
               </div>
             </div>
           ) : isProjectsEmpty ? (
-            <div className="text-center py-20 bg-white rounded-3xl border border-slate-100 shadow-xs max-w-xl mx-auto px-6">
+            <div className="text-center py-20 glass-card rounded-3xl max-w-xl mx-auto px-6">
               <div className="w-16 h-16 bg-brand/5 rounded-2xl flex items-center justify-center text-brand mx-auto mb-6">
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 13h6m-3-3v6m-9 1V4a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
@@ -86,7 +86,7 @@ export default function DashboardPage() {
                 {projects.map((project) => (
                   <div 
                     key={project.id} 
-                    className="col-span-12 md:col-span-6 lg:col-span-4 bg-white rounded-3xl border border-slate-100 p-6 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group"
+                    className="col-span-12 md:col-span-6 lg:col-span-4 glass-card glass-card-hover rounded-3xl p-6 flex flex-col justify-between group"
                   >
                     <div>
                       {/* Project Header */}
