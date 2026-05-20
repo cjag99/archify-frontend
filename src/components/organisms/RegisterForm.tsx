@@ -8,7 +8,7 @@ interface RegisterFormProps {
   onSwitch?: () => void;
 }
 export const RegisterForm = ({ onSwitch }: RegisterFormProps) => {
-  const { handleRegister, loading, error } = useRegisterForm();
+  const { handleRegister, loading, error, formError } = useRegisterForm();
   return (
     <form onSubmit={handleRegister} className="w-full space-y-3">
       <div className="grid grid-cols-2 gap-3">
@@ -16,33 +16,33 @@ export const RegisterForm = ({ onSwitch }: RegisterFormProps) => {
           label="First name"
           name="first_name"
           type="text"
-          error={error || ""}
+          error={formError?.first_name || error || ""}
         />
         <Input
           label="Last name"
           name="last_name"
           type="text"
-          error={error || ""}
+          error={formError?.last_name || error || ""}
         />
       </div>
       <Input
         label="Username"
         name="username"
         type="text"
-        error={error || ""}
+        error={formError?.username || error || ""}
       />
-      <Input label="Email" name="email" type="email" error={error || ""} />
+      <Input label="Email" name="email" type="email" error={formError?.email || error || ""} />
       <Input
         label="Password"
         name="password"
         type="password"
-        error={error || ""}
+        error={formError?.password || error || ""}
       />
       <Input
         label="Confirm Password"
         name="confirmPassword"
         type="password"
-        error={error || ""}
+        error={formError?.confirmPassword || error || ""}
       />
       <Button type="submit" variant="primary" isLoading={loading} fullWidth>
         Sign up

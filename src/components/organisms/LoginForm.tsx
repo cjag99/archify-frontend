@@ -8,11 +8,11 @@ interface LoginFormProps {
     onSwitch?: () => void;
 }
 export const LoginForm = ({ onSwitch }: LoginFormProps) => {
-    const { handleLogin, loading, error } = useLoginForm();
+    const { handleLogin, loading, error, formError } = useLoginForm();
     return (
         <form onSubmit={handleLogin} className="w-full space-y-4">
-            <Input label="Email" name="email" type="email" error={error || ""} />
-            <Input label="Password" name="password" type="password" error={error || ""} />
+            <Input label="Email" name="email" type="email" error={formError?.email || error || ""} />
+            <Input label="Password" name="password" type="password" error={formError?.password || error || ""} />
             <Button type="submit" variant="primary" isLoading={loading} fullWidth>
                 Log in
             </Button>

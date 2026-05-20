@@ -2,22 +2,39 @@
 
 import { useState } from "react";
 import { useAuth } from "@/core/context/AuthContext";
+import { Validator } from "@/core/validations/validator";
 
 export const useLoginForm = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [formError, setFormError] = useState<Record<string, string> | null>(null);
 
     const { login } = useAuth();
-    
 
-    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {    
+
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
+        setFormError(null);
+
+        const formData = new FormData(e.currentTarget);
+        const data = Object.fromEntries(formData.entries());
+
+        const emailValidation = Validator.validateString("Email", data.email as string, 5, 255);
+        const passwordValidation = Validator.validateString("Password", data.password as string, 8, 128);
+
+        if (!emailValidation.isValid || !passwordValidation.isValid) {
+            setFormError({
+                email: emailValidation.message,
+                password: passwordValidation.message
+            });
+            setLoading(false);
+            return;
+        }
 
         try {
-            const formData = new FormData(e.currentTarget);
-            const data = Object.fromEntries(formData.entries());
+
             await login({
                 email: data.email as string,
                 password: data.password as string
@@ -25,16 +42,16 @@ export const useLoginForm = () => {
             alert("Login successful");
 
         } catch (err: Error | unknown) {
-           if (err instanceof Error) {
+            if (err instanceof Error) {
                 setError(err.message);
-           } else {
+            } else {
                 setError("Unknown error");
-           }
+            }
         } finally {
             setLoading(false);
         }
 
     };
 
-    return { handleLogin, loading, error };
+    return { handleLogin, loading, error, formError };
 }
