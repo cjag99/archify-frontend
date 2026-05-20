@@ -6,12 +6,25 @@ import type { FC } from "react";
 import { NavMenu } from "../molecules/NavMenu";
 import { RegisterForm } from "./RegisterForm";
 import { LoginForm } from "./LoginForm";
+import { ProfileMenu } from "../molecules/ProfileMenu";
 
 
 export const Navbar: FC = () => {
   const [modalType, setModalType] = useState<"login" | "register" | null>(null);
   const { isAuthenticated, logout, loading } = useAuth();
-  if (loading) return <nav className="p-4 bg-gray-800 text-white">Loading...</nav>;
+  if (loading) {
+    return (
+      <header className="w-full border-b border-slate-100 bg-white/80 backdrop-blur-md sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 bg-brand/10 rounded-xl animate-pulse" />
+            <div className="w-24 h-6 bg-slate-100 rounded animate-pulse" />
+          </div>
+          <div className="w-24 h-10 bg-slate-100 rounded-full animate-pulse" />
+        </div>
+      </header>
+    );
+  }
 
   const closeModal = () => setModalType(null);
   return (
@@ -32,15 +45,8 @@ export const Navbar: FC = () => {
 
         <div className="flex items-center gap-4">
           {isAuthenticated ? (
-            <>
-            <button
-              onClick={logout}
-              className="text-slate-600 border border-slate-200 hover:border-red-500 hover:text-red-500 px-5 py-2.5 rounded-full font-semibold transition-all duration-200 hover:-translate-y-0.5 active:scale-95 cursor-pointer"
-            >
-              Log out
-            </button>
-          </>
-        ) : (
+            <ProfileMenu />
+          ) : (
            <>
           <button
             onClick={() => setModalType("login")}

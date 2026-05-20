@@ -5,7 +5,7 @@ import { NavLink } from "../atoms/NavLink";
 
 interface NavItems {
     label: string;
-    href: string;    
+    href: string;
 }
 
 
@@ -13,11 +13,11 @@ interface NavItems {
 export const NavMenu: FC = () => {
     const { isAuthenticated } = useAuth();
     const menuItems: NavItems[] = [
-    { label: "Home", href: isAuthenticated ? "/dashboard" : "/" },
-    { label: "About", href: "/about" },
-    { label: "Services", href: "/services" },
-    { label: "Contact", href: "/contact" },
-];
+        { label: "Home", href: isAuthenticated ? "/dashboard" : "/" },
+        { label: "Projects", href: "/projects" },
+        { label: "Patterns", href: "/patterns" },
+        { label: "Architectures", href: "/architectures" },
+    ];
     return (
         <nav className="flex items-center gap-8">
             {menuItems.map((item) => (

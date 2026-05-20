@@ -4,11 +4,12 @@ import { useState, useRef, useEffect } from "react";
 import { FC } from "react";
 import { useAuth } from "@/core/context/AuthContext";
 import { ProfileDropdown } from "./ProfileDropdown";
+import { ChevronDown } from "lucide-react";
 
 export const ProfileMenu: FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const { user, logout, isAuthenticated } = useAuth();
+    const { user } = useAuth();
     const hasAvatar = user && user.avatar !== null;
 
     useEffect(() => {
@@ -26,81 +27,42 @@ export const ProfileMenu: FC = () => {
 
     const toggleDropdown = () => setIsOpen(!isOpen);
 
+    if (!user) return null;
+
     return (
         <div className="relative" ref={dropdownRef}>
-            <>
-                {!hasAvatar && user && (
-                    <div
-                        onClick={toggleDropdown}
-                        className="flex items-center gap-2 cursor-pointer group"
-                    >
-                        <div className="relative flex-shrink-0">
-                            <div className="w-10 h-10 rounded-full bg-brand-light flex items-center justify-center text-white font-bold text-base">
-                                {user.first_name.charAt(0).toUpperCase()}
-                            </div>
-                            {/* Indicador de conexión (opcional) */}
-                            <span className="absolute top-0 right-0 block h-3 w-3 rounded-full bg-green-400 ring-2 ring-white"></span>
+            <div
+                onClick={toggleDropdown}
+                className="flex items-center gap-2.5 cursor-pointer group px-2 py-1.5 rounded-full hover:bg-slate-50 transition-all duration-200 active:scale-98 select-none"
+            >
+                <div className="relative flex-shrink-0">
+                    {hasAvatar && user?.avatar ? (
+                        <img
+                            src={user.avatar}
+                            alt="Avatar"
+                            className="w-9 h-9 rounded-full object-cover ring-2 ring-slate-100 group-hover:ring-brand/30 transition-all duration-200"
+                        />
+                    ) : (
+                        <div className="w-9 h-9 rounded-full bg-brand/5 text-brand flex items-center justify-center font-bold text-sm ring-2 ring-slate-100 group-hover:ring-brand/30 transition-all duration-200">
+                            {user.first_name ? user.first_name.charAt(0).toUpperCase() : "U"}
                         </div>
-                        <div className="hidden md:block text-left">
-                            <p className="text-sm font-semibold text-slate-900 leading-none">
-                                {user.first_name} {user.last_name}
-                            </p>
-                            <p className="text-xs text-slate-500 mt-0.5 capitalize">
-                                {user.role}
-                            </p>
-                        </div>
-                        <svg
-                            className={`w-4 h-4 text-slate-500 transition-transform ${isOpen ? "rotate-180" : ""}`}
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M19 9l-7 7-7-7"
-                            />
-                        </svg>
-                    </div>
-                )}
-                {hasAvatar && user && (
-                    <div
-                        onClick={toggleDropdown}
-                        className="flex items-center gap-2 cursor-pointer group"
-                    >
-                        <div className="relative flex-shrink-0">
+                    )}
+                    <span className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white"></span>
+                </div>
 
-                            {/* Indicador de conexión (opcional) */}
-                            <span className="absolute top-0 right-0 block h-3 w-3 rounded-full bg-green-400 ring-2 ring-white"></span>
-                        </div>
-                        <div className="hidden md:block text-left">
-                            <p className="text-sm font-semibold text-slate-900 leading-none">
-                                {user.first_name} {user.last_name}
-                            </p>
-                            <p className="text-xs text-slate-500 mt-0.5 capitalize">
-                                {user.role}
-                            </p>
-                        </div>
-                        <svg
-                            className={`w-4 h-4 text-slate-500 transition-transform ${isOpen ? "rotate-180" : ""}`}
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M19 9l-7 7-7-7"
-                            />
-                        </svg>
-                    </div>
-                )}
-                {isOpen && (
-                    <ProfileDropdown onClose={() => setIsOpen(false)} />
-                )}
-            </>
+                <div className="hidden md:block text-left">
+                    <p className="text-sm font-semibold text-slate-800 group-hover:text-brand transition-colors duration-200 leading-none mb-0.5">
+                        {user.username}
+                    </p>
+                </div>
+
+                <ChevronDown
+                    className={`w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+                />
+            </div>
+            {isOpen && (
+                <ProfileDropdown onClose={() => setIsOpen(false)} />
+            )}
         </div>
     );
 }
