@@ -2,7 +2,7 @@
 import React from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline';
+  variant?: 'primary' | 'secondary' | 'outline' | 'success';
   isLoading?: boolean;
   fullWidth?: boolean;
 }
@@ -24,7 +24,8 @@ export const Button = ({
   const variants = {
     primary: "refraction-gradient-hover text-white",
     secondary: "bg-slate-100 text-slate-900 hover:bg-slate-200",
-    outline: "border-2 border-slate-200 text-slate-600 hover:border-brand hover:text-brand transition-colors"
+    outline: "border-2 border-slate-200 text-slate-600 hover:border-brand hover:text-brand transition-colors",
+    success: "success-gradient-hover text-white"
   };
 
   const widthStyle = fullWidth ? "w-full" : "w-auto";

@@ -3,6 +3,8 @@ import { FC } from "react";
 import { useAdminTable } from "@/hooks/useAdminTable";
 import { useParams } from "next/navigation";
 import { EmptyTable } from "./EmptyTable";
+import { Button } from "@/components/atoms/Button";
+import { Plus } from "lucide-react";
 
 export const AdminTable: FC = () => {
     const { tablename } = useParams();
@@ -18,9 +20,31 @@ export const AdminTable: FC = () => {
             </div>
         );
     }
+
+    const singularTable = currentTable ? currentTable.toLowerCase().replace(/s$/, "") : "";
     
     if (error) return <EmptyTable />;
-    if (!data || data.length === 0) return <EmptyTable />;
+    if (!data || data.length === 0) {
+        return (
+            <div className="p-8 max-w-7xl mx-auto">
+                <div className="flex items-center justify-between mb-8">
+                    <div>
+                        <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight capitalize mb-2">
+                            {`${currentTable} Directory`}
+                        </h1>
+                        <p className="text-sm text-slate-500">
+                            View and manage {currentTable} records in the system.
+                        </p>
+                    </div>
+                </div>
+                <EmptyTable 
+                    label={singularTable} 
+                    onClick={() => console.log(`Create new ${singularTable}`)} 
+                />
+            </div>
+        );
+    }
+
     columns = Object.keys(data[0]);
     rows = data.map((item: any) => Object.values(item));
 
@@ -35,6 +59,14 @@ export const AdminTable: FC = () => {
                         View and manage {currentTable} records in the system.
                     </p>
                 </div>
+                <Button
+                    onClick={() => console.log(`Create new ${singularTable}`)}
+                    variant="success"
+                    className="flex items-center gap-2"
+                >
+                    <Plus className="w-5 h-5" />
+                    New {singularTable}
+                </Button>
             </div>
 
             <div className="overflow-hidden glass-card rounded-3xl">

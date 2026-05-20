@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/components/atoms/Button";
+import { Plus } from "lucide-react";
 import { ProtectedRoute } from "@/components/organisms/ProtectedRoute";
 import { useAuth } from "@/core/context/AuthContext";
 import { useProject } from "@/hooks/useProject";
@@ -75,17 +77,26 @@ export default function DashboardPage() {
               <p className="text-slate-500 mb-6 max-w-sm mx-auto">
                 You don't have any projects in your workspace yet. Let's create your first architecture!
               </p>
+              <Button
+                onClick={() => router.push("/dashboard/projects/new")}
+                variant="success"
+                fullWidth={false}
+                className="mt-4"
+              >
+                <Plus className="w-5 h-5" />
+                Create your first project
+              </Button>
             </div>
           ) : (
             <div>
               <div className="flex items-center justify-between mb-6">
                 <p className="text-sm font-semibold text-slate-400 uppercase tracking-wider">Your Projects ({projects.length})</p>
               </div>
-              
+
               <div className="grid grid-cols-12 gap-6">
                 {projects.map((project) => (
-                  <div 
-                    key={project.id} 
+                  <div
+                    key={project.id}
                     className="col-span-12 md:col-span-6 lg:col-span-4 glass-card glass-card-hover rounded-3xl p-6 flex flex-col justify-between group"
                   >
                     <div>
@@ -103,7 +114,7 @@ export default function DashboardPage() {
                           </p>
                         </div>
                       </div>
-                      
+
                       {/* Project Description */}
                       <p className="text-slate-500 text-sm leading-relaxed mb-6 line-clamp-2 min-h-[2.5rem]">
                         {project.description || "No description provided. Click below to view and design this project's architecture."}
@@ -111,7 +122,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Action Button */}
-                    <button 
+                    <button
                       onClick={() => router.push(`/dashboard/projects/${project.id}`)}
                       className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl font-bold bg-slate-50 hover:bg-brand hover:text-white text-slate-700 transition-all duration-300 active:scale-[0.98] border border-slate-100 hover:border-brand cursor-pointer"
                     >
