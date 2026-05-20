@@ -16,7 +16,7 @@ export const Input = ({ label, error, ...props }: InputProps) => {
           w-full px-4 py-3 rounded-lg border shadow-sm transition-all outline-none
           ${error 
             ? 'border-red-500 focus:ring-2 focus:ring-red-100' 
-            : 'border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100'
+            : 'border-gray-200 focus:border-brand focus:ring-2 focus:ring-brand/10'
           }
           placeholder:text-gray-400 text-gray-900
         `}

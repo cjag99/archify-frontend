@@ -26,7 +26,7 @@ export interface User {
     email: string;
     is_authorized: boolean;
     role: "user" | "admin";
-    avatar: UUID;
+    avatar: UUID | null;
 }
 
 export interface AuthContextType {

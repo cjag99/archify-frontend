@@ -35,7 +35,7 @@ export const Navbar: FC = () => {
             <>
             <button
               onClick={logout}
-              className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded transition"
+              className="text-slate-600 border border-slate-200 hover:border-red-500 hover:text-red-500 px-5 py-2.5 rounded-full font-semibold transition-all duration-200 hover:-translate-y-0.5 active:scale-95 cursor-pointer"
             >
               Log out
             </button>

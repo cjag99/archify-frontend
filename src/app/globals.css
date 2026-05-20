@@ -2,8 +2,14 @@
 
 :root {
   --brand-color: #8C03EF;
+  --brand-color-dark: #7102c3;
+  --brand-color-light: #a53bf2;
 }
 
-@theme inline {
+@theme {
   --color-brand: var(--brand-color);
+  --color-brand-dark: var(--brand-color-dark);
+  --color-brand-light: var(--brand-color-light);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }

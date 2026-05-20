@@ -1,6 +1,5 @@
 "use client";
 import { useAdminTable } from "@/hooks/useAdminTable";
-import { NavLink } from "../atoms/NavLink";
 import { FC } from "react";
 
 export const AdminMenu: FC = () => {
@@ -33,16 +32,34 @@ export const AdminMenu: FC = () => {
     ];
 
     return (
-        <nav className="flex flex-col items-start gap-4 p-6 bg-white rounded-lg shadow-md" >
+        <nav className="flex flex-col gap-1.5 p-4 bg-white rounded-3xl border border-slate-100 shadow-xs w-full" >
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 mb-2">
+                Tables
+            </p>
             {
-                DBTables.map((table) => (
-                    <NavLink key={table.href} href={table.href} onClick={() => changeTable(table.apiRoute)} >
-                        {table.icon && (
-                            <span className="mr-2 w-[25px] h-[25px] inline-block align-middle" dangerouslySetInnerHTML={{ __html: table.icon }} />
-                        )}
-                        {table.label}
-                    </NavLink>
-                ))
+                DBTables.map((table) => {
+                    const isActive = currentTable === table.apiRoute;
+                    return (
+                        <a 
+                            key={table.href} 
+                            href={table.href} 
+                            onClick={() => changeTable(table.apiRoute)} 
+                            className={`flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold text-sm transition-all duration-200 cursor-pointer active:scale-[0.98] ${
+                                isActive 
+                                    ? "bg-brand/10 text-brand" 
+                                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                            }`}
+                        >
+                            {table.icon && (
+                                <span 
+                                    className={`w-5 h-5 transition-colors duration-200 ${isActive ? "text-brand" : "text-slate-400"}`} 
+                                    dangerouslySetInnerHTML={{ __html: table.icon }} 
+                                />
+                            )}
+                            {table.label}
+                        </a>
+                    );
+                })
             }
         </nav >
     );

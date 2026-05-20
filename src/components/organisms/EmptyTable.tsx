@@ -5,14 +5,14 @@ import { Database } from "lucide-react";
 
 export const EmptyTable: FC = () => {
     return (
-        <div className="flex flex-col items-center justify-center">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="text-center">
-                    <Database className="w-24 h-24 text-gray-400" />
-                    <h3 className="mt-2 text-lg font-semibold text-gray-900">No features yet</h3>
-                    <p className="mt-1 text-sm text-gray-500">Get started by creating a new feature.</p>
-                </div>
+        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-slate-100 shadow-xs max-w-xl mx-auto px-6">
+            <div className="w-16 h-16 bg-brand/5 rounded-2xl flex items-center justify-center text-brand mb-6">
+                <Database className="w-8 h-8" />
             </div>
+            <h3 className="text-xl font-bold text-slate-800 mb-2">No records found</h3>
+            <p className="text-slate-500 max-w-sm mx-auto text-center text-sm leading-relaxed">
+                This table is currently empty or couldn't be loaded. Check back later or add records in the console.
+            </p>
         </div>
     );
 }

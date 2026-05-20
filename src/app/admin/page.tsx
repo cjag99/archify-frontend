@@ -9,12 +9,14 @@ export default function AdminPage() {
 
     return (
         <ProtectedRoute>
-            <div className="min-h-screen grid grid-cols-12 gap-4 bg-linear-to-br from-slate-50 to-slate-100">
-                <div className="col-span-3">
-                    <AdminNavBar />
-                </div>
-                <div className="col-span-9">
-                    <AdminTable />
+            <div className="min-h-screen bg-slate-50/50">
+                <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row gap-8">
+                    <aside className="w-full md:w-64 shrink-0">
+                        <AdminNavBar />
+                    </aside>
+                    <main className="flex-1">
+                        <AdminTable />
+                    </main>
                 </div>
             </div>
         </ProtectedRoute>

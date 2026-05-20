@@ -22,10 +22,10 @@ export const Button = ({
   
 
   const variants = {
-  primary: "bg-[#8C03EF] text-white hover:bg-[#7a02d4] shadow-lg shadow-purple-500/20 transition-all",
-  secondary: "bg-slate-100 text-slate-900 hover:bg-slate-200",
-  outline: "border-2 border-slate-200 text-slate-600 hover:border-[#8C03EF] hover:text-[#8C03EF] transition-colors"
-};
+    primary: "bg-brand text-white hover:bg-brand-dark shadow-lg shadow-brand/20 transition-all",
+    secondary: "bg-slate-100 text-slate-900 hover:bg-slate-200",
+    outline: "border-2 border-slate-200 text-slate-600 hover:border-brand hover:text-brand transition-colors"
+  };
 
   const widthStyle = fullWidth ? "w-full" : "w-auto";
 
