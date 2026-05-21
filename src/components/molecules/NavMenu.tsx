@@ -14,7 +14,7 @@ export const NavMenu: FC = () => {
     const { isAuthenticated } = useAuth();
     const menuItems: NavItems[] = [
         { label: "Home", href: isAuthenticated ? "/dashboard" : "/" },
-        { label: "Projects", href: "/projects" },
+        { label: "Projects", href: "/dashboard/projects" },
         { label: "Patterns", href: "/patterns" },
         { label: "Architectures", href: "/architectures" },
     ];
