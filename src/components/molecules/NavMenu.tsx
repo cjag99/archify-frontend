@@ -15,8 +15,8 @@ export const NavMenu: FC = () => {
     const menuItems: NavItems[] = [
         { label: "Home", href: isAuthenticated ? "/dashboard" : "/" },
         { label: "Projects", href: "/dashboard/projects" },
-        { label: "Patterns", href: "/patterns" },
-        { label: "Architectures", href: "/architectures" },
+        { label: "Patterns", href: "/dashboard/patterns" },
+        { label: "Architectures", href: "/dashboard/architectures" },
     ];
     return (
         <nav className="flex items-center gap-8">
