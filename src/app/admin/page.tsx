@@ -2,10 +2,9 @@
 import { AdminNavBar } from "@/components/organisms/AdminNavBar";
 import { ProtectedRoute } from "@/components/organisms/ProtectedRoute";
 import { AdminTable } from "@/components/organisms/AdminTable";
-import { useAuth } from "@/core/context/AuthContext";
+
 
 export default function AdminPage() {
-    const { user } = useAuth();
 
     return (
         <ProtectedRoute>

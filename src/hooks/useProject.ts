@@ -1,33 +1,26 @@
 "use client";
 
-import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/core/context/AuthContext";
+import { projectService } from "@/core/api/projects.service";
+import { Project } from "@/core/types/models";
 
 export const useProject = () => {
     const { user } = useAuth();
-    const [projects, setProjects] = useState<any[]>([]);
+    const [projects, setProjects] = useState<Project[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchProjects = async () => {
+    const fetchProjects = useCallback(async () => {
         if (!user) return;
-        setLoading(true);
-        setError(null);
+        // Defer updates to avoid calling setState synchronously during effect rendering phase
+        Promise.resolve().then(() => {
+            setLoading(true);
+            setError(null);
+        });
+
         try {
-            const response = await fetch(`http://localhost:8000/projects/`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${Cookies.get("auth_token")}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status} ${response.statusText}`);
-            }
-
-            const result = await response.json();
+            const result = await projectService.getAll();
             setProjects(Array.isArray(result) ? result : []);
         } catch (err) {
             setError(err instanceof Error ? err.message : "Unknown error");
@@ -36,11 +29,12 @@ export const useProject = () => {
         } finally {
             setLoading(false);
         }
-    }
+    }, [user]);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchProjects();
-    }, [user]);
+    }, [fetchProjects]);
 
     return { projects, loading, error };
 }

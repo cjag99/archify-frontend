@@ -1,35 +1,15 @@
 import { LoginCredentials, RegisterCredentials, AuthResponse } from "../types/auth";
-
+import { apiClient } from "./apiClient";
 export const authService = {
-    login : async (credentials: LoginCredentials): Promise<AuthResponse> => {
-        const response = await fetch("http://localhost:8000/auth/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(credentials)
-        });
-        const data = await response.json();
-        if (!response.ok) {
-           if (data.detail && Array.isArray(data.detail)) {
-                throw new Error(data.detail[0].msg || "Error logging in");
-            }
-        }
-        return data as AuthResponse;
+    login: (credentials: LoginCredentials): Promise<AuthResponse> => {
+        return apiClient.post<AuthResponse>("/auth/login", credentials);
     },
-
-    register: async (credentials: RegisterCredentials): Promise<AuthResponse> => {
-        const response = await fetch("http://localhost:8000/auth/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(credentials)
-        });
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.detail || data.message || "Error registering");
-        }
-        return data as AuthResponse;
-    }
+    register: (credentials: RegisterCredentials): Promise<AuthResponse> => {
+        return apiClient.post<AuthResponse>("/auth/register", credentials);
+    },
+    logout: (): Promise<void> => {
+        return apiClient.post("/auth/logout", {});
+    },
 }
+
+   

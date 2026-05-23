@@ -8,8 +8,8 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   loading: boolean;
-  login: (credentials: LoginCredentials) => Promise<void>; // Agregado
-  logout: () => void; // Agregado
+  login: (credentials: LoginCredentials) => Promise<void>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -19,20 +19,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // Función logout definida antes para poder usarla en el useEffect
   const logout = useCallback(() => {
-    Cookies.remove("auth_token");
-    Cookies.remove("user_data");
-    setUser(null);
-    router.replace("/");
+    authService.logout()
+      .catch((error) => console.error("Error calling logout endpoint:", error))
+      .finally(() => {
+        Cookies.remove("user_data");
+        setUser(null);
+        router.replace("/");
+      });
   }, [router]);
 
   useEffect(() => {
     const loadStorageData = () => {
-      const token = Cookies.get("auth_token");
       const savedUser = Cookies.get("user_data");
 
-      if (token && savedUser) {
+      if (savedUser) {
         try {
           setUser(JSON.parse(savedUser));
         } catch (error) {
@@ -50,8 +51,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const data: AuthResponse = await authService.login(credentials);
 
-      // Guardamos el token y el usuario en cookies
-      Cookies.set("auth_token", data.access_token, { expires: 7, sameSite: 'lax' });
       Cookies.set("user_data", JSON.stringify(data.profile), { expires: 7, sameSite: 'lax' });
 
       setUser(data.profile);
