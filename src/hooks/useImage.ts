@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useAuth } from "@/core/context/AuthContext";
+import { apiClient } from "@/core/api/apiClient";
 import { imageService } from "@/core/api/images.service";
 import { ImageType } from "@/core/types/models";
 import { UUID } from "crypto";
@@ -14,7 +15,7 @@ export const useImage = () => {
     const [error, setError] = useState<string | null>(null);
 
     const fetchImage = useCallback(async (id: UUID) => {
-        if (!user) return;
+        if (!user) return null;
         Promise.resolve().then(() => {
             setLoading(true);
             setError(null);
@@ -22,10 +23,12 @@ export const useImage = () => {
         try {
             const result = await imageService.getById(id);
             setImage(result);
+            return result;
         } catch (err) {
             setError(err instanceof Error ? err.message : "Unknown error");
             console.error("Fetch error:", err);
             setImage(null);
+            return null;
         } finally {
             setLoading(false);
         }
@@ -39,11 +42,11 @@ export const useImage = () => {
         });
 
         const formData = new FormData();
-        formData.append("file", file);
-        formData.append("usage_type", usage_type);
+        formData.append("image", file);
 
         try {
-            const result = await imageService.create(formData);
+            const endpoint = `/images?usage_type=${encodeURIComponent(usage_type)}`;
+            const result = await apiClient.post<ImageType>(endpoint, formData);
             setImages((prevImages) => [...prevImages, result]);
             return result;
         } catch (err) {

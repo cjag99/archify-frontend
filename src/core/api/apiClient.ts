@@ -7,8 +7,8 @@ class ApiClient {
         this.baseUrl = baseUrl;
     }
 
-    private async getHeaders(customHeaders?: HeadersInit): Promise<HeadersInit> {
-        const isFormData = customHeaders instanceof FormData;
+    private async getHeaders(customHeaders?: HeadersInit, body?: unknown): Promise<HeadersInit> {
+        const isFormData = body instanceof FormData;
         const defaultHeaders: Record<string, string> = isFormData
             ? {}
             : {
@@ -28,7 +28,7 @@ class ApiClient {
         options: ApiOptions = {}
     ): Promise<T> {
         const url = `${this.baseUrl}${endpoint}`;
-        const headers = await this.getHeaders(options?.headers);
+        const headers = await this.getHeaders(options?.headers, body);
         const config: RequestInit = {
             method,
             headers,

@@ -30,11 +30,11 @@ export interface Pattern {
 }
 
 export interface CodeLanguage {
-    id: string;
+    id: UUID;
     name: string;
-    extension: string;
-    created_at?: string;
-    updated_at?: string;
+    file_extension: string;
+    created_at?: Date;
+    icon?: UUID;
 }
 
 export interface PatternCode {
