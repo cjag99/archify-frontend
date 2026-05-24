@@ -13,7 +13,6 @@ export const useProject = () => {
 
     const fetchProjects = useCallback(async () => {
         if (!user) return;
-        // Defer updates to avoid calling setState synchronously during effect rendering phase
         Promise.resolve().then(() => {
             setLoading(true);
             setError(null);

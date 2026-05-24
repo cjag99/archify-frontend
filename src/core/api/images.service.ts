@@ -1,4 +1,4 @@
 import { CrudService } from "./crud.service";
-import { Image } from "../types/models";
+import { ImageType } from "../types/models";
 
-export const imageService = new CrudService<Image>("/images");
+export const imageService = new CrudService<ImageType, FormData>("/images");

@@ -1,4 +1,5 @@
 import { User } from "./auth";
+import { UUID } from "crypto";
 
 export type { User };
 
@@ -45,11 +46,17 @@ export interface PatternCode {
     updated_at?: string;
 }
 
-export interface Image {
-    id: string;
+export enum ImageUsageType {
+    AVATAR = "avatar",
+    PROJECT_LOGO = "project_logo",
+    REACT_NODE = "react_node",
+    CODE_LOGO = "code_logo",
+}
+export interface ImageType {
+    id: UUID;
+    file_name: string;
     url: string;
-    title: string | null;
-    description: string | null;
-    created_at?: string;
-    updated_at?: string;
+    user_id: UUID;
+    usage_type: ImageUsageType;
+    created_at: Date;
 }
