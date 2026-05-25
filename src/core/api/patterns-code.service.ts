@@ -1,4 +1,11 @@
 import { CrudService } from "./crud.service";
 import { PatternCode } from "../types/models";
 
-export const patternCodeService = new CrudService<PatternCode>("/patterns-code");
+export type CodeSnippetCreatePayload = {
+    pattern_id: string;
+    code_id: string;
+    code_snippet: JSON;
+};
+
+
+export const patternCodeService = new CrudService<PatternCode, CodeSnippetCreatePayload>("/patterns-code");

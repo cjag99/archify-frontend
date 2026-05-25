@@ -12,6 +12,11 @@ export class CrudService<T, CreateDto = Partial<T>, UpdateDto = Partial<T>> {
         return apiClient.get<T>(`${this.endpoint}/${id}`);
     }
 
+    getByIds(ids: (string | number)[]): Promise<T> {
+        const query = ids.map(id => `ids[]=${encodeURIComponent(id)}`).join('&');
+        return apiClient.get<T>(`${this.endpoint}?${query}`);
+    }
+
     create(data: CreateDto): Promise<T> {
         return apiClient.post<T>(this.endpoint, data);
     }
