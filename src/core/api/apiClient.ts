@@ -1,4 +1,4 @@
-type ApiOptions = Omit<RequestInit, "body" | "method">;
+export type ApiOptions = Omit<RequestInit, "body" | "method">;
 
 class ApiClient {
     private baseUrl: string;

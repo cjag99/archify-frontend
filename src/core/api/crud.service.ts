@@ -1,11 +1,11 @@
-import { apiClient } from "./apiClient";
+import { apiClient, type ApiOptions } from "./apiClient";
 
 export class CrudService<T, CreateDto = Partial<T>, UpdateDto = Partial<T>> {
     constructor(protected endpoint: string) {}
 
-    getAll(): Promise<T[]> {
+    getAll(options?: ApiOptions): Promise<T[]> {
         // Ensure trailing slash if needed, or stick to clean endpoint structure
-        return apiClient.get<T[]>(this.endpoint);
+        return apiClient.get<T[]>(this.endpoint, options);
     }
 
     getById(id: string | number): Promise<T> {

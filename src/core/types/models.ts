@@ -22,11 +22,11 @@ export interface Architecture {
 }
 
 export interface Pattern {
-    id: string;
+    id: UUID;
     name: string;
     description: string | null;
-    created_at?: string;
-    updated_at?: string;
+    created_at?: Date;
+    base_structure?: JSON;
 }
 
 export interface CodeLanguage {
@@ -38,12 +38,11 @@ export interface CodeLanguage {
 }
 
 export interface PatternCode {
-    id: string;
-    pattern_id: string;
-    language_id: string;
-    code: string;
-    created_at?: string;
-    updated_at?: string;
+    id: UUID;
+    pattern_id: UUID;
+    code_id: UUID;
+    code_snippet: JSON;
+    created_at?: Date;
 }
 
 export enum ImageUsageType {
