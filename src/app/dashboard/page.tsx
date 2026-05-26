@@ -116,7 +116,7 @@ export default function DashboardPage() {
                       </div>
 
                       {/* Project Description */}
-                      <p className="text-slate-500 text-sm leading-relaxed mb-6 line-clamp-2 min-h-[2.5rem]">
+                      <p className="text-slate-500 text-sm leading-relaxed mb-6 line-clamp-2 min-h-10">
                         {project.description || "No description provided. Click below to view and design this project's architecture."}
                       </p>
                     </div>

@@ -60,10 +60,27 @@ export const useAdminTable = (tableName?: string) => {
         router.push(`/admin/tables/${table}`);
     };
 
+    const dropData = async (id: string | number) => {
+        if (!tableName) return;
+        const service = servicesMap[tableName];
+        if (!service) {
+            setError(`No service found for table: ${tableName}`);
+            return;
+        }
+
+        try {
+            await service.delete(id);
+            await fetchData();
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Unknown error");
+            console.error("Delete error:", err);
+        }
+    };
+
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchData();
     }, [fetchData]);
 
-    return { currentTable: tableName, changeTable, data, loading, error };
+    return { currentTable: tableName, changeTable, data, loading, error, dropData, refreshData: fetchData };
 }

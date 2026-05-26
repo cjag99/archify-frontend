@@ -1,14 +1,18 @@
 "use client";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useAdminTable } from "@/hooks/useAdminTable";
 import { useParams } from "next/navigation";
 import { EmptyTable } from "./EmptyTable";
 import { Button } from "@/components/atoms/Button";
 import { Plus } from "lucide-react";
+import Modal from "./Modal";
+import { CodeLanguageForm } from "./CodeLanguageForm";
+import { DeleteModal } from "./DeleteModal";
 
 export const AdminTable: FC = () => {
+    const [modalType, setModalType] = useState<string | null>(null);
     const { tablename } = useParams();
-    const { data, loading, error, currentTable } = useAdminTable(tablename as string);
+    const { data, loading, error, currentTable, dropData, refreshData } = useAdminTable(tablename as string);
     let columns: string[] = [];
     let rows: any[] = [];
 
@@ -21,6 +25,7 @@ export const AdminTable: FC = () => {
         );
     }
 
+    const closeModal = () => setModalType(null);
     const singularTable = currentTable ? currentTable.toLowerCase().replace(/s$/, "") : "";
     
     if (error) return <EmptyTable />;
@@ -39,14 +44,17 @@ export const AdminTable: FC = () => {
                 </div>
                 <EmptyTable 
                     label={singularTable} 
-                    onClick={() => console.log(`Create new ${singularTable}`)} 
+                    onClick={() => setModalType(singularTable)} 
                 />
             </div>
         );
     }
 
     columns = Object.keys(data[0]);
-    rows = data.map((item: any) => Object.values(item));
+    rows = data.map((item: any) => ({
+        item,
+        values: Object.values(item),
+    }));
 
     return (
         <div className="p-8 max-w-7xl mx-auto">
@@ -59,14 +67,27 @@ export const AdminTable: FC = () => {
                         View and manage {currentTable} records in the system.
                     </p>
                 </div>
+                <>
                 <Button
-                    onClick={() => console.log(`Create new ${singularTable}`)}
+                    onClick={() =>setModalType(`${singularTable}-create`)}
                     variant="success"
                     className="flex items-center gap-2"
                 >
                     <Plus className="w-5 h-5" />
                     New {singularTable}
                 </Button>
+                <Modal isOpen={modalType !== null} onClose={closeModal}>
+                    {modalType === `code-language-create` && (
+                        <CodeLanguageForm
+                            onCreated={async () => {
+                                await refreshData();
+                                closeModal();
+                            }}
+                        />
+                    )}
+                    </Modal>
+                </>
+                
             </div>
 
             <div className="overflow-hidden glass-card rounded-3xl">
@@ -82,26 +103,36 @@ export const AdminTable: FC = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            {rows.map((row: any[], i: number) => (
+                            {rows.map((row: { item: any; values: any[] }, i: number) => (
                                 <tr key={i} className="hover:bg-slate-50/30 transition-colors group">
-                                    {row.map((cell: any, j: number) => (
+                                    {row.values.map((cell: any, j: number) => (
                                         <td key={j} className="px-6 py-4 text-sm text-slate-600 font-medium">
-                                            {j === row.length - 1 ? (
+                                            {j === row.values.length - 1 ? (
                                                 <div className="flex items-center justify-between gap-4">
                                                     <span className="truncate max-w-[150px]">{cell?.toString() || "-"}</span>
                                                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                                        <>
                                                         <button 
-                                                            onClick={() => console.log("Editar")} 
+                                                            onClick={() => setModalType(`${singularTable}-edit`)} 
                                                             className="text-xs font-semibold bg-slate-50 hover:bg-brand/10 hover:text-brand text-slate-600 px-3 py-1.5 rounded-lg transition-all active:scale-95 cursor-pointer"
                                                         >
                                                             Edit
                                                         </button>
                                                         <button 
-                                                            onClick={() => console.log("Eliminar")} 
+                                                            onClick={() => setModalType(`${singularTable}-delete`)} 
                                                             className="text-xs font-semibold bg-red-50 hover:bg-red-500 hover:text-white text-red-600 px-3 py-1.5 rounded-lg transition-all active:scale-95 cursor-pointer"
                                                         >
                                                             Delete
                                                         </button>
+                                                        <Modal isOpen={modalType !== null} onClose={closeModal}>
+                                                            {modalType === `${singularTable}-delete` && (
+                                                                <DeleteModal
+                                                                    onConfirm={() => dropData(row.item.id)}
+                                                                    onClose={closeModal}
+                                                                />
+                                                            )}
+                                                        </Modal>
+                                                        </>
                                                     </div>
                                                 </div>
                                             ) : (

@@ -73,6 +73,22 @@ export const useCodeLanguage = () => {
         }
     }, []);
 
+    const dropCodeLanguage = useCallback(async (id: string) => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            await codeLanguageService.delete(id);
+            setCodeLanguages((prevCodeLanguages) => prevCodeLanguages.filter(cl => cl.id !== id));
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Unknown error");
+            console.error("Delete error:", err);
+        }
+        finally {
+            setLoading(false);
+        }
+    }, []);
+
     useEffect(() => {
         let isMounted = true;
 
@@ -98,5 +114,6 @@ export const useCodeLanguage = () => {
         error,
         fetchCodeLanguage,
         createCodeLanguage,
+        dropCodeLanguage,
     };
 };

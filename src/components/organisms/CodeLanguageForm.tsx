@@ -6,8 +6,13 @@ import { useCodeLanguage } from "@/hooks/useCodeLanguage";
 import { useImage } from "@/hooks/useImage";
 import { Button } from "../atoms/Button";
 import { Input } from "../atoms/Input";
+import { FileInput } from "../molecules/FileInput";
 
-export const CodeLanguageForm = () => {
+interface CodeLanguageFormProps {
+    onCreated?: () => Promise<void>;
+}
+
+export const CodeLanguageForm = ({ onCreated }: CodeLanguageFormProps) => {
     const { user } = useAuth();
     const { createImage } = useImage();
     const { createCodeLanguage, loading } = useCodeLanguage();
@@ -15,25 +20,26 @@ export const CodeLanguageForm = () => {
     const [isUploadingIcon, setIsUploadingIcon] = useState(false);
     const [uploadError, setUploadError] = useState<string | null>(null);
 
-    const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
+    const handleImage = (file: File | null) => {
         if (!file) return;
 
-        setUploadError(null);
-        setIconId("");
-        setIsUploadingIcon(true);
+        void (async () => {
+            setUploadError(null);
+            setIconId("");
+            setIsUploadingIcon(true);
 
-        try {
-            const result = await createImage(file, "code_logo");
-            if (!result?.id) {
-                setUploadError("No se pudo subir la imagen. Intenta de nuevo.");
-                return;
+            try {
+                const result = await createImage(file, "code_logo");
+                if (!result?.id) {
+                    setUploadError("No se pudo subir la imagen. Intenta de nuevo.");
+                    return;
+                }
+
+                setIconId(result.id);
+            } finally {
+                setIsUploadingIcon(false);
             }
-
-            setIconId(result.id);
-        } finally {
-            setIsUploadingIcon(false);
-        }
+        })();
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -61,14 +67,15 @@ export const CodeLanguageForm = () => {
             formData.get("extension") as string,
             iconId
         );
+
+        await onCreated?.();
     };
 
     return (
         <form onSubmit={handleSubmit} className="w-full space-y-3">
             <Input label="Name" name="name" type="text" />
             <Input label="File extension" name="extension" type="text" />
-            <Input label="image" name="image" type="file" onChange={handleImage} />
-            <Input name="icon" type="hidden" value={iconId} readOnly />
+            <FileInput label="Icon" onChange={handleImage} accept="image/*" />
             {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
             <Button
                 type="submit"
@@ -76,7 +83,9 @@ export const CodeLanguageForm = () => {
                 isLoading={loading || isUploadingIcon}
                 disabled={!iconId || isUploadingIcon}
                 fullWidth
-            />
+            >
+                Create Code Language
+            </Button>
         </form>
     );
 };
