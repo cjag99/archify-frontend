@@ -1,24 +1,56 @@
 "use client";
 
+import { useState } from "react";
 import { useParams, usePathname } from "next/navigation";
+import { Node, Edge } from "@xyflow/react";
 import { ProtectedRoute } from "@/components/organisms/ProtectedRoute";
 import { PatternStep1 } from "@/components/molecules/PatternStep1";
+import { ArchitectureStep1 } from "@/components/molecules/ArchitectureStep1";
+import { ArchitectureStep2 } from "@/components/molecules/ArchitectureStep2";
+import { useArchitecture } from "@/hooks/useArchitecture";
+
+interface ArchitecturePayload {
+    name: string;
+    description: string;
+    enabled: boolean;
+}
 
 export default function NewResourcePage() {
     const params = useParams();
     const pathname = usePathname();
+    const [architecturePayload, setArchitecturePayload] = useState<ArchitecturePayload | null>(null);
+    const [step, setStep] = useState<1 | 2>(1);
 
     const resource = (typeof params?.resource === "string" ? params.resource : (pathname.split("/")[2] || ""));
-
+    const { createArchitecture } = useArchitecture();
     const handlePatternNext = (payload: { name: string; description: string }) => {
         console.log("Pattern step 1 payload:", payload);
-        
+    };
+
+    const handleArchitectureNext = (payload: ArchitecturePayload) => {
+        setArchitecturePayload(payload);
+        setStep(2);
+    };
+
+    const handleArchitectureBack = () => setStep(1);
+
+    const handleArchitectureFinish = (
+      schema: { nodes: Node[]; edges: Edge[] },
+      payload: ArchitecturePayload | null
+    ) => {
+     const finalPayload = {
+        name: payload?.name || "Untitled Architecture",
+        description: payload?.description || "",
+        enabled: payload?.enabled ?? true,
+        schema: schema as unknown as JSON,
+      };
+      createArchitecture(finalPayload);
     };
 
     return (
         <ProtectedRoute>
             <div className="min-h-screen bg-slate-50/50 flex flex-col items-center justify-center p-6">
-                <div className="w-full max-w-xl glass-card rounded-3xl p-8 border border-slate-100">
+                <div className="w-full max-w-300 glass-card rounded-3xl p-8 border border-slate-100">
                     <div className="mb-4">
                         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand/5 text-brand capitalize">
                             Active Config: {resource}
@@ -27,6 +59,20 @@ export default function NewResourcePage() {
 
                     {resource === "patterns" ? (
                         <PatternStep1 onNext={handlePatternNext} />
+                    ) : resource === "architectures" ? (
+                        step === 1 ? (
+                            <ArchitectureStep1 onNext={handleArchitectureNext} />
+                        ) : architecturePayload ? (
+                            <ArchitectureStep2
+                                architectureName={architecturePayload.name}
+                                architectureDescription={architecturePayload.description}
+                                enabled={architecturePayload.enabled}
+                                onBack={handleArchitectureBack}
+                                onFinish={handleArchitectureFinish}
+                            />
+                        ) : (
+                            <ArchitectureStep1 onNext={handleArchitectureNext} />
+                        )
                     ) : (
                         <div className="text-center py-6">
                             <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">

@@ -5,12 +5,14 @@ import {
   useNodesState,
   useEdgesState,
   addEdge,
+  reconnectEdge,
   useReactFlow,
   ReactFlowProvider,
   Connection,
   Node,
   Edge,
   NodeProps,
+  OnReconnect,
 } from "@xyflow/react";
 
 import NodeSidebar, { SidebarNodeItem } from "@/components/organisms/NodeSidebar";
@@ -46,7 +48,7 @@ function EditorContent({
         x: 250 + Math.random() * 100,
         y: 200 + Math.random() * 100,
       },
-      data: { label: `${label} ${id.slice(0, 4)}` },
+      data: { label },
     };
     setNodes((nds) => nds.concat(newNode));
   }, [setNodes]);
@@ -74,7 +76,7 @@ function EditorContent({
       id,
       type,
       position,
-      data: { label: `${label} ${id.slice(0, 4)}` },
+      data: { label },
     };
 
     setNodes((nds) => nds.concat(newNode));
@@ -82,6 +84,12 @@ function EditorContent({
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
+    [setEdges]
+  );
+
+  const onReconnect = useCallback<OnReconnect>(
+    (oldEdge, connection) =>
+      setEdges((eds) => reconnectEdge(oldEdge, connection, eds)),
     [setEdges]
   );
 
@@ -106,6 +114,7 @@ function EditorContent({
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
+          onReconnect={onReconnect}
         />
       </div>
     </div>

@@ -15,10 +15,10 @@ export interface Project {
 export interface Architecture {
     id: string;
     name: string;
-    description: string | null;
+    description?: string;
     project_id: string;
+    base_structure?: JSON;
     created_at?: string;
-    updated_at?: string;
 }
 
 export interface Pattern {

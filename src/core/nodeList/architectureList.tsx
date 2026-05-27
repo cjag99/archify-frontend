@@ -1,6 +1,12 @@
 import { SidebarNodeItem } from "@/components/organisms/NodeSidebar"
-import { Compass, Cpu, Binoculars, Box, Layers, Package, Server, HardDrive } from "lucide-react";
+import { Compass, Cpu, Binoculars, Box, Layers, Package, Server, HardDrive, User } from "lucide-react";
 export const architectureList: SidebarNodeItem[] = [
+    {
+        type: "user",
+        label: "User",
+        description: "Representa un usuario o actor en el diagrama.",
+        icon: <User size={20} className="text-brand" />
+    },
     {
         type: "mvc-controller",
         label: "MVC Controller",

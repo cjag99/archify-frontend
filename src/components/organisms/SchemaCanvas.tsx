@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { ReactFlow, Node, Edge, OnNodesChange, OnEdgesChange, OnConnect, BackgroundVariant, NodeProps } from '@xyflow/react';
+import { ReactFlow, Node, Edge, OnNodesChange, OnEdgesChange, OnConnect, OnReconnect, BackgroundVariant, NodeProps, MarkerType } from '@xyflow/react';
 import SchemeBackground from '../molecules/SchemaBackground';
 import '@xyflow/react/dist/style.css';
 
@@ -12,6 +12,7 @@ interface SchemeCanvasProps {
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
   onConnect: OnConnect;
+  onReconnect: OnReconnect;
 }
 
 export default function SchemeCanvas({
@@ -20,7 +21,8 @@ export default function SchemeCanvas({
   nodeTypes,
   onNodesChange,
   onEdgesChange,
-  onConnect
+  onConnect,
+  onReconnect,
 }: SchemeCanvasProps) {
   return (
     <ReactFlow
@@ -30,9 +32,15 @@ export default function SchemeCanvas({
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
+      onReconnect={onReconnect}
+      edgesReconnectable
+      reconnectRadius={20}
+      defaultEdgeOptions={{
+        markerEnd: { type: MarkerType.ArrowClosed },
+      }}
       fitView
     >
       <SchemeBackground variant={BackgroundVariant.Dots} color="#cbd5e1" />
     </ReactFlow>
   );
-}
+} 
