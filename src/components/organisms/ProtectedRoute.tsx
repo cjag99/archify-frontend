@@ -8,14 +8,14 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
     useEffect(() => {
         if (!loading && !isAuthenticated) {
-            router.replace("/"); // Redirects to home page if not authenticated
+            router.replace("/");
         }
     }, [isAuthenticated, loading, router]);
 
     if (loading) {
-        return <div>Loading...</div>; // Or a loading spinner
+        return <div>Loading...</div>;
     }
 
-   return isAuthenticated ? <>{children}</> : null; // Renders children only if authenticated
+   return isAuthenticated ? <>{children}</> : null;
 
 };

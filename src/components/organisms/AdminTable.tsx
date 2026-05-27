@@ -14,7 +14,8 @@ export const AdminTable: FC = () => {
     const { tablename } = useParams();
     const { data, loading, error, currentTable, dropData, refreshData } = useAdminTable(tablename as string);
     let columns: string[] = [];
-    let rows: any[] = [];
+    type TableRow = { item: Record<string, unknown>; values: unknown[] };
+    let rows: TableRow[] = [];
 
     if (loading) {
         return (
@@ -50,8 +51,8 @@ export const AdminTable: FC = () => {
         );
     }
 
-    columns = Object.keys(data[0]);
-    rows = data.map((item: any) => ({
+    columns = Object.keys(data[0] as Record<string, unknown>);
+    rows = (data as Record<string, unknown>[]).map((item) => ({
         item,
         values: Object.values(item),
     }));
@@ -103,13 +104,13 @@ export const AdminTable: FC = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            {rows.map((row: { item: any; values: any[] }, i: number) => (
+                            {rows.map((row: TableRow, i: number) => (
                                 <tr key={i} className="hover:bg-slate-50/30 transition-colors group">
-                                    {row.values.map((cell: any, j: number) => (
+                                    {row.values.map((cell: unknown, j: number) => (
                                         <td key={j} className="px-6 py-4 text-sm text-slate-600 font-medium">
                                             {j === row.values.length - 1 ? (
                                                 <div className="flex items-center justify-between gap-4">
-                                                    <span className="truncate max-w-[150px]">{cell?.toString() || "-"}</span>
+                                                    <span className="truncate max-w-37.5">{cell === null || cell === undefined ? "-" : String(cell)}</span>
                                                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                                                         <>
                                                         <button 
@@ -117,7 +118,7 @@ export const AdminTable: FC = () => {
                                                             className="text-xs font-semibold bg-slate-50 hover:bg-brand/10 hover:text-brand text-slate-600 px-3 py-1.5 rounded-lg transition-all active:scale-95 cursor-pointer"
                                                         >
                                                             Edit
-                                                        </button>
+                                                       </button>
                                                         <button 
                                                             onClick={() => setModalType(`${singularTable}-delete`)} 
                                                             className="text-xs font-semibold bg-red-50 hover:bg-red-500 hover:text-white text-red-600 px-3 py-1.5 rounded-lg transition-all active:scale-95 cursor-pointer"
@@ -127,7 +128,8 @@ export const AdminTable: FC = () => {
                                                         <Modal isOpen={modalType !== null} onClose={closeModal}>
                                                             {modalType === `${singularTable}-delete` && (
                                                                 <DeleteModal
-                                                                    onConfirm={() => dropData(row.item.id)}
+                                                                    id={String(row.item.id)}
+                                                                    onConfirm={() => dropData(row.item.id as string | number)}
                                                                     onClose={closeModal}
                                                                 />
                                                             )}
@@ -136,8 +138,8 @@ export const AdminTable: FC = () => {
                                                     </div>
                                                 </div>
                                             ) : (
-                                                <span className="truncate max-w-[200px] block">
-                                                    {cell?.toString() || "-"}
+                                                <span className="truncate max-w-50 block">
+                                                    {cell === null || cell === undefined ? "-" : String(cell)}
                                                 </span>
                                             )}
                                         </td>

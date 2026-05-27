@@ -75,7 +75,7 @@ export default function DashboardPage() {
               </div>
               <h2 className="text-xl font-bold text-slate-800 mb-2">No projects found</h2>
               <p className="text-slate-500 mb-6 max-w-sm mx-auto">
-                You don't have any projects in your workspace yet. Let's create your first architecture!
+                You dont have any projects in your workspace yet. Lets create your first architecture!
               </p>
               <Button
                 onClick={() => router.push("/dashboard/projects/new")}

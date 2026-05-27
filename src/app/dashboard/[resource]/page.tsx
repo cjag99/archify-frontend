@@ -10,8 +10,8 @@ import { Button } from "@/components/atoms/Button";
 import { Plus, Folder, FileCode, Workflow, HelpCircle } from "lucide-react";
 import { CountLabel } from "@/components/molecules/CountLabel";
 import { useEffect, useState } from "react";
+import { Project, Pattern, Architecture } from "@/core/types/models";
 
-// Resource configuration map
 const RESOURCE_CONFIG = {
     projects: {
         title: "Your Projects",
@@ -53,17 +53,18 @@ const RESOURCE_CONFIG = {
 
 type ResourceType = keyof typeof RESOURCE_CONFIG;
 
+type ResourceItem = Project | Pattern | Architecture;
+
 export default function GenericResourcesPage() {
     const { user } = useAuth();
     const router = useRouter();
     const params = useParams();
     const pathname = usePathname();
     
-    // Extract the dynamic resource route param (projects, patterns, architectures)
     const resource = (typeof params?.resource === "string" ? params.resource : (pathname.split("/")[2] || "")) as ResourceType;
     const config = RESOURCE_CONFIG[resource];
 
-    const [items, setItems] = useState<any[]>([]);
+    const [items, setItems] = useState<ResourceItem[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -97,7 +98,6 @@ export default function GenericResourcesPage() {
         };
     }, [resource, config, user]);
 
-    // Handle invalid resource parameter
     if (!config) {
         return (
             <ProtectedRoute>
@@ -108,7 +108,7 @@ export default function GenericResourcesPage() {
                         </div>
                         <h2 className="text-xl font-bold text-slate-800 mb-2">Resource not found</h2>
                         <p className="text-slate-500 mb-6">
-                            The requested directory "{resource}" does not exist in our dashboard.
+                            The requested directory {resource} does not exist in our dashboard.
                         </p>
                         <Button
                             onClick={() => router.push("/dashboard")}

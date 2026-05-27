@@ -8,12 +8,11 @@ export default function NewResourcePage() {
     const params = useParams();
     const pathname = usePathname();
 
-    // Extract active config from resource param or pathname fallback
     const resource = (typeof params?.resource === "string" ? params.resource : (pathname.split("/")[2] || ""));
 
     const handlePatternNext = (payload: { name: string; description: string }) => {
         console.log("Pattern step 1 payload:", payload);
-        // You can redirect or handle the next wizard steps here
+        
     };
 
     return (
