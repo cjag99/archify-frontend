@@ -5,7 +5,7 @@ export type ArchitectureCreatePayload = {
     name: string;
     description?: string;
     enabled?: boolean;
-    schema: JSON;
+    base_structure?: JSON;
 };
 
 export const architectureService = new CrudService<Architecture>("/architectures");

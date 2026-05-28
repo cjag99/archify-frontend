@@ -42,7 +42,7 @@ export const useCodeLanguage = () => {
 
         try {
             const result = await codeLanguageService.getAll();
-            setCodeLanguages(result);
+            setCodeLanguages(Array.isArray(result) ? result : []);
         } catch (err) {
             setError(err instanceof Error ? err.message : "Unknown error");
             console.error("Fetch error:", err);
@@ -113,6 +113,7 @@ export const useCodeLanguage = () => {
         loading,
         error,
         fetchCodeLanguage,
+        fetchCodeLanguages,
         createCodeLanguage,
         dropCodeLanguage,
     };

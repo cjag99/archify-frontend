@@ -4,26 +4,31 @@ import { FC, useState, FormEvent } from "react";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { Textarea } from "@/components/atoms/Textarea";
+import { Select } from "../atoms/Select";
 
 interface PatternStep1Props {
   initialName?: string;
   initialDescription?: string;
-  onNext: (payload: { name: string; description: string }) => void;
+  initialGraphicType?: number;
+  onNext: (payload: { name: string; description: string; graphicType: number }) => void;
 }
 
 export const PatternStep1: FC<PatternStep1Props> = ({
   initialName = "",
   initialDescription = "",
+  initialGraphicType = 0,
   onNext,
 }) => {
   const [name, setName] = useState(initialName);
   const [description, setDescription] = useState(initialDescription);
+  const [graphicType, setGraphicType] = useState<number>(initialGraphicType);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onNext({
       name: name.trim(),
       description: description.trim(),
+      graphicType,
     });
   };
 
@@ -53,6 +58,18 @@ export const PatternStep1: FC<PatternStep1Props> = ({
           onChange={(event) => setDescription(event.target.value)}
           placeholder="Describe the pattern in a few sentences"
         />
+
+        <Select
+          label="Graphic element"
+          value={graphicType}
+          onChange={(event) => setGraphicType(Number(event.target.value))}
+          options={[
+            { value: 0, label: "Select an option" },
+            { value: 1, label: "Use an image" },
+            { value: 2, label: "Use schema" },
+          ]}
+        />
+
       </div>
 
       <div className="flex justify-end">

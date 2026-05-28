@@ -29,16 +29,18 @@ export const usePatterns = () => {
         }
     }, []);
 
-    const createPattern = useCallback(async (payload: PatternCreatePayload) => {
+    const createPattern = useCallback(async (payload: PatternCreatePayload): Promise<Pattern | undefined> => {
         setLoading(true);
         setError(null);
 
         try {
             const newPattern = await patternService.create(payload);
             setPatterns((prev) => [...prev, newPattern]);
+            return newPattern;
         } catch (err) {
             setError(err instanceof Error ? err.message : "Unknown error");
             console.error("Create error:", err);
+            return undefined;
         } finally {
             setLoading(false);
         }

@@ -5,6 +5,7 @@ export type PatternCreatePayload = {
     name: string;
     description: string | null;
     base_structure?: JSON;
+    image_id?: string | null;
 };
 
 export const patternService = new CrudService<Pattern, PatternCreatePayload>("/patterns");
