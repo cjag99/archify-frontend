@@ -3,6 +3,8 @@
 import { useParams } from "next/navigation";
 import { ProtectedRoute } from "@/components/organisms/ProtectedRoute";
 import { PatternView } from "@/components/organisms/PatternView";
+import { BackLink } from "@/components/atoms/BackLink";
+import { dashboardResourceList } from "@/lib/routes";
 
 export default function ResourceDetailPage() {
     const params = useParams();
@@ -41,12 +43,10 @@ export default function ResourceDetailPage() {
                     <p className="text-slate-500 mb-6">
                         Detailed view for {resource} is currently under construction.
                     </p>
-                    <button
-                        onClick={() => window.history.back()}
-                        className="inline-flex items-center justify-center gap-2 py-3 px-6 rounded-2xl font-bold bg-slate-50 hover:bg-brand hover:text-white text-slate-700 transition-all duration-300 border border-slate-100 hover:border-brand"
-                    >
-                        Go back
-                    </button>
+                    <BackLink
+                        href={dashboardResourceList(resource)}
+                        label={`Volver a ${resource}`}
+                    />
                 </div>
             </div>
         </ProtectedRoute>

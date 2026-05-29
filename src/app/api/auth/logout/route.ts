@@ -33,6 +33,14 @@ export async function POST(_req: NextRequest) {
             maxAge: 0,
         });
 
+        cookieStore.set("user_data", "", {
+            httpOnly: false,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+            maxAge: 0,
+        });
+
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error("[BFF Logout Error]:", error);

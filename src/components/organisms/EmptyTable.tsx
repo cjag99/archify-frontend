@@ -20,7 +20,13 @@ export const EmptyTable: FC<EmptyTableProps> = ({ label, onClick }) => {
         if (label != "project" && label != "pattern" && label != "architecture") {
             setModalType(label || "record");
         } else {
-            router.replace(`/${label === "project" ? "projects" : label === "pattern" ? "patterns" : "architectures"}/new`);
+            const resource =
+                label === "project"
+                    ? "projects"
+                    : label === "pattern"
+                      ? "patterns"
+                      : "architectures";
+            router.push(`/dashboard/${resource}/new`);
         }
     };
 

@@ -1,16 +1,31 @@
-import type { FC, ReactNode } from 'react';
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import type { FC, ReactNode } from "react";
 
 export const NavLink: FC<{
   href: string;
   children: ReactNode;
   onClick?: () => void;
-}> = ({ href, children, onClick }) => (
-  <a 
-    href={href} 
-    onClick={onClick}
-    className="relative py-1 text-black font-medium transition-colors duration-300 hover:text-brand group"
-  >
-    {children}
-    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand transition-all duration-300 group-hover:w-full" />
-  </a>
-);
+}> = ({ href, children, onClick }) => {
+  const pathname = usePathname();
+  const isActive = pathname === href || pathname.startsWith(`${href}/`);
+
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={`relative py-1 font-medium transition-colors duration-300 group ${
+        isActive ? "text-brand" : "text-black hover:text-brand"
+      }`}
+    >
+      {children}
+      <span
+        className={`absolute bottom-0 left-0 h-0.5 bg-brand transition-all duration-300 ${
+          isActive ? "w-full" : "w-0 group-hover:w-full"
+        }`}
+      />
+    </Link>
+  );
+};

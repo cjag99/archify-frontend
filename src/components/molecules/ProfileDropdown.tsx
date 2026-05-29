@@ -60,11 +60,22 @@ export const ProfileDropdown: FC<ProfileDropdownProps> = ({ onClose }) => {
                     <span>Settings</span>
                 </Link>
 
+                {user.is_authorized && (
+                    <Link
+                        href="/admin"
+                        onClick={() => onClose()}
+                        className="flex items-center gap-3 px-3 py-2 text-sm text-slate-600 font-semibold rounded-xl hover:bg-brand/5 hover:text-brand transition-all duration-150 group"
+                    >
+                        <Settings className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-brand transition-colors" />
+                        <span>Admin panel</span>
+                    </Link>
+                )}
+
                 <div className="border-t border-slate-100/60 my-1" />
 
                 <button
                     onClick={() => {
-                        logout();
+                        void logout();
                         onClose();
                     }}
                     className="flex items-center gap-3 w-full px-3 py-2 text-sm text-red-600 font-semibold rounded-xl hover:bg-red-50 hover:text-red-700 transition-all duration-150 cursor-pointer group"

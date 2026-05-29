@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { usePatterns } from "@/hooks/usePattern";
 import { usePatternCode } from "@/hooks/usePatternCode";
 import { useCodeLanguage } from "@/hooks/useCodeLanguage";
 import { useImage } from "@/hooks/useImage";
 import { useAuth } from "@/core/context/AuthContext";
+import { BackLink } from "@/components/atoms/BackLink";
 import { Pattern, ImageType, CodeLanguage } from "@/core/types/models";
+import { ROUTES } from "@/lib/routes";
 import SchemaCanvas from "@/components/organisms/SchemaCanvas";
 import { UserNode } from "@/components/molecules/diagramNodes/UserNode";
 import { SingletonNode } from "@/components/molecules/diagramNodes/SingletonNode";
@@ -42,7 +42,6 @@ function LanguageLogo({ src, alt, size = 20 }: { src: string; alt: string; size?
 }
 
 export function PatternView({ patternId }: PatternViewProps) {
-  const router = useRouter();
   const { loading: authLoading } = useAuth();
   const { codeLanguages, fetchCodeLanguage } = useCodeLanguage();
   const { fetchPatternById } = usePatterns();
@@ -130,13 +129,7 @@ export function PatternView({ patternId }: PatternViewProps) {
   return (
     <div className="min-h-screen bg-slate-50/50 p-6 md:p-12">
       <div className="max-w-5xl mx-auto space-y-8">
-        <button 
-          onClick={() => router.back()}
-          className="flex items-center gap-2 font-semibold text-slate-500 hover:text-slate-800 transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Volver a la lista</span>
-        </button>
+        <BackLink href={ROUTES.patterns} label="Volver a patterns" />
 
         <div className="space-y-12">
           <div className="space-y-4">

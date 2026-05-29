@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useParams, usePathname } from "next/navigation";
 import { ProtectedRoute } from "@/components/organisms/ProtectedRoute";
+import { BackLink } from "@/components/atoms/BackLink";
+import { dashboardResourceList } from "@/lib/routes";
 import { PatternStep1 } from "@/components/molecules/PatternStep1";
 import { PatternStep2 } from "@/components/molecules/PatternStep2";
 import { PatternStep3 } from "@/components/molecules/PatternStep3";
@@ -153,6 +155,12 @@ export default function NewResourcePage() {
         <ProtectedRoute>
             <div className="min-h-screen bg-slate-50/50 flex flex-col items-center justify-center p-6">
                 <div className="w-full max-w-300 glass-card rounded-3xl p-8 border border-slate-100">
+                    <div className="mb-6">
+                        <BackLink
+                            href={dashboardResourceList(resource)}
+                            label={`Volver a ${resource}`}
+                        />
+                    </div>
                     <div className="mb-4">
                         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand/5 text-brand capitalize">
                             Active Config: {resource}

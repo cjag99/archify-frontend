@@ -6,9 +6,10 @@ import { Input } from "@/components/atoms/Input";
 
 interface RegisterFormProps {
   onSwitch?: () => void;
+  onSuccess?: () => void;
 }
-export const RegisterForm = ({ onSwitch }: RegisterFormProps) => {
-  const { handleRegister, loading, error, formError } = useRegisterForm();
+export const RegisterForm = ({ onSwitch, onSuccess }: RegisterFormProps) => {
+  const { handleRegister, loading, error, formError } = useRegisterForm(onSuccess);
   return (
     <form onSubmit={handleRegister} className="w-full space-y-3">
       <div className="grid grid-cols-2 gap-3">

@@ -1,72 +1,94 @@
 "use client";
-import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
+
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback,
+} from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { authService } from "../api/auth.service";
-import { User, AuthResponse, LoginCredentials } from "../types/auth";
+import { User, AuthResponse, LoginCredentials, RegisterCredentials } from "../types/auth";
+import { getPostLoginPath } from "@/lib/routes";
+
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   loading: boolean;
-  login: (credentials: LoginCredentials) => Promise<void>;
-  logout: () => void;
+  login: (credentials: LoginCredentials, redirectTo?: string | null) => Promise<void>;
+  register: (credentials: RegisterCredentials) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+const USER_DATA_COOKIE = "user_data";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const logout = useCallback(() => {
-    authService.logout()
-      .catch((error) => console.error("Error calling logout endpoint:", error))
-      .finally(() => {
-        Cookies.remove("user_data");
-        setUser(null);
-        router.replace("/");
-      });
+  const logout = useCallback(async () => {
+    try {
+      await authService.logout();
+    } catch (error) {
+      console.error("Error calling logout endpoint:", error);
+    } finally {
+      Cookies.remove(USER_DATA_COOKIE);
+      setUser(null);
+      router.replace("/");
+      router.refresh();
+    }
   }, [router]);
 
   useEffect(() => {
-    const loadStorageData = () => {
-      const savedUser = Cookies.get("user_data");
+    const savedUser = Cookies.get(USER_DATA_COOKIE);
 
-      if (savedUser) {
-        try {
-          setUser(JSON.parse(savedUser));
-        } catch (error) {
-          console.error("Error parseando user_data de cookies", error);
-          logout();
-        }
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (error) {
+        console.error("Error parseando user_data de cookies", error);
+        Cookies.remove(USER_DATA_COOKIE);
+        setUser(null);
       }
-      setLoading(false); 
-    };
-
-    loadStorageData();
-  }, [logout]);
-
-  const login = async (credentials: LoginCredentials) => {
-    try {
-      const data: AuthResponse = await authService.login(credentials);
-
-      Cookies.set("user_data", JSON.stringify(data.profile), { expires: 7, sameSite: 'lax' });
-
-      setUser(data.profile);
-      if (data.profile.is_authorized) {
-        router.push("/admin");
-        return;
-      }
-      router.push("/dashboard");
-    } catch (error) {
-      console.error("Error en AuthContext - Login:", error);
-      throw error;
     }
+
+    setLoading(false);
+  }, []);
+
+  const establishSession = (profile: User, redirectTo?: string | null) => {
+    Cookies.set(USER_DATA_COOKIE, JSON.stringify(profile), {
+      expires: 7,
+      sameSite: "lax",
+      path: "/",
+    });
+    setUser(profile);
+    router.replace(getPostLoginPath(profile, redirectTo));
+    router.refresh();
+  };
+
+  const login = async (
+    credentials: LoginCredentials,
+    redirectTo?: string | null
+  ) => {
+    const data: AuthResponse = await authService.login(credentials);
+    establishSession(data.profile, redirectTo);
+  };
+
+  const register = async (credentials: RegisterCredentials) => {
+    const data = await authService.register(credentials);
+    establishSession(data.profile);
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loading, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated: !!user, loading, login, register, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
