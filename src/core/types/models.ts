@@ -26,7 +26,8 @@ export interface Pattern {
     name: string;
     description: string | null;
     created_at?: Date;
-    base_structure?: JSON;
+    base_structure?: JSON | any;
+    image_id?: string | null;
 }
 
 export interface CodeLanguage {
@@ -35,6 +36,7 @@ export interface CodeLanguage {
     file_extension: string;
     created_at?: Date;
     icon?: UUID;
+    icon_url?: string;
 }
 
 export interface PatternCode {

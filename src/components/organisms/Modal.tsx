@@ -6,9 +6,10 @@ interface ModalProps {
   isOpen: boolean
   onClose: () => void
   children: React.ReactNode
+  maxWidth?: string
 }
 
-export default function Modal({ isOpen, onClose, children }: ModalProps) {
+export default function Modal({ isOpen, onClose, children, maxWidth }: ModalProps) {
     useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -25,7 +26,7 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
         className="absolute inset-0 bg-slate-900/40 backdrop-blur-md transition-opacity"
         onClick={onClose} 
       />
-      <div className="relative glass-card w-full max-w-md rounded-[2.5rem] overflow-hidden animate-in fade-in zoom-in duration-300">
+      <div className={`relative glass-card w-full ${maxWidth || 'max-w-md'} rounded-[2.5rem] overflow-hidden animate-in fade-in zoom-in duration-300`}>
 
         <button 
           onClick={onClose}

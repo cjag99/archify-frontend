@@ -13,7 +13,7 @@ export const useCodeLanguage = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchCodeLanguage = useCallback(async (id: string) => {
+    const fetchCodeLanguage = useCallback(async (id: string): Promise<CodeLanguage | null> => {
         setLoading(true);
         setError(null);
         setCodeLogo(null);
@@ -26,11 +26,13 @@ export const useCodeLanguage = () => {
                 const fetchedImage = await fetchImage(result.icon);
                 setCodeLogo(fetchedImage ?? null);
             }
+            return result;
         } catch (err) {
             setError(err instanceof Error ? err.message : "Unknown error");
             console.error("Fetch error:", err);
             setCodeLanguage(null);
             setCodeLogo(null);
+            return null;
         } finally {
             setLoading(false);
         }

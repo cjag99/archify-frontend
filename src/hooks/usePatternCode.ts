@@ -9,6 +9,7 @@ export const usePatternCode = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [codeSnippet, setCodeSnippet] = useState<CodeSnippetCreatePayload | null>(null);
+    const [patternCodes, setPatternCodes] = useState<import("../core/types/models").PatternCode[]>([]);
 
     const createCodeSnippet = useCallback(async (payload: CodeSnippetCreatePayload) => {
         if (!user) return;
@@ -46,5 +47,24 @@ export const usePatternCode = () => {
         }
     }, [user]);
 
-    return { codeSnippet, loading, error, createCodeSnippet, fetchCodeSnippet };
+    const fetchCodesByPatternId = useCallback(async (patternId: string) => {
+        if (!user) return;
+        Promise.resolve().then(() => {
+            setLoading(true);
+            setError(null);
+        });
+
+        try {
+            const result = await patternCodeService.getByPatternId(patternId);
+            setPatternCodes(result);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Unknown error");
+            console.error("Fetch codes error:", err);
+            setPatternCodes([]);
+        } finally {
+            setLoading(false);
+        }
+    }, [user]);
+
+    return { codeSnippet, patternCodes, loading, error, createCodeSnippet, fetchCodeSnippet, fetchCodesByPatternId };
 };

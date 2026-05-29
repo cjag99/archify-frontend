@@ -15,7 +15,6 @@ export const useImage = () => {
     const [error, setError] = useState<string | null>(null);
 
     const fetchImage = useCallback(async (id: UUID) => {
-        if (!user) return null;
         Promise.resolve().then(() => {
             setLoading(true);
             setError(null);
@@ -32,7 +31,7 @@ export const useImage = () => {
         } finally {
             setLoading(false);
         }
-    }, [user]);
+    }, []);
 
     const createImage = useCallback(async (file: File, usage_type: string) => {
         if (!user) return;

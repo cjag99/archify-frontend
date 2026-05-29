@@ -56,5 +56,25 @@ export const usePatterns = () => {
         };
     }, [fetchPatterns]);
 
-    return { patterns, loading, error, fetchPatterns, createPattern };
+    const fetchPatternById = useCallback(async (id: string, signal?: AbortSignal) => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const result = await patternService.getById(id);
+            return result;
+        } catch (err) {
+            if (err instanceof Error && err.name === "AbortError") {
+                return undefined;
+            }
+
+            setError(err instanceof Error ? err.message : "Unknown error");
+            console.error("Fetch by id error:", err);
+            return undefined;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    return { patterns, loading, error, fetchPatterns, fetchPatternById, createPattern };
 };

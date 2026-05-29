@@ -13,12 +13,13 @@ export interface SchemaCanvasProps {
   onNodesChange?: (nodes: any[]) => void;
   onEdgesChange?: (edges: any[]) => void;
   onConnect?: (connection: any) => void;
+  readonly?: boolean;
 }
 
 // En X6 v3, es obligatorio renderizar el PortalProvider para que los nodos de React funcionen
 const PortalProvider = getProvider();
 
-export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNodesChange, onEdgesChange, onConnect }: SchemaCanvasProps) {
+export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNodesChange, onEdgesChange, onConnect, readonly = false }: SchemaCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<Graph | null>(null);
 
@@ -78,7 +79,7 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
     graph.use(
       new Scroller({
         enabled: true,
-        pannable: true,
+        pannable: !readonly,
       })
     );
 
@@ -172,7 +173,16 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
         }
       }
     });
-  }, [nodes, nodeTypes]);
+
+    if (readonly) {
+      setTimeout(() => {
+        if (graphRef.current) {
+          graphRef.current.zoomToFit({ padding: 80, maxScale: 1 });
+          graphRef.current.centerContent();
+        }
+      }, 150);
+    }
+  }, [nodes, nodeTypes, readonly]);
 
   // Sincronizar Aristas
   useEffect(() => {
@@ -198,6 +208,11 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
     <>
       <PortalProvider />
       <div className="relative w-full h-full border border-slate-300 pointer-events-auto overflow-hidden">
+        <style>{`
+          .x6-graph-svg {
+            overflow: visible !important;
+          }
+        `}</style>
         {/* Contenedor principal */}
         <div ref={containerRef} className="w-full h-full" />
       </div>
