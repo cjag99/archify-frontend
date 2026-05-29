@@ -8,4 +8,4 @@ export type PatternCreatePayload = {
     image_id?: string | null;
 };
 
-export const patternService = new CrudService<Pattern, PatternCreatePayload>("/patterns");
+export const patternService = new CrudService<Pattern, PatternCreatePayload, Partial<PatternCreatePayload>>("/patterns");

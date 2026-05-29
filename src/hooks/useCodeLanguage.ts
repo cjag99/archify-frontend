@@ -5,7 +5,15 @@ import { useImage } from "@/hooks/useImage";
 import { CodeLanguage, ImageType } from "@/core/types/models";
 import { codeLanguageService } from "@/core/api/code-languages.service";
 
-export const useCodeLanguage = () => {
+interface UseCodeLanguageOptions {
+    autoFetch?: boolean;
+    logErrors?: boolean;
+}
+
+export const useCodeLanguage = ({
+    autoFetch = true,
+    logErrors = true,
+}: UseCodeLanguageOptions = {}) => {
     const { fetchImage } = useImage();
     const [codeLanguage, setCodeLanguage] = useState<CodeLanguage | null>(null);
     const [codeLanguages, setCodeLanguages] = useState<CodeLanguage[]>([]);
@@ -29,14 +37,16 @@ export const useCodeLanguage = () => {
             return result;
         } catch (err) {
             setError(err instanceof Error ? err.message : "Unknown error");
-            console.error("Fetch error:", err);
+            if (logErrors) {
+                console.error("Fetch error:", err);
+            }
             setCodeLanguage(null);
             setCodeLogo(null);
             return null;
         } finally {
             setLoading(false);
         }
-    }, [fetchImage]);
+    }, [fetchImage, logErrors]);
 
     const fetchCodeLanguages = useCallback(async () => {
         setLoading(true);
@@ -47,12 +57,14 @@ export const useCodeLanguage = () => {
             setCodeLanguages(Array.isArray(result) ? result : []);
         } catch (err) {
             setError(err instanceof Error ? err.message : "Unknown error");
-            console.error("Fetch error:", err);
+            if (logErrors) {
+                console.error("Fetch error:", err);
+            }
             setCodeLanguages([]);
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [logErrors]);
 
     const createCodeLanguage = useCallback(async (name: string, file_extension: string, icon: string) => {
         setLoading(true);
@@ -95,6 +107,11 @@ export const useCodeLanguage = () => {
         let isMounted = true;
 
         const loadCodeLanguages = async () => {
+            if (!autoFetch) {
+                setLoading(false);
+                return;
+            }
+
             await fetchCodeLanguages();
             if (!isMounted) {
                 return;
@@ -106,7 +123,7 @@ export const useCodeLanguage = () => {
         return () => {
             isMounted = false;
         };
-    }, [fetchCodeLanguages]);
+    }, [autoFetch, fetchCodeLanguages]);
 
     return {
         codeLanguage,

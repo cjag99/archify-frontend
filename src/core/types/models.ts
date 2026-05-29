@@ -18,6 +18,7 @@ export interface Architecture {
     description?: string;
     project_id: string;
     base_structure?: JSON;
+    enabled?: boolean;
     created_at?: string;
 }
 

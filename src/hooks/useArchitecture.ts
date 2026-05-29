@@ -55,6 +55,38 @@ export const useArchitecture = () => {
         }
     }, [fetchArchitectures]);
 
+    const updateArchitecture = useCallback(async (id: string, payload: Partial<ArchitectureCreatePayload>) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const result = await architectureService.update(id, payload);
+            setArchitecture(result);
+            await fetchArchitectures();
+            return result;
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Unknown error");
+            return null;
+        } finally {
+            setLoading(false);
+        }
+    }, [fetchArchitectures]);
+
+    const deleteArchitecture = useCallback(async (id: string) => {
+        setLoading(true);
+        setError(null);
+        try {
+            await architectureService.delete(id);
+            setArchitecture(null);
+            await fetchArchitectures();
+            return true;
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Unknown error");
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    }, [fetchArchitectures]);
+
     useEffect(() => {
         let isMounted = true;
         const loadArchitectures = async () => {
@@ -78,5 +110,7 @@ export const useArchitecture = () => {
         fetchArchitectures,
         fetchArchitecture,
         createArchitecture,
+        updateArchitecture,
+        deleteArchitecture,
     };
 };

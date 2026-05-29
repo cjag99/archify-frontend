@@ -32,7 +32,7 @@ export const PatternStep1: FC<PatternStep1Props> = ({
     });
   };
 
-  const canContinue = name.trim().length > 0 && description.trim().length > 0;
+  const canContinue = name.trim().length > 0 && description.trim().length > 0 && graphicType > 0;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">

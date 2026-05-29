@@ -41,6 +41,8 @@ interface ArchitectureStep2Props {
   architectureName: string;
   architectureDescription: string;
   enabled: boolean;
+  initialNodes?: CanvasNodeData[];
+  initialEdges?: CanvasEdgeData[];
   onBack: () => void;
   // ✨ Tipado actualizado con tus nuevos modelos limpios
   onFinish: (
@@ -67,12 +69,14 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
   architectureName,
   architectureDescription,
   enabled,
+  initialNodes = [],
+  initialEdges = [],
   onBack,
   onFinish,
 }) => {
   // 📦 Estados nativos puros de React (Adiós React Flow)
-  const [nodes, setNodes] = useState<CanvasNodeData[]>([]);
-  const [edges, setEdges] = useState<CanvasEdgeData[]>([]);
+  const [nodes, setNodes] = useState<CanvasNodeData[]>(initialNodes);
+  const [edges, setEdges] = useState<CanvasEdgeData[]>(initialEdges);
 
   // 1. Sincronizadores que se alimentan del ciclo interno de X6
   const handleNodesChange = useCallback((updatedNodes: CanvasNodeData[]) => {

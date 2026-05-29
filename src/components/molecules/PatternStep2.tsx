@@ -35,6 +35,11 @@ interface PatternStep2Props {
   patternName: string;
   patternDescription: string;
   graphicType: number;
+  mode?: "create" | "edit";
+  patternId?: string;
+  initialNodes?: CanvasNodeData[];
+  initialEdges?: CanvasEdgeData[];
+  initialImageId?: string | null;
   onBack: () => void;
   onFinish: (patternId: string) => void;
 }
@@ -43,18 +48,23 @@ export const PatternStep2: React.FC<PatternStep2Props> = ({
   patternName,
   patternDescription,
   graphicType,
+  mode = "create",
+  patternId,
+  initialNodes = [],
+  initialEdges = [],
+  initialImageId = null,
   onBack,
   onFinish,
 }) => {
  
-  const [nodes, setNodes] = useState<CanvasNodeData[]>([]);
-  const [edges, setEdges] = useState<CanvasEdgeData[]>([]);
+  const [nodes, setNodes] = useState<CanvasNodeData[]>(initialNodes);
+  const [edges, setEdges] = useState<CanvasEdgeData[]>(initialEdges);
   const [image, setImage] = useState<ImageType | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   
   const { createImage } = useImage();
-  const { createPattern } = usePatterns();
+  const { createPattern, updatePattern } = usePatterns();
 
   const patternNodeTypes = {
     user: UserNode,
@@ -153,7 +163,7 @@ export const PatternStep2: React.FC<PatternStep2Props> = ({
 
   const canSubmit =
     graphicType === 1
-      ? Boolean(image)
+      ? Boolean(image || initialImageId)
       : graphicType === 2
       ? nodes.length > 0
       : true;
@@ -177,18 +187,22 @@ export const PatternStep2: React.FC<PatternStep2Props> = ({
         nodes,
         edges,
       } as unknown as JSON,
-      image_id: image ? image.id : null,
+      image_id: image ? image.id : initialImageId,
     };
 
     try {
-      const createdPattern = await createPattern(finalPayload);
-      if (!createdPattern?.id) {
-        throw new Error("El patrón se creó pero no se recibió el ID.");
+      const savedPattern =
+        mode === "edit" && patternId
+          ? await updatePattern(patternId, finalPayload)
+          : await createPattern(finalPayload);
+
+      if (mode !== "edit" && !savedPattern?.id) {
+        throw new Error("El patrón se guardó pero no se recibió el ID.");
       }
-      onFinish(createdPattern.id);
+      onFinish(savedPattern?.id || patternId || "");
     } catch (err) {
-      console.error("Pattern creation failed:", err);
-      setUploadError("No se pudo crear el patrón. Intenta de nuevo.");
+      console.error("Pattern save failed:", err);
+      setUploadError("No se pudo guardar el patrón. Intenta de nuevo.");
     }
   };
 
@@ -197,6 +211,9 @@ export const PatternStep2: React.FC<PatternStep2Props> = ({
       {graphicType === 1 ? (
         <>
           <FileInput label="Graphic" onChange={uploadImage} accept="image/*" />
+          {initialImageId && !image && (
+            <p className="text-sm text-slate-500">La imagen actual se mantendrá si no subes una nueva.</p>
+          )}
           {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
           {isUploadingImage && <p className="text-sm text-gray-500">Subiendo imagen...</p>}
         </>

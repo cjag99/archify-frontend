@@ -1,15 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { usePatterns } from "@/hooks/usePattern";
 import { usePatternCode } from "@/hooks/usePatternCode";
 import { useCodeLanguage } from "@/hooks/useCodeLanguage";
 import { useImage } from "@/hooks/useImage";
 import { useAuth } from "@/core/context/AuthContext";
 import { BackLink } from "@/components/atoms/BackLink";
+import { Button } from "@/components/atoms/Button";
 import { Pattern, ImageType, CodeLanguage } from "@/core/types/models";
 import { ROUTES } from "@/lib/routes";
 import SchemaCanvas from "@/components/organisms/SchemaCanvas";
+import Modal from "@/components/organisms/Modal";
+import { DeleteModal } from "@/components/organisms/DeleteModal";
+import { PatternStep1 } from "@/components/molecules/PatternStep1";
+import { PatternStep2 } from "@/components/molecules/PatternStep2";
 import { UserNode } from "@/components/molecules/diagramNodes/UserNode";
 import { SingletonNode } from "@/components/molecules/diagramNodes/SingletonNode";
 import Image from "next/image";
@@ -42,9 +48,14 @@ function LanguageLogo({ src, alt, size = 20 }: { src: string; alt: string; size?
 }
 
 export function PatternView({ patternId }: PatternViewProps) {
-  const { loading: authLoading } = useAuth();
-  const { codeLanguages, fetchCodeLanguage } = useCodeLanguage();
-  const { fetchPatternById } = usePatterns();
+  const router = useRouter();
+  const { loading: authLoading, user } = useAuth();
+  const canLoadCodeLanguages = Boolean(user?.is_authorized || user?.role === "admin");
+  const { codeLanguages, fetchCodeLanguage } = useCodeLanguage({
+    autoFetch: canLoadCodeLanguages,
+    logErrors: canLoadCodeLanguages,
+  });
+  const { fetchPatternById, deletePattern } = usePatterns();
   const { patternCodes, fetchCodesByPatternId, loading: codesLoading } = usePatternCode();
   const { fetchImage } = useImage();
   const [pattern, setPattern] = useState<Pattern | null>(null);
@@ -54,6 +65,9 @@ export function PatternView({ patternId }: PatternViewProps) {
   const [selectedSnippetIndex, setSelectedSnippetIndex] = useState<number>(0);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [languageImages, setLanguageImages] = useState<Record<string, string>>({});
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editPayload, setEditPayload] = useState<{ name: string; description: string; graphicType: number } | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -110,14 +124,14 @@ export function PatternView({ patternId }: PatternViewProps) {
       }
     };
 
-    if (!authLoading && patternCodes.length > 0) {
+    if (!authLoading && canLoadCodeLanguages && patternCodes.length > 0) {
       void resolveLogos();
     }
 
     return () => {
       active = false;
     };
-  }, [patternCodes, codeLanguages, fetchCodeLanguage, fetchImage, authLoading]);
+  }, [patternCodes, codeLanguages, fetchCodeLanguage, fetchImage, authLoading, canLoadCodeLanguages]);
 
   const getLogoUrl = (lang: CodeLanguage | null | undefined) =>
     lang ? (lang.icon_url ?? languageImages[lang.id]) : undefined;
@@ -125,19 +139,88 @@ export function PatternView({ patternId }: PatternViewProps) {
   const selectedSnippet = patternCodes[selectedSnippetIndex];
   const selectedLang = selectedSnippet ? codeLanguages.find(l => l.id === selectedSnippet.code_id) : null;
   const selectedLogoUrl = getLogoUrl(selectedLang);
+  const patternSchema = pattern?.base_structure as { nodes?: any[]; edges?: any[] } | undefined;
+  const getPatternGraphicType = () => pattern?.image_id ? 1 : patternSchema ? 2 : 0;
+
+  if (isEditing && pattern) {
+    const currentEditPayload = editPayload ?? {
+      name: pattern.name,
+      description: pattern.description || "",
+      graphicType: getPatternGraphicType(),
+    };
+
+    return (
+      <div className="min-h-screen bg-slate-50/50 p-6 md:p-12">
+        <div className="max-w-5xl mx-auto space-y-8">
+          <BackLink href={ROUTES.patterns} label="Volver a patterns" />
+          <div className="glass-card rounded-3xl p-8 border border-slate-100">
+            {!editPayload ? (
+              <PatternStep1
+                initialName={currentEditPayload.name}
+                initialDescription={currentEditPayload.description}
+                initialGraphicType={currentEditPayload.graphicType}
+                onNext={(payload) => setEditPayload(payload)}
+              />
+            ) : (
+              <PatternStep2
+                mode="edit"
+                patternId={patternId}
+                patternName={currentEditPayload.name}
+                patternDescription={currentEditPayload.description}
+                graphicType={currentEditPayload.graphicType}
+                initialNodes={patternSchema?.nodes || []}
+                initialEdges={patternSchema?.edges || []}
+                initialImageId={pattern.image_id || null}
+                onBack={() => setEditPayload(null)}
+                onFinish={() => {
+                  setIsEditing(false);
+                  setEditPayload(null);
+                  void fetchPatternById(patternId).then((data) => setPattern(data || null));
+                }}
+              />
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50/50 p-6 md:p-12">
       <div className="max-w-5xl mx-auto space-y-8">
         <BackLink href={ROUTES.patterns} label="Volver a patterns" />
+        <Modal isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)}>
+          <DeleteModal
+            id={patternId}
+            onClose={() => setIsDeleteOpen(false)}
+            onConfirm={async () => {
+              const deleted = await deletePattern(patternId);
+              if (deleted) {
+                router.push(ROUTES.patterns);
+              }
+            }}
+          />
+        </Modal>
 
         <div className="space-y-12">
-          <div className="space-y-4">
-            <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
-              {loading ? "Loading..." : pattern?.name || "Pattern Details"}
-            </h1>
-            {pattern?.description && (
-              <p className="text-xl text-slate-500 max-w-3xl leading-relaxed">{pattern.description}</p>
+          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+            <div className="space-y-4">
+              <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
+                {loading ? "Loading..." : pattern?.name || "Pattern Details"}
+              </h1>
+              {pattern?.description && (
+                <p className="text-xl text-slate-500 max-w-3xl leading-relaxed">{pattern.description}</p>
+              )}
+            </div>
+            {!loading && pattern && (
+              <div className="flex gap-3">
+                <Button variant="secondary" onClick={() => setIsEditing(true)}>
+                  Edit
+                </Button>
+                <Button variant="danger" onClick={() => setIsDeleteOpen(true)}>
+                  Delete
+                </Button>
+              </div>
             )}
           </div>
           

@@ -1,10 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useArchitecture } from "@/hooks/useArchitecture";
 import { BackLink } from "@/components/atoms/BackLink";
+import { Button } from "@/components/atoms/Button";
 import { ROUTES } from "@/lib/routes";
 import SchemaCanvas from "@/components/organisms/SchemaCanvas";
+import Modal from "@/components/organisms/Modal";
+import { DeleteModal } from "@/components/organisms/DeleteModal";
+import { ArchitectureStep1 } from "@/components/molecules/ArchitectureStep1";
+import { ArchitectureStep2 } from "@/components/molecules/ArchitectureStep2";
 import { UserNode } from "@/components/molecules/diagramNodes/UserNode";
 import { MVCViewNode } from "@/components/molecules/diagramNodes/MVCViewNode";
 import { MVCModelNode } from "@/components/molecules/diagramNodes/MVCModelNode";
@@ -50,7 +56,17 @@ type ArchitectureSchema = {
 };
 
 export function ArchitectureView({ architectureId }: ArchitectureViewProps) {
-  const { architecture, fetchArchitecture, loading } = useArchitecture();
+  const router = useRouter();
+  const {
+    architecture,
+    fetchArchitecture,
+    updateArchitecture,
+    deleteArchitecture,
+    loading,
+  } = useArchitecture();
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editPayload, setEditPayload] = useState<{ name: string; description: string; enabled: boolean } | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -71,20 +87,88 @@ export function ArchitectureView({ architectureId }: ArchitectureViewProps) {
   const schema = architecture?.base_structure as ArchitectureSchema | undefined;
   const hasSchema = Boolean(schema?.nodes?.length || schema?.edges?.length);
 
+  if (isEditing && architecture) {
+    const currentEditPayload = editPayload ?? {
+      name: architecture.name,
+      description: architecture.description || "",
+      enabled: architecture.enabled ?? true,
+    };
+
+    return (
+      <div className="min-h-screen bg-slate-50/50 p-6 md:p-12">
+        <div className="max-w-5xl mx-auto space-y-8">
+          <BackLink href={ROUTES.architectures} label="Volver a architectures" />
+          <div className="glass-card rounded-3xl p-8 border border-slate-100">
+            {!editPayload ? (
+              <ArchitectureStep1
+                initialName={currentEditPayload.name}
+                initialDescription={currentEditPayload.description}
+                initialEnabled={currentEditPayload.enabled}
+                onNext={(payload) => setEditPayload(payload)}
+              />
+            ) : (
+              <ArchitectureStep2
+                architectureName={currentEditPayload.name}
+                architectureDescription={currentEditPayload.description}
+                enabled={currentEditPayload.enabled}
+                initialNodes={schema?.nodes || []}
+                initialEdges={schema?.edges || []}
+                onBack={() => setEditPayload(null)}
+                onFinish={async (updatedSchema, payload) => {
+                  await updateArchitecture(architectureId, {
+                    ...payload,
+                    base_structure: updatedSchema as unknown as JSON,
+                  });
+                  await fetchArchitecture(architectureId);
+                  setIsEditing(false);
+                  setEditPayload(null);
+                }}
+              />
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50/50 p-6 md:p-12">
       <div className="max-w-5xl mx-auto space-y-8">
         <BackLink href={ROUTES.architectures} label="Volver a architectures" />
+        <Modal isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)}>
+          <DeleteModal
+            id={architectureId}
+            onClose={() => setIsDeleteOpen(false)}
+            onConfirm={async () => {
+              const deleted = await deleteArchitecture(architectureId);
+              if (deleted) {
+                router.push(ROUTES.architectures);
+              }
+            }}
+          />
+        </Modal>
 
         <div className="space-y-12">
-          <div className="space-y-4">
-            <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
-              {loading ? "Loading..." : architecture?.name || "Architecture Details"}
-            </h1>
-            {architecture?.description && (
-              <p className="text-xl text-slate-500 max-w-3xl leading-relaxed">
-                {architecture.description}
-              </p>
+          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+            <div className="space-y-4">
+              <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
+                {loading ? "Loading..." : architecture?.name || "Architecture Details"}
+              </h1>
+              {architecture?.description && (
+                <p className="text-xl text-slate-500 max-w-3xl leading-relaxed">
+                  {architecture.description}
+                </p>
+              )}
+            </div>
+            {!loading && architecture && (
+              <div className="flex gap-3">
+                <Button variant="secondary" onClick={() => setIsEditing(true)}>
+                  Edit
+                </Button>
+                <Button variant="danger" onClick={() => setIsDeleteOpen(true)}>
+                  Delete
+                </Button>
+              </div>
             )}
           </div>
 

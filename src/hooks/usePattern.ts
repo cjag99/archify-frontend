@@ -46,6 +46,45 @@ export const usePatterns = () => {
         }
     }, []);
 
+    const updatePattern = useCallback(async (id: string, payload: Partial<PatternCreatePayload>): Promise<Pattern | undefined> => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const updatedPattern = await patternService.update(id, payload);
+            if (updatedPattern?.id) {
+                setPatterns((prev) => prev.map((pattern) => pattern.id === updatedPattern.id ? updatedPattern : pattern));
+                return updatedPattern;
+            }
+
+            setPatterns((prev) => prev.map((pattern) => pattern.id === id ? { ...pattern, ...payload } as Pattern : pattern));
+            return { id, ...payload } as Pattern;
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Unknown error");
+            console.error("Update error:", err);
+            return undefined;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    const deletePattern = useCallback(async (id: string): Promise<boolean> => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            await patternService.delete(id);
+            setPatterns((prev) => prev.filter((pattern) => pattern.id !== id));
+            return true;
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Unknown error");
+            console.error("Delete error:", err);
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
     useEffect(() => {
         const controller = new AbortController();
         // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -76,5 +115,5 @@ export const usePatterns = () => {
         }
     }, []);
 
-    return { patterns, loading, error, fetchPatterns, fetchPatternById, createPattern };
+    return { patterns, loading, error, fetchPatterns, fetchPatternById, createPattern, updatePattern, deletePattern };
 };
