@@ -73,10 +73,10 @@ export default function NewResourcePage() {
         name: payload?.name || "Untitled Architecture",
         description: payload?.description || "",
         enabled: payload?.enabled ?? true,
-        schema: schema as unknown as JSON,
+        base_structure: schema as unknown as JSON,
       };
 
-      createArchitecture(finalPayload);
+      void createArchitecture(finalPayload);
     };
 
     const renderArchitectureSteps = () => {

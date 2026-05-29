@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { Architecture } from "@/core/types/models";
-import { architectureService } from "@/core/api/architectures.service";
+import { architectureService, type ArchitectureCreatePayload } from "@/core/api/architectures.service";
 
 export const useArchitecture = () => {
     const [architectures, setArchitectures] = useState<Architecture[]>([]);
@@ -39,15 +39,17 @@ export const useArchitecture = () => {
         }
     }, []);
 
-    const createArchitecture = useCallback(async (payload: { name: string; description?: string; enabled?: boolean; schema: JSON }) => {
+    const createArchitecture = useCallback(async (payload: ArchitectureCreatePayload) => {
         setLoading(true);
         setError(null);
         try {
             const result = await architectureService.create(payload);
             setArchitecture(result);
             await fetchArchitectures();
+            return result;
         } catch (err) {
             setError(err instanceof Error ? err.message : "Unknown error");
+            return null;
         } finally {
             setLoading(false);
         }

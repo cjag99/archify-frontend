@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import { ProtectedRoute } from "@/components/organisms/ProtectedRoute";
 import { PatternView } from "@/components/organisms/PatternView";
+import { ArchitectureView } from "@/components/organisms/ArchitectureView";
 import { BackLink } from "@/components/atoms/BackLink";
 import { dashboardResourceList } from "@/lib/routes";
 
@@ -29,7 +30,15 @@ export default function ResourceDetailPage() {
         );
     }
 
-    // Placeholder for projects and architectures that don't have a detailed view component yet
+    if (resource === "architectures") {
+        return (
+            <ProtectedRoute>
+                <ArchitectureView architectureId={id} />
+            </ProtectedRoute>
+        );
+    }
+
+    // Placeholder for projects that don't have a detailed view component yet
     return (
         <ProtectedRoute>
             <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6">

@@ -26,7 +26,7 @@ const patternNodeTypes = {
 
 function LanguageLogo({ src, alt, size = 20 }: { src: string; alt: string; size?: number }) {
   return (
-    <img
+    <Image
       src={src}
       alt={alt}
       width={size}
@@ -146,7 +146,7 @@ export function PatternView({ patternId }: PatternViewProps) {
               <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
                 Schema
               </h3>
-              <div className="w-full h-[600px] border border-slate-200 rounded-[2.5rem] shadow-sm overflow-hidden bg-white relative pointer-events-none">
+              <div className="w-full h-150 border border-slate-200 rounded-[2.5rem] shadow-sm overflow-hidden bg-white relative pointer-events-none">
                 <SchemaCanvas
                   nodes={pattern.base_structure.nodes || []}
                   edges={pattern.base_structure.edges || []}
@@ -162,7 +162,7 @@ export function PatternView({ patternId }: PatternViewProps) {
               <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
                 Graphic Representation
               </h3>
-              <div className="w-full relative h-[400px] md:h-[600px] rounded-[2.5rem] shadow-sm overflow-hidden border border-slate-200 bg-white">
+              <div className="w-full relative h-100 md:h-150 rounded-[2.5rem] shadow-sm overflow-hidden border border-slate-200 bg-white">
                 <Image src={imageObj.url} alt={pattern.name} fill className="object-contain" unoptimized />
               </div>
             </div>
@@ -226,7 +226,7 @@ export function PatternView({ patternId }: PatternViewProps) {
               <p className="text-slate-400">Loading code snippets...</p>
             ) : selectedSnippet ? (
               <div className="grid gap-6">
-                <div className="p-8 bg-slate-900 rounded-[2rem] shadow-md border border-slate-800 relative group overflow-hidden">
+                <div className="p-8 bg-slate-900 rounded-4xl shadow-md border border-slate-800 relative group overflow-hidden">
                   <div className="absolute top-0 right-0 p-4 opacity-50">
                     <svg className="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
                   </div>
@@ -240,7 +240,7 @@ export function PatternView({ patternId }: PatternViewProps) {
                 </div>
               </div>
             ) : (
-              <div className="p-8 bg-white border border-slate-200 rounded-[2rem] text-center">
+              <div className="p-8 bg-white border border-slate-200 rounded-4xl text-center">
                 <p className="text-slate-500 font-medium text-lg">No code snippets available for this pattern yet.</p>
               </div>
             )}

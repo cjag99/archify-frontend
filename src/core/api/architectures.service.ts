@@ -8,4 +8,4 @@ export type ArchitectureCreatePayload = {
     base_structure?: JSON;
 };
 
-export const architectureService = new CrudService<Architecture>("/architectures");
+export const architectureService = new CrudService<Architecture, ArchitectureCreatePayload>("/architectures");
