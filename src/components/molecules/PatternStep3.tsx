@@ -34,8 +34,15 @@ export const PatternStep3: React.FC<PatternStep3Props> = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSubmissionMessage(null);
+  
+    const payloadEstricto = {
+    pattern_id: String(patternId).trim(),
+    code_id: String(selectedLanguage).trim(),
+    code_snippet: { code_snippet: codeSnippet } 
+  };
 
-    if (!selectedLanguage) {
+
+    if (!selectedLanguage  || selectedLanguage === "") {
       setSubmissionMessage("Selecciona un lenguaje antes de continuar.");
       return;
     }
@@ -44,11 +51,11 @@ export const PatternStep3: React.FC<PatternStep3Props> = ({
       setSubmissionMessage("Escribe un snippet de código antes de enviar.");
       return;
     }
-
+   
     await createCodeSnippet({
       pattern_id: patternId,
       code_id: selectedLanguage,
-    code_snippet: codeSnippet as unknown as JSON,
+      code_snippet: {"code_snippet": codeSnippet} as unknown as JSON,
     });
 
     if (!createError) {
@@ -79,10 +86,13 @@ export const PatternStep3: React.FC<PatternStep3Props> = ({
               label="Language"
               value={selectedLanguage}
               onChange={(event) => setSelectedLanguage(event.target.value)}
-              options={(Array.isArray(codeLanguages) ? codeLanguages : []).map((language) => ({
-                value: language.id,
-                label: language.name,
-              }))}
+              options={[
+                { value: "", label: "Selecciona un lenguaje..." },
+                ...(Array.isArray(codeLanguages) ? codeLanguages : []).map((language) => ({
+                  value: language.id,
+                  label: language.name,
+                }))
+              ]}
             />
             {languagesLoading && <p className="text-sm text-slate-500">Cargando lenguajes...</p>}
             {languagesError && <p className="text-sm text-red-600">{languagesError}</p>}

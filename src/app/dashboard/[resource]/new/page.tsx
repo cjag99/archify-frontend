@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useParams, usePathname } from "next/navigation";
-import { Node, Edge } from "@xyflow/react";
 import { ProtectedRoute } from "@/components/organisms/ProtectedRoute";
 import { PatternStep1 } from "@/components/molecules/PatternStep1";
 import { PatternStep2 } from "@/components/molecules/PatternStep2";
@@ -11,7 +10,18 @@ import { ArchitectureStep1 } from "@/components/molecules/ArchitectureStep1";
 import { ArchitectureStep2 } from "@/components/molecules/ArchitectureStep2";
 import { Button } from "@/components/atoms/Button";
 import { useArchitecture } from "@/hooks/useArchitecture";
+interface CanvasNodeData {
+  id: string;
+  type?: string;
+  position?: { x: number; y: number };
+  data?: Record<string, any>;
+}
 
+interface CanvasEdgeData {
+  id: string;
+  source: string;
+  target: string;
+}
 interface ArchitecturePayload {
     name: string;
     description: string;
@@ -54,7 +64,7 @@ export default function NewResourcePage() {
     const handleArchitectureBack = () => setStep(1);
 
     const handleArchitectureFinish = (
-      schema: { nodes: Node[]; edges: Edge[] },
+      schema: { nodes: CanvasNodeData[]; edges: CanvasEdgeData[] },
       payload: ArchitecturePayload | null
     ) => {
       const finalPayload = {

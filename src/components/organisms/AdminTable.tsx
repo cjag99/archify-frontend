@@ -11,8 +11,12 @@ import { DeleteModal } from "./DeleteModal";
 
 export const AdminTable: FC = () => {
     const [modalType, setModalType] = useState<string | null>(null);
+    // 💡 Estado extra para saber qué item estamos editando/borrando sin duplicar componentes
+    const [selectedItem, setSelectedItem] = useState<Record<string, unknown> | null>(null);
+    
     const { tablename } = useParams();
     const { data, loading, error, currentTable, dropData, refreshData } = useAdminTable(tablename as string);
+    
     let columns: string[] = [];
     type TableRow = { item: Record<string, unknown>; values: unknown[] };
     let rows: TableRow[] = [];
@@ -26,10 +30,18 @@ export const AdminTable: FC = () => {
         );
     }
 
-    const closeModal = () => setModalType(null);
-    const singularTable = currentTable ? currentTable.toLowerCase().replace(/s$/, "") : "";
+    const closeModal = () => {
+        setModalType(null);
+        setSelectedItem(null);
+    };
+
+    // 💡 Normalizamos reemplazando guiones bajos por guiones medios para curarnos en salud
+    const singularTable = currentTable 
+        ? currentTable.toLowerCase().replace(/s$/, "").replace("_", "-") 
+        : "";
     
     if (error) return <EmptyTable />;
+    
     if (!data || data.length === 0) {
         return (
             <div className="p-8 max-w-7xl mx-auto">
@@ -45,7 +57,7 @@ export const AdminTable: FC = () => {
                 </div>
                 <EmptyTable 
                     label={singularTable} 
-                    onClick={() => setModalType(singularTable)} 
+                    onClick={() => setModalType(`${singularTable}-create`)} 
                 />
             </div>
         );
@@ -68,28 +80,39 @@ export const AdminTable: FC = () => {
                         View and manage {currentTable} records in the system.
                     </p>
                 </div>
-                <>
+                
                 <Button
-                    onClick={() =>setModalType(`${singularTable}-create`)}
+                    onClick={() => setModalType(`${singularTable}-create`)}
                     variant="success"
                     className="flex items-center gap-2"
                 >
                     <Plus className="w-5 h-5" />
-                    New {singularTable}
+                    New {singularTable.replace("-", " ")}
                 </Button>
-                <Modal isOpen={modalType !== null} onClose={closeModal}>
-                    {modalType === `code-language-create` && (
-                        <CodeLanguageForm
-                            onCreated={async () => {
-                                await refreshData();
-                                closeModal();
-                            }}
-                        />
-                    )}
-                    </Modal>
-                </>
-                
             </div>
+
+            {/* ✨ ÚNICO CONTENEDOR DE MODALES GLOBAL (Fuera de las tablas) */}
+            <Modal isOpen={modalType !== null} onClose={closeModal}>
+                {modalType === "code-language-create" && (
+                    <CodeLanguageForm
+                        onCreated={async () => {
+                            await refreshData();
+                            closeModal();
+                        }}
+                    />
+                )}
+                
+                {modalType === `${singularTable}-delete` && selectedItem && (
+                    <DeleteModal
+                        id={String(selectedItem.id)}
+                        onConfirm={async () => {
+                            await dropData(selectedItem.id as string | number);
+                            closeModal();
+                        }}
+                        onClose={closeModal}
+                    />
+                )}
+            </Modal>
 
             <div className="overflow-hidden glass-card rounded-3xl">
                 <div className="overflow-x-auto">
@@ -110,31 +133,28 @@ export const AdminTable: FC = () => {
                                         <td key={j} className="px-6 py-4 text-sm text-slate-600 font-medium">
                                             {j === row.values.length - 1 ? (
                                                 <div className="flex items-center justify-between gap-4">
-                                                    <span className="truncate max-w-37.5">{cell === null || cell === undefined ? "-" : String(cell)}</span>
+                                                    <span className="truncate max-w-37.5">
+                                                        {cell === null || cell === undefined ? "-" : String(cell)}
+                                                    </span>
                                                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                                        <>
                                                         <button 
-                                                            onClick={() => setModalType(`${singularTable}-edit`)} 
+                                                            onClick={() => {
+                                                                setSelectedItem(row.item);
+                                                                setModalType(`${singularTable}-edit`);
+                                                            }} 
                                                             className="text-xs font-semibold bg-slate-50 hover:bg-brand/10 hover:text-brand text-slate-600 px-3 py-1.5 rounded-lg transition-all active:scale-95 cursor-pointer"
                                                         >
                                                             Edit
-                                                       </button>
+                                                        </button>
                                                         <button 
-                                                            onClick={() => setModalType(`${singularTable}-delete`)} 
+                                                            onClick={() => {
+                                                                setSelectedItem(row.item); // Guardamos el elemento que queremos borrar
+                                                                setModalType(`${singularTable}-delete`);
+                                                            }} 
                                                             className="text-xs font-semibold bg-red-50 hover:bg-red-500 hover:text-white text-red-600 px-3 py-1.5 rounded-lg transition-all active:scale-95 cursor-pointer"
                                                         >
                                                             Delete
                                                         </button>
-                                                        <Modal isOpen={modalType !== null} onClose={closeModal}>
-                                                            {modalType === `${singularTable}-delete` && (
-                                                                <DeleteModal
-                                                                    id={String(row.item.id)}
-                                                                    onConfirm={() => dropData(row.item.id as string | number)}
-                                                                    onClose={closeModal}
-                                                                />
-                                                            )}
-                                                        </Modal>
-                                                        </>
                                                     </div>
                                                 </div>
                                             ) : (
@@ -152,4 +172,4 @@ export const AdminTable: FC = () => {
             </div>
         </div>
     );
-}
+};

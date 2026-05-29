@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-import { NodeProps } from "@xyflow/react";
+import { Node } from "@antv/x6";
 import { Box } from "lucide-react";
 import { DiagramNodeCard } from "./DiagramNodeCard";
 
-export const CleanEntityNode: React.FC<NodeProps> = (props) => (
+export const CleanEntityNode: React.FC<{ node: Node }> = ({ node }) => (
   <DiagramNodeCard
-    {...props}
+    node={node}
     icon={<Box size={24} className="text-brand" />}
     defaultLabel="Entity"
     defaultDescription="Representa los objetos de dominio y las reglas centrales de Clean Architecture."

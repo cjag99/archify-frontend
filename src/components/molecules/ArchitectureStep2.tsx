@@ -1,16 +1,6 @@
 "use client";
 
-import React, { useCallback } from "react";
-import {
-  Connection,
-  Node,
-  Edge,
-  addEdge,
-  reconnectEdge,
-  useNodesState,
-  useEdgesState,
-  OnReconnect,
-} from "@xyflow/react";
+import React, { useCallback, useState } from "react";
 import SchemaCanvas from "@/components/organisms/SchemaCanvas";
 import NodeSidebar from "@/components/organisms/NodeSidebar";
 import { Button } from "@/components/atoms/Button";
@@ -27,6 +17,38 @@ import { HexagonalApplicationNode } from "./diagramNodes/HexagonalApplicationNod
 import { HexagonalAdapterNode } from "./diagramNodes/HexagonalAdapterNode";
 import { UserNode } from "./diagramNodes/UserNode";
 
+// Interfaces de Dominio unificadas con tu nuevo SchemaCanvas
+interface CanvasNodeData {
+  id: string;
+  type?: string;
+  position?: { x: number; y: number };
+  data?: Record<string, unknown>;
+}
+
+interface CanvasEdgeData {
+  id: string;
+  source: string;
+  target: string;
+}
+
+interface ConnectionPayload {
+  id: string;
+  source: string;
+  target: string;
+}
+
+interface ArchitectureStep2Props {
+  architectureName: string;
+  architectureDescription: string;
+  enabled: boolean;
+  onBack: () => void;
+  // ✨ Tipado actualizado con tus nuevos modelos limpios
+  onFinish: (
+    schema: { nodes: CanvasNodeData[]; edges: CanvasEdgeData[] },
+    payload: { name: string; description: string; enabled: boolean }
+  ) => void;
+}
+
 const architectureNodeTypes = {
   user: UserNode,
   "mvc-view": MVCViewNode,
@@ -41,17 +63,6 @@ const architectureNodeTypes = {
   "hex-adapter": HexagonalAdapterNode,
 };
 
-interface ArchitectureStep2Props {
-  architectureName: string;
-  architectureDescription: string;
-  enabled: boolean;
-  onBack: () => void;
-  onFinish: (
-    schema: { nodes: Node[]; edges: Edge[] },
-    payload: { name: string; description: string; enabled: boolean }
-  ) => void;
-}
-
 export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
   architectureName,
   architectureDescription,
@@ -59,27 +70,35 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
   onBack,
   onFinish,
 }) => {
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  // 📦 Estados nativos puros de React (Adiós React Flow)
+  const [nodes, setNodes] = useState<CanvasNodeData[]>([]);
+  const [edges, setEdges] = useState<CanvasEdgeData[]>([]);
 
-  const handleAddNode = useCallback(
-    (type: string, label: string) => {
-      const id = crypto.randomUUID();
-      setNodes((current) =>
-        current.concat({
-          id,
-          type,
-          position: {
-            x: 220 + Math.random() * 120,
-            y: 180 + Math.random() * 120,
-          },
-          data: { label },
-        })
-      );
-    },
-    [setNodes]
-  );
+  // 1. Sincronizadores que se alimentan del ciclo interno de X6
+  const handleNodesChange = useCallback((updatedNodes: CanvasNodeData[]) => {
+    setNodes(updatedNodes);
+  }, []);
 
+  const handleEdgesChange = useCallback((updatedEdges: CanvasEdgeData[]) => {
+    setEdges(updatedEdges);
+  }, []);
+
+  // 2. Insertar componentes mediante click manual directo en la sidebar
+  const handleAddNode = useCallback((type: string, label: string) => {
+    const id = crypto.randomUUID();
+    const newNode: CanvasNodeData = {
+      id,
+      type,
+      position: {
+        x: 220 + Math.random() * 120,
+        y: 180 + Math.random() * 120,
+      },
+      data: { label },
+    };
+    setNodes((current) => current.concat(newNode));
+  }, []);
+
+  // 3. Mecanismo de arrastre (Drag & Drop) relativo al lienzo contenedor
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
@@ -88,38 +107,45 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
   const onDrop = useCallback(
     (event: React.DragEvent<HTMLDivElement>) => {
       event.preventDefault();
-      const type = event.dataTransfer.getData("application/reactflow");
+      const type = event.dataTransfer.getData("application/reactflow") || event.dataTransfer.getData("text/plain");
       if (!type) return;
 
       const item = architectureList.find((node) => node.type === type);
       const label = item ? item.label : "Component";
-      const position = {
-        x: event.clientX - 120,
-        y: event.clientY - 120,
-      };
+
+      // Coordenadas calculadas en base a la bounding box para evitar desvíos en el canvas de X6
+      const rect = event.currentTarget.getBoundingClientRect();
+      const clientX = event.clientX - rect.left;
+      const clientY = event.clientY - rect.top;
 
       const id = crypto.randomUUID();
-      setNodes((current) =>
-        current.concat({
-          id,
-          type,
-          position,
-          data: { label },
-        })
-      );
+      const newNode: CanvasNodeData = {
+        id,
+        type,
+        position: { x: clientX - 48, y: clientY - 48 }, // Centramos respecto al ratón
+        data: { label },
+      };
+
+      setNodes((current) => current.concat(newNode));
     },
-    [setNodes]
+    []
   );
 
-  const onConnect = useCallback(
-    (connection: Connection) => setEdges((current) => addEdge(connection, current)),
-    [setEdges]
-  );
+  // 4. Orquestación de cables reactivos simplificados (Manhattan inteligente de X6)
+  const onConnect = useCallback((connection: ConnectionPayload) => {
+    setEdges((currentEdges) => {
+      const exists = currentEdges.some(
+        (e) => e.source === connection.source && e.target === connection.target
+      );
+      if (exists) return currentEdges;
 
-  const onReconnect = useCallback<OnReconnect>(
-    (oldEdge, connection) => setEdges((current) => reconnectEdge(oldEdge, connection, current)),
-    [setEdges]
-  );
+      return currentEdges.concat({
+        id: connection.id || `edge-${crypto.randomUUID()}`,
+        source: connection.source,
+        target: connection.target,
+      });
+    });
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -148,7 +174,7 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
         />
 
         <div
-          className="grow rounded-3xl border border-slate-200 bg-white shadow-sm"
+          className="grow rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden"
           onDragOver={onDragOver}
           onDrop={onDrop}
         >
@@ -156,10 +182,9 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
             nodes={nodes}
             edges={edges}
             nodeTypes={architectureNodeTypes}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
+            onNodesChange={handleNodesChange}
+            onEdgesChange={handleEdgesChange}
             onConnect={onConnect}
-            onReconnect={onReconnect}
           />
         </div>
       </div>
