@@ -17,15 +17,15 @@ export const Button = ({
 }: ButtonProps) => {
   
 
-  const baseStyles = "inline-flex items-center justify-center px-4 py-3 rounded-lg font-semibold transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:active:scale-100 disabled:cursor-not-allowed";
+  const baseStyles = "inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand/30";
   
 
   const variants = {
-    primary: "refraction-gradient-hover text-white",
-    secondary: "bg-slate-100 text-slate-900 hover:bg-slate-200",
-    outline: "border-2 border-slate-200 text-slate-600 hover:border-brand hover:text-brand transition-colors",
-    success: "success-gradient-hover text-white",
-    danger: "bg-red-500 text-white hover:bg-red-600",
+    primary: "refraction-gradient-hover text-white shadow-lg shadow-brand/15 hover:-translate-y-0.5",
+    secondary: "bg-white text-slate-800 border border-slate-200 shadow-sm hover:bg-slate-50 hover:border-slate-300",
+    outline: "border border-slate-200 bg-white/70 text-slate-700 shadow-sm hover:border-brand/40 hover:text-brand hover:bg-brand/5",
+    success: "success-gradient-hover text-white shadow-lg shadow-emerald-500/15 hover:-translate-y-0.5",
+    danger: "bg-red-500 text-white shadow-lg shadow-red-500/15 hover:bg-red-600 hover:-translate-y-0.5",
   };
 
   const widthStyle = fullWidth ? "w-full" : "w-auto";

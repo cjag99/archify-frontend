@@ -95,10 +95,10 @@ export function ArchitectureView({ architectureId }: ArchitectureViewProps) {
     };
 
     return (
-      <div className="min-h-screen bg-slate-50/50 p-6 md:p-12">
+      <div className="app-shell p-6 md:p-12">
         <div className="max-w-5xl mx-auto space-y-8">
           <BackLink href={ROUTES.architectures} label="Volver a architectures" />
-          <div className="glass-card rounded-3xl p-8 border border-slate-100">
+          <div className="glass-card rounded-2xl p-8 border border-slate-200">
             {!editPayload ? (
               <ArchitectureStep1
                 initialName={currentEditPayload.name}
@@ -132,7 +132,7 @@ export function ArchitectureView({ architectureId }: ArchitectureViewProps) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/50 p-6 md:p-12">
+    <div className="app-shell p-6 md:p-12">
       <div className="max-w-5xl mx-auto space-y-8">
         <BackLink href={ROUTES.architectures} label="Volver a architectures" />
         <Modal isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)}>
@@ -151,7 +151,7 @@ export function ArchitectureView({ architectureId }: ArchitectureViewProps) {
         <div className="space-y-12">
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
             <div className="space-y-4">
-              <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
+              <h1 className="text-4xl font-extrabold text-slate-950">
                 {loading ? "Loading..." : architecture?.name || "Architecture Details"}
               </h1>
               {architecture?.description && (
@@ -177,7 +177,7 @@ export function ArchitectureView({ architectureId }: ArchitectureViewProps) {
               <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
                 Schema
               </h3>
-              <div className="w-full h-150 border border-slate-200 rounded-[2.5rem] shadow-sm overflow-hidden bg-white relative pointer-events-none">
+              <div className="w-full h-150 border border-slate-200 rounded-2xl shadow-sm overflow-hidden bg-white relative pointer-events-none">
                 <SchemaCanvas
                   nodes={schema?.nodes || []}
                   edges={schema?.edges || []}
@@ -188,7 +188,7 @@ export function ArchitectureView({ architectureId }: ArchitectureViewProps) {
             </div>
           ) : (
             !loading && (
-              <div className="p-8 bg-white border border-slate-200 rounded-4xl text-center">
+              <div className="p-8 bg-white border border-slate-200 rounded-2xl text-center">
                 <p className="text-slate-500 font-medium text-lg">
                   No schema available for this architecture yet.
                 </p>

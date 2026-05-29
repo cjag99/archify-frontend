@@ -73,13 +73,13 @@ export const PatternStep3: React.FC<PatternStep3Props> = ({
   return (
     <div className="space-y-6">
       <div className="space-y-2 text-center">
-        <h2 className="text-2xl font-bold text-slate-900">Step 3: Add pattern code</h2>
+        <h2 className="text-2xl font-bold text-slate-950">Step 3: Add pattern code</h2>
         <p className="text-slate-500">
           Sube un snippet asociado al patrón <strong>{patternName}</strong>.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+      <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div className="min-w-0 flex-1 space-y-4">
             <Select
@@ -117,7 +117,7 @@ export const PatternStep3: React.FC<PatternStep3Props> = ({
           />
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-left">
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-left">
           <p className="text-sm text-slate-500">Pattern ID:</p>
           <p className="mt-2 break-all text-base font-medium text-slate-900">{patternId}</p>
         </div>

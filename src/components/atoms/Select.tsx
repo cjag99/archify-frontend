@@ -8,9 +8,9 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 
 export const Select = ({ label, error, options, defaultValue = 0, value, ...props }: SelectProps) => {
   return (
-    <div className="w-full">
+    <div className="w-full space-y-1.5">
         {label && (
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-semibold text-slate-700">
             {label}
           </label>
         )}
@@ -18,12 +18,12 @@ export const Select = ({ label, error, options, defaultValue = 0, value, ...prop
           {...props}
           {...(value === undefined ? { defaultValue } : { value })}
           className={`
-            w-full px-4 py-3 rounded-lg border shadow-sm transition-all outline-none
+            w-full appearance-none px-4 py-3 rounded-xl border bg-white/90 shadow-sm transition-all outline-none
             ${error
-              ? 'border-red-500 focus:ring-2 focus:ring-red-100'
-              : 'border-gray-200 focus:border-brand focus:ring-2 focus:ring-brand/10'
+              ? 'border-red-300 text-red-900 focus:border-red-400 focus:ring-4 focus:ring-red-100'
+              : 'border-slate-200 focus:border-brand/60 focus:ring-4 focus:ring-brand/10 hover:border-slate-300'
             }
-            placeholder:text-gray-400 text-gray-900
+            placeholder:text-slate-400 text-slate-900
           `}
         >
             {options.map((option) => (
@@ -37,7 +37,7 @@ export const Select = ({ label, error, options, defaultValue = 0, value, ...prop
             ))}
         </select>
         {error && (
-          <p className="mt-1 text-xs text-red-600 font-medium">
+          <p className="text-xs text-red-600 font-semibold">
             {error}
           </p>
         )}

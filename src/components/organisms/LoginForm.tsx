@@ -14,7 +14,7 @@ function LoginFormInner({ onSwitch, onSuccess }: LoginFormProps) {
   const { handleLogin, loading, error, formError } = useLoginForm(onSuccess);
 
   return (
-    <form onSubmit={handleLogin} className="w-full space-y-4">
+    <form onSubmit={handleLogin} className="w-full space-y-5">
       <Input
         label="Email"
         name="email"
@@ -31,7 +31,7 @@ function LoginFormInner({ onSwitch, onSuccess }: LoginFormProps) {
         Log in
       </Button>
       {onSwitch && (
-        <p className="text-sm text-slate-600 mt-4 text-center">
+        <p className="text-sm text-slate-600 pt-1 text-center">
           Don&apos;t have an account?{" "}
           <button
             type="button"

@@ -25,7 +25,7 @@ export function DiagramNodeCard({
   // 🧭 En X6 los datos personalizados se guardan y leen a través de node.getData()
   // Añadida validación de seguridad por si en v3 la propiedad se inyecta tarde o con otro formato
   if (!node || typeof node.getData !== 'function') {
-    return <div className="p-2 text-xs bg-red-100 text-red-600 rounded">Cargando nodo...</div>;
+    return <div className="p-2 text-xs bg-red-100 text-red-600 rounded-lg">Cargando nodo...</div>;
   }
   
   const data = node.getData() || {};
@@ -61,7 +61,7 @@ export function DiagramNodeCard({
       ref={cardRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="group flex flex-col items-center justify-center rounded-2xl border border-brand/20 bg-brand/5 p-3 shadow-sm transition-all duration-300 hover:border-brand/40 hover:bg-brand/10 hover:shadow-md w-24 h-24"
+      className="group flex flex-col items-center justify-center rounded-xl border border-brand/20 bg-brand/5 p-3 shadow-sm transition-all duration-300 hover:border-brand/40 hover:bg-brand/10 hover:shadow-md w-24 h-24"
     >
       
       {/* Contenido Visual del Nodo */}
@@ -84,7 +84,7 @@ export function DiagramNodeCard({
         >
           <div className="w-48 rounded-xl border border-slate-200 bg-white p-3 text-xs text-slate-700 shadow-xl">
             <div className="mb-2 flex items-center justify-between border-b border-slate-100 pb-2">
-              <span className="font-bold uppercase tracking-wider text-brand text-[10px]">
+              <span className="font-bold uppercase text-brand text-[10px]">
                 {title}
               </span>
               <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[9px] font-semibold text-brand">

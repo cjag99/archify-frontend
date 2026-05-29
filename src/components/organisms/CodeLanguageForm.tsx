@@ -72,7 +72,7 @@ export const CodeLanguageForm = ({ onCreated }: CodeLanguageFormProps) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="w-full space-y-3">
+        <form onSubmit={handleSubmit} className="w-full space-y-4">
             <Input label="Name" name="name" type="text" />
             <Input label="File extension" name="extension" type="text" />
             <FileInput label="Icon" onChange={handleImage} accept="image/*" />

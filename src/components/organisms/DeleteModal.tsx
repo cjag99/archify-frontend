@@ -27,7 +27,7 @@ export const DeleteModal = ({ onConfirm, onClose }: DeleteModalProps) => {
 
     return (
         <div>
-            <h2 className="text-xl font-semibold text-slate-900 mb-4">Confirm Deletion</h2>
+            <h2 className="text-xl font-bold text-slate-950 mb-3">Confirm Deletion</h2>
             <p className="text-sm text-slate-500 mb-6">
                 Are you sure you want to delete this item? This action cannot be undone.
             </p>

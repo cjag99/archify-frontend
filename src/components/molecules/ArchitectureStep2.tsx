@@ -153,15 +153,15 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
 
   return (
     <div className="space-y-6">
-      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">Step 2: Design your architecture</h2>
+            <h2 className="text-2xl font-bold text-slate-950">Step 2: Design your architecture</h2>
             <p className="mt-2 text-sm text-slate-500 max-w-2xl">
               Diseña la estructura visual de <strong>{architectureName}</strong>. Añade nodos, conecta capas y define la arquitectura usando el editor.
             </p>
           </div>
-          <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
             <p className="font-semibold text-slate-900">Status</p>
             <p>{enabled ? "Enabled" : "Disabled"}</p>
             <p className="mt-1 text-xs text-slate-500">{architectureDescription}</p>
@@ -178,7 +178,7 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
         />
 
         <div
-          className="grow rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden"
+          className="grow rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden"
           onDragOver={onDragOver}
           onDrop={onDrop}
         >

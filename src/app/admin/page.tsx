@@ -8,7 +8,7 @@ export default function AdminPage() {
 
     return (
         <AdminProtectedRoute>
-            <div className="min-h-screen bg-slate-50/50">
+            <div className="app-shell">
                 <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row gap-8">
                     <aside className="w-full md:w-64 shrink-0">
                         <AdminNavBar />

@@ -17,7 +17,7 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50/50">
+      <div className="app-shell flex items-center justify-center">
         <p className="text-slate-500">Loading...</p>
       </div>
     );

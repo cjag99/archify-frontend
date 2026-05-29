@@ -88,9 +88,9 @@ export const FileInput = ({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full space-y-1.5">
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-semibold text-slate-700">
           {label}
         </label>
       )}
@@ -106,7 +106,7 @@ export const FileInput = ({
       {previewUrl ? (
         <div className="flex flex-col items-center justify-center min-h-40">
           <div className="relative group w-fit">
-            <div className="relative h-40 w-40 sm:w-52 border border-gray-200 rounded-lg overflow-hidden shadow-sm bg-gray-50">
+            <div className="relative h-40 w-40 sm:w-52 border border-slate-200 rounded-xl overflow-hidden shadow-sm bg-slate-50">
               <Image
                 src={previewUrl}
                 alt={`Vista previa de ${fileName}`}
@@ -127,7 +127,7 @@ export const FileInput = ({
             </button>
           </div>
 
-          <p className="mt-3 text-sm font-medium text-gray-500 break-all text-center max-w-xs">
+          <p className="mt-3 text-sm font-medium text-slate-500 break-all text-center max-w-xs">
             <span className="text-brand font-semibold">{fileName}</span>
           </p>
         </div>
@@ -140,19 +140,19 @@ export const FileInput = ({
           onClick={onButtonClick}
           className={`
             relative w-full flex flex-col items-center justify-center p-6 min-h-40
-            border-2 border-dashed rounded-lg cursor-pointer transition-all duration-200
+            border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200
             ${error 
-              ? "border-red-500 bg-red-50/30" 
+              ? "border-red-300 bg-red-50/60" 
               : isDragActive
                 ? "border-brand bg-brand/5 ring-2 ring-brand/10"
-                : "border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400"
+                : "border-slate-300 bg-white/80 hover:bg-slate-50 hover:border-brand/40"
             }
           `}
         >
           <div className="text-center pointer-events-none">
             <svg
               className={`mx-auto h-10 w-10 mb-3 transition-colors ${
-                isDragActive ? "text-brand" : "text-gray-400"
+                isDragActive ? "text-brand" : "text-slate-400"
               }`}
               stroke="currentColor"
               fill="none"
@@ -167,14 +167,14 @@ export const FileInput = ({
               />
             </svg>
 
-            <p className="text-sm font-medium text-gray-600">{placeholder}</p>
-            <p className="mt-1 text-xs text-gray-400">PNG, JPG, WEBP hasta 10MB</p>
+            <p className="text-sm font-semibold text-slate-600">{placeholder}</p>
+            <p className="mt-1 text-xs text-slate-400">PNG, JPG, WEBP hasta 10MB</p>
           </div>
         </div>
       )}
 
       {error && (
-        <p className="mt-1 text-xs text-red-600 font-medium">
+        <p className="text-xs text-red-600 font-semibold">
           {error}
         </p>
       )}

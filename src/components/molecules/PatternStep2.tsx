@@ -219,8 +219,8 @@ export const PatternStep2: React.FC<PatternStep2Props> = ({
         </>
       ) : graphicType === 2 ? (
         <div className="space-y-6">
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-2xl font-bold text-slate-900">Step 2: Design your pattern schema</h2>
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 className="text-2xl font-bold text-slate-950">Step 2: Design your pattern schema</h2>
             <p className="mt-2 text-sm text-slate-500">
               Añade nodos y conexiones para definir la estructura del patrón.
             </p>
@@ -235,7 +235,7 @@ export const PatternStep2: React.FC<PatternStep2Props> = ({
             />
 
             <div
-              className="grow rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden"
+              className="grow rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden"
               onDragOver={onDragOver}
               onDrop={onDrop}
             >

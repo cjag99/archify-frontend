@@ -6,8 +6,8 @@ export const CountLabel: FC<{
     count: number;
 }> = ({ label, count }) => {
     return (
-        <div className="w-90 flex justify-between items-center border-b border-slate-100">
-            <span className="text-xl uppercase tracking-wider text-slate-500 font-bold"> TOTAL {label}</span>
+        <div className="w-full sm:w-90 flex justify-between items-center border-b border-slate-200 pb-3">
+            <span className="text-sm uppercase text-slate-500 font-bold">Total {label}</span>
             <CountBadge count={count} />
         </div>
     );

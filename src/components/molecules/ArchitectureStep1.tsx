@@ -36,7 +36,7 @@ export const ArchitectureStep1: FC<ArchitectureStep1Props> = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
-        <h2 className="text-2xl font-bold text-slate-900">Step 1: Define Your Architecture</h2>
+        <h2 className="text-2xl font-bold text-slate-950 sm:text-3xl">Step 1: Define Your Architecture</h2>
         <p className="text-sm text-slate-500">
           Agrega un nombre y una descripción para tu arquitectura antes de continuar al siguiente paso.
         </p>
@@ -59,7 +59,7 @@ export const ArchitectureStep1: FC<ArchitectureStep1Props> = ({
         />
 
         {/* Enabled Switch */}
-        <div className="flex items-center justify-between p-4 bg-slate-50/50 border border-slate-100 rounded-2xl transition-all duration-300">
+        <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-300 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <label className="block text-sm font-semibold text-slate-700">Enabled</label>
             <span className="text-xs text-slate-400">Determine if this architecture is active and usable.</span>
@@ -67,7 +67,7 @@ export const ArchitectureStep1: FC<ArchitectureStep1Props> = ({
           <button
             type="button"
             onClick={() => setEnabled(!enabled)}
-            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out outline-none ${
+            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out outline-none focus-visible:ring-4 focus-visible:ring-brand/10 ${
               enabled ? "bg-brand" : "bg-slate-200"
             }`}
           >
@@ -81,7 +81,7 @@ export const ArchitectureStep1: FC<ArchitectureStep1Props> = ({
       </div>
 
       <div className="flex justify-end">
-        <Button type="submit" variant="success" disabled={!canContinue}>
+        <Button type="submit" variant="success" disabled={!canContinue} className="w-full sm:w-auto">
           Continue to Step 2
         </Button>
       </div>

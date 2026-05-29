@@ -11,8 +11,8 @@ interface RegisterFormProps {
 export const RegisterForm = ({ onSwitch, onSuccess }: RegisterFormProps) => {
   const { handleRegister, loading, error, formError } = useRegisterForm(onSuccess);
   return (
-    <form onSubmit={handleRegister} className="w-full space-y-3">
-      <div className="grid grid-cols-2 gap-3">
+    <form onSubmit={handleRegister} className="w-full space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Input
           label="First name"
           name="first_name"
@@ -49,7 +49,7 @@ export const RegisterForm = ({ onSwitch, onSuccess }: RegisterFormProps) => {
         Sign up
       </Button>
       {onSwitch && (
-        <p className="text-sm text-slate-600 mt-4 text-center">
+        <p className="text-sm text-slate-600 pt-1 text-center">
           Already have an account?{" "}
           <button
             type="button"

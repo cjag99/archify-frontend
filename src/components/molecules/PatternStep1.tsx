@@ -37,7 +37,7 @@ export const PatternStep1: FC<PatternStep1Props> = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
-        <h2 className="text-2xl font-bold text-slate-900">Step 1: Define Your Pattern</h2>
+        <h2 className="text-2xl font-bold text-slate-950 sm:text-3xl">Step 1: Define Your Pattern</h2>
         <p className="text-sm text-slate-500">
           Agrega un nombre y una descripción para tu patrón antes de continuar al siguiente paso.
         </p>
@@ -73,7 +73,7 @@ export const PatternStep1: FC<PatternStep1Props> = ({
       </div>
 
       <div className="flex justify-end">
-        <Button type="submit" variant="success" disabled={!canContinue}>
+        <Button type="submit" variant="success" disabled={!canContinue} className="w-full sm:w-auto">
           Continue to Step 2
         </Button>
       </div>

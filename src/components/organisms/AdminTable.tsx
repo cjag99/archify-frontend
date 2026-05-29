@@ -47,7 +47,7 @@ export const AdminTable: FC = () => {
             <div className="p-8 max-w-7xl mx-auto">
                 <div className="flex items-center justify-between mb-8">
                     <div>
-                        <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight capitalize mb-2">
+                        <h1 className="text-3xl font-extrabold text-slate-950 capitalize mb-2">
                             {`${currentTable} Directory`}
                         </h1>
                         <p className="text-sm text-slate-500">
@@ -73,7 +73,7 @@ export const AdminTable: FC = () => {
         <div className="p-8 max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-8">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight capitalize mb-2">
+                    <h1 className="text-3xl font-extrabold text-slate-950 capitalize mb-2">
                         {`${currentTable} Directory`}
                     </h1>
                     <p className="text-sm text-slate-500">
@@ -114,13 +114,13 @@ export const AdminTable: FC = () => {
                 )}
             </Modal>
 
-            <div className="overflow-hidden glass-card rounded-3xl">
+            <div className="overflow-hidden glass-card rounded-2xl">
                 <div className="overflow-x-auto">
                     <table className="w-full border-collapse">
                         <thead>
                             <tr className="border-b border-slate-100 bg-slate-50/50">
                                 {columns.map((col: string, i: number) => (
-                                    <th key={i} className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                    <th key={i} className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase">
                                         {col.replace("_", " ")}
                                     </th>
                                 ))}
@@ -128,7 +128,7 @@ export const AdminTable: FC = () => {
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                             {rows.map((row: TableRow, i: number) => (
-                                <tr key={i} className="hover:bg-slate-50/30 transition-colors group">
+                                <tr key={i} className="hover:bg-slate-50/80 transition-colors group">
                                     {row.values.map((cell: unknown, j: number) => (
                                         <td key={j} className="px-6 py-4 text-sm text-slate-600 font-medium">
                                             {j === row.values.length - 1 ? (

@@ -4,9 +4,16 @@ import { useAuth } from "@/core/context/AuthContext";
 import type { FC } from "react";
 import { NavLink } from "../atoms/NavLink";
 import { ROUTES } from "@/lib/routes";
+interface NavMenuProps {
+  mobile?: boolean;
+  onNavigate?: () => void;
+}
 
-export const NavMenu: FC = () => {
+export const NavMenu: FC<NavMenuProps> = ({ mobile = false, onNavigate }) => {
   const { isAuthenticated, loading } = useAuth();
+  const navClassName = mobile
+    ? "flex flex-col items-stretch gap-2"
+    : "flex items-center gap-5 lg:gap-7";
 
   if (loading) {
     return null;
@@ -14,8 +21,10 @@ export const NavMenu: FC = () => {
 
   if (!isAuthenticated) {
     return (
-      <nav className="flex items-center gap-8">
-        <NavLink href={ROUTES.home}>Home</NavLink>
+      <nav className={navClassName}>
+        <NavLink href={ROUTES.home} onClick={onNavigate} compact={mobile}>
+          Home
+        </NavLink>
       </nav>
     );
   }
@@ -28,9 +37,14 @@ export const NavMenu: FC = () => {
   ];
 
   return (
-    <nav className="flex items-center gap-8">
+    <nav className={navClassName}>
       {menuItems.map((item) => (
-        <NavLink key={item.href} href={item.href}>
+        <NavLink
+          key={item.href}
+          href={item.href}
+          onClick={onNavigate}
+          compact={mobile}
+        >
           {item.label}
         </NavLink>
       ))}

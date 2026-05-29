@@ -150,10 +150,10 @@ export function PatternView({ patternId }: PatternViewProps) {
     };
 
     return (
-      <div className="min-h-screen bg-slate-50/50 p-6 md:p-12">
+      <div className="app-shell p-6 md:p-12">
         <div className="max-w-5xl mx-auto space-y-8">
           <BackLink href={ROUTES.patterns} label="Volver a patterns" />
-          <div className="glass-card rounded-3xl p-8 border border-slate-100">
+          <div className="glass-card rounded-2xl p-8 border border-slate-200">
             {!editPayload ? (
               <PatternStep1
                 initialName={currentEditPayload.name}
@@ -186,7 +186,7 @@ export function PatternView({ patternId }: PatternViewProps) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/50 p-6 md:p-12">
+    <div className="app-shell p-6 md:p-12">
       <div className="max-w-5xl mx-auto space-y-8">
         <BackLink href={ROUTES.patterns} label="Volver a patterns" />
         <Modal isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)}>
@@ -205,7 +205,7 @@ export function PatternView({ patternId }: PatternViewProps) {
         <div className="space-y-12">
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
             <div className="space-y-4">
-              <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
+              <h1 className="text-4xl font-extrabold text-slate-950">
                 {loading ? "Loading..." : pattern?.name || "Pattern Details"}
               </h1>
               {pattern?.description && (
@@ -229,7 +229,7 @@ export function PatternView({ patternId }: PatternViewProps) {
               <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
                 Schema
               </h3>
-              <div className="w-full h-150 border border-slate-200 rounded-[2.5rem] shadow-sm overflow-hidden bg-white relative pointer-events-none">
+              <div className="w-full h-150 border border-slate-200 rounded-2xl shadow-sm overflow-hidden bg-white relative pointer-events-none">
                 <SchemaCanvas
                   nodes={pattern.base_structure.nodes || []}
                   edges={pattern.base_structure.edges || []}
@@ -245,7 +245,7 @@ export function PatternView({ patternId }: PatternViewProps) {
               <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
                 Graphic Representation
               </h3>
-              <div className="w-full relative h-100 md:h-150 rounded-[2.5rem] shadow-sm overflow-hidden border border-slate-200 bg-white">
+              <div className="w-full relative h-100 md:h-150 rounded-2xl shadow-sm overflow-hidden border border-slate-200 bg-white">
                 <Image src={imageObj.url} alt={pattern.name} fill className="object-contain" unoptimized />
               </div>
             </div>
@@ -309,7 +309,7 @@ export function PatternView({ patternId }: PatternViewProps) {
               <p className="text-slate-400">Loading code snippets...</p>
             ) : selectedSnippet ? (
               <div className="grid gap-6">
-                <div className="p-8 bg-slate-900 rounded-4xl shadow-md border border-slate-800 relative group overflow-hidden">
+                <div className="p-8 bg-slate-950 rounded-2xl shadow-md border border-slate-800 relative group overflow-hidden">
                   <div className="absolute top-0 right-0 p-4 opacity-50">
                     <svg className="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
                   </div>
@@ -323,7 +323,7 @@ export function PatternView({ patternId }: PatternViewProps) {
                 </div>
               </div>
             ) : (
-              <div className="p-8 bg-white border border-slate-200 rounded-4xl text-center">
+              <div className="p-8 bg-white border border-slate-200 rounded-2xl text-center">
                 <p className="text-slate-500 font-medium text-lg">No code snippets available for this pattern yet.</p>
               </div>
             )}

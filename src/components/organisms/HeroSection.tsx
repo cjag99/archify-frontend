@@ -5,30 +5,29 @@ import { HeroVisual } from "../atoms/HeroVisual";
 export const HeroSection: FC = () => {
   return (
     <div className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] bg-size-[24px_24px] mask-[radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] -z-10" />
-      <div className="absolute top-1/2 -right-1/4 w-125 h-125 bg-[#8C03EF]/10 rounded-full blur-[120px] -z-10" />
-      <section className="min-h-[85vh] grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-16 lg:gap-24 items-center max-w-7xl mx-auto px-6 py-20">
-        <div className="flex flex-col items-start text-left z-10">
-          <h1 className="text-5xl lg:text-6xl font-extrabold mb-6 text-slate-900 leading-[1.1] tracking-tight">
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] bg-size-[24px_24px] opacity-45 sm:bg-size-[28px_28px]" />
+      <div className="absolute inset-x-0 top-0 -z-10 h-48 bg-gradient-to-b from-brand/8 to-transparent" />
+      <section className="mx-auto grid min-h-[70vh] max-w-7xl grid-cols-1 items-center gap-10 px-4 py-14 sm:gap-12 sm:px-6 sm:py-16 lg:min-h-[82vh] lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:py-20">
+        <div className="z-10 flex flex-col items-start text-left">
+          <span className="eyebrow mb-4 sm:mb-5">Architecture workspace</span>
+          <h1 className="mb-5 text-4xl leading-[1.08] font-extrabold text-slate-950 sm:mb-6 sm:text-5xl lg:text-6xl">
             Your architecture, <br />
-            <span className="text-[#8C03EF]">ready to code.</span>
+            <span className="text-brand">ready to code.</span>
           </h1>
-
-          <p className="text-xl text-slate-600 mb-8 max-w-xl leading-relaxed">
+          <p className="mb-7 max-w-xl text-base leading-relaxed text-slate-600 sm:mb-8 sm:text-lg lg:text-xl">
             Great programming starts with great design. Choose your architectural
             pattern, define your domain and generate a professional scaffolding
             in seconds.
           </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 items-center">
+          <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
             <Button
               variant="primary"
-              className="px-12 py-8 text-xl shadow-2xl shadow-brand/20 group inline-flex items-center justify-center"
+              className="group w-full justify-center px-6 py-3.5 text-sm sm:w-auto sm:px-7 sm:py-4 sm:text-base"
             >
               Start designing now
-              <span className="ml-3 transition-transform duration-300 ease-in-out group-hover:translate-x-2 leading-none flex items-cente relative top-0.5">
+              <span className="leading-none flex items-center transition-transform duration-300 ease-in-out group-hover:translate-x-1">
                 <svg
-                  className="w-5 h-5"
+                  className="h-5 w-5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -44,8 +43,7 @@ export const HeroSection: FC = () => {
             </Button>
           </div>
         </div>
-
-        <div className="relative w-full">
+        <div className="relative w-full lg:pl-3">
           <HeroVisual />
         </div>
       </section>

@@ -8,7 +8,8 @@ export const NavLink: FC<{
   href: string;
   children: ReactNode;
   onClick?: () => void;
-}> = ({ href, children, onClick }) => {
+  compact?: boolean;
+}> = ({ href, children, onClick, compact = false }) => {
   const pathname = usePathname();
   const isActive = pathname === href || pathname.startsWith(`${href}/`);
 
@@ -16,16 +17,20 @@ export const NavLink: FC<{
     <Link
       href={href}
       onClick={onClick}
-      className={`relative py-1 font-medium transition-colors duration-300 group ${
-        isActive ? "text-brand" : "text-black hover:text-brand"
+      className={`relative rounded-xl px-3 py-2 text-sm font-semibold transition-colors duration-200 group ${
+        isActive
+          ? "bg-brand/8 text-brand"
+          : "text-slate-600 hover:bg-slate-100 hover:text-brand"
       }`}
     >
       {children}
-      <span
-        className={`absolute bottom-0 left-0 h-0.5 bg-brand transition-all duration-300 ${
-          isActive ? "w-full" : "w-0 group-hover:w-full"
-        }`}
-      />
+      {!compact && (
+        <span
+          className={`absolute bottom-1 left-3 right-3 h-0.5 origin-left rounded-full bg-brand transition-transform duration-300 ${
+            isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+          }`}
+        />
+      )}
     </Link>
   );
 };

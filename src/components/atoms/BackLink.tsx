@@ -12,9 +12,9 @@ export function BackLink({ href, label = "Volver" }: BackLinkProps) {
   return (
     <Link
       href={href}
-      className="inline-flex items-center gap-2 font-semibold text-slate-500 hover:text-slate-800 transition-colors"
+      className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-3 py-2 text-sm font-bold text-slate-600 shadow-sm transition-all hover:border-brand/30 hover:bg-brand/5 hover:text-brand"
     >
-      <ArrowLeft className="w-5 h-5" />
+      <ArrowLeft className="w-4 h-4" />
       <span>{label}</span>
     </Link>
   );

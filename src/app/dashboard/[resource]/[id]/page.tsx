@@ -15,7 +15,7 @@ export default function ResourceDetailPage() {
     if (!id || !resource) {
         return (
             <ProtectedRoute>
-                <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+                <div className="app-shell flex items-center justify-center p-6">
                     <p className="text-slate-500">Invalid resource parameters.</p>
                 </div>
             </ProtectedRoute>
@@ -41,9 +41,9 @@ export default function ResourceDetailPage() {
     // Placeholder for projects that don't have a detailed view component yet
     return (
         <ProtectedRoute>
-            <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6">
-                <div className="text-center py-12 glass-card rounded-3xl max-w-md mx-auto px-6 w-full">
-                    <div className="w-16 h-16 bg-brand/5 rounded-2xl flex items-center justify-center text-brand mx-auto mb-6">
+            <div className="app-shell flex flex-col items-center justify-center p-6">
+                <div className="text-center py-12 glass-card rounded-2xl max-w-md mx-auto px-6 w-full">
+                    <div className="w-14 h-14 bg-brand/8 rounded-xl flex items-center justify-center text-brand mx-auto mb-6">
                         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                         </svg>

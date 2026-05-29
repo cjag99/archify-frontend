@@ -52,8 +52,8 @@ export const AdminMenu: FC = () => {
     ];
 
     return (
-        <nav className="flex flex-col gap-1.5 p-4 glass-card rounded-3xl w-full" >
-            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 mb-2">
+        <nav className="flex flex-col gap-1.5 p-4 glass-card rounded-2xl w-full" >
+            <p className="text-[10px] font-bold uppercase text-slate-400 px-3 mb-2">
                 Tables
             </p>
             {
@@ -65,7 +65,7 @@ export const AdminMenu: FC = () => {
                             key={table.href}
                             href={table.href}
                             onClick={() => changeTable(table.apiRoute)}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold text-sm transition-all duration-200 cursor-pointer active:scale-[0.98] ${isActive
+                            className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer active:scale-[0.98] ${isActive
                                 ? "bg-brand/10 text-brand"
                                 : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                                 }`}

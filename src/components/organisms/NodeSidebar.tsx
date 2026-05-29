@@ -14,18 +14,20 @@ interface SidebarProps {
   subtitle?: string;
   items: SidebarNodeItem[];
   onAddNode: (type: string, label: string) => void;
+  className?: string;
 }
 
 export default function NodeSidebar({ 
   title = "Componentes", 
   subtitle = "Haz click o arrastra para añadir al lienzo.", 
   items, 
-  onAddNode 
+  onAddNode,
+  className = "",
 }: SidebarProps) {
   return (
-    <aside className="w-52 border-r border-slate-200 bg-white p-5 flex flex-col gap-5 h-full z-10 select-none">
+    <aside className={`z-10 flex h-auto w-full select-none flex-col gap-4 rounded-2xl border border-slate-200 bg-white/95 p-4 sm:gap-5 sm:p-5 xl:h-full xl:w-56 xl:rounded-none xl:border-y-0 xl:border-l-0 ${className}`}>
       <div>
-        <h3 className="font-semibold text-sm text-slate-950 uppercase tracking-wider">
+        <h3 className="font-bold text-sm text-slate-950">
           {title}
         </h3>
         <p className="text-xs text-slate-500 mt-1">
@@ -33,7 +35,7 @@ export default function NodeSidebar({
         </p>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 overflow-visible pb-2">
+      <div className="grid grid-cols-4 gap-2 overflow-x-auto pb-1 sm:grid-cols-6 sm:gap-3 md:grid-cols-8 xl:grid-cols-3">
         {items.map((node) => (
           <button
             key={node.type}
@@ -44,10 +46,10 @@ export default function NodeSidebar({
               event.dataTransfer.effectAllowed = "move";
             }}
             onClick={() => onAddNode(node.type, node.label)}
-            className="group relative flex h-13 w-13 items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 text-slate-700 transition-all duration-200 hover:border-brand hover:bg-brand/10 focus:outline-none focus:ring-2 focus:ring-brand/20"
+            className="group relative flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-brand/40 hover:bg-brand/10 focus:outline-none focus:ring-4 focus:ring-brand/10 sm:h-12 sm:w-12"
           >
             {node.icon}
-            <span className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 hidden -translate-x-1/2 whitespace-nowrap rounded-xl bg-slate-900 px-2 py-1 text-xs text-white shadow-lg transition-opacity duration-200 group-hover:block">
+            <span className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 hidden -translate-x-1/2 whitespace-nowrap rounded-lg bg-slate-950 px-2 py-1 text-xs text-white shadow-lg transition-opacity duration-200 group-hover:block">
               {node.label}
             </span>
           </button>

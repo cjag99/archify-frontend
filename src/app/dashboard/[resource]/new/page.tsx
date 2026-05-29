@@ -140,7 +140,7 @@ export default function NewResourcePage() {
         default:
           return (
             <div className="text-center py-6">
-              <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+              <h1 className="text-2xl font-extrabold text-slate-950">
                 Creating new {resource}
               </h1>
               <p className="text-slate-500 mt-2 text-sm">
@@ -153,8 +153,8 @@ export default function NewResourcePage() {
 
     return (
         <ProtectedRoute>
-            <div className="min-h-screen bg-slate-50/50 flex flex-col items-center justify-center p-6">
-                <div className="w-full max-w-300 glass-card rounded-3xl p-8 border border-slate-100">
+            <div className="app-shell flex flex-col items-center justify-center p-6">
+                <div className="w-full max-w-300 glass-card rounded-2xl p-8 border border-slate-200">
                     <div className="mb-6">
                         <BackLink
                             href={dashboardResourceList(resource)}
@@ -162,7 +162,7 @@ export default function NewResourcePage() {
                         />
                     </div>
                     <div className="mb-4">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand/5 text-brand capitalize">
+                        <span className="eyebrow capitalize">
                             Active Config: {resource}
                         </span>
                     </div>
