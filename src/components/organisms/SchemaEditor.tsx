@@ -125,7 +125,7 @@ export default function SchemeEditor({
   }, []);
 
   return (
-    <div className="flex flex-col w-full h-full overflow-hidden bg-slate-50">
+    <div className="flex flex-col xl:flex-row w-full h-full overflow-hidden bg-slate-50">
       <NodeSidebar
         title={title}
         subtitle={subtitle}

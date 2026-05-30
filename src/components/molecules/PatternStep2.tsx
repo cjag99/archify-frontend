@@ -226,7 +226,7 @@ export const PatternStep2: React.FC<PatternStep2Props> = ({
             </p>
           </div>
 
-          <div className="flex h-[calc(100vh-340px)] gap-6">
+          <div className="flex flex-col xl:flex-row h-[calc(100vh-200px)] md:h-[calc(100vh-340px)] gap-4 xl:gap-6">
             <NodeSidebar
               title="Schema Nodes"
               subtitle="Haz click o arrastra para añadir un nodo al lienzo."
@@ -235,7 +235,7 @@ export const PatternStep2: React.FC<PatternStep2Props> = ({
             />
 
             <div
-              className="grow rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden"
+              className="grow rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden min-h-[400px]"
               onDragOver={onDragOver}
               onDrop={onDrop}
             >

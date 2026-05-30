@@ -1,7 +1,8 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { useAuth } from "@/core/context/AuthContext";
+import { useImage } from "@/hooks/useImage";
 import { User, Settings, LogOut } from "lucide-react";
 import Link from "next/link";
 
@@ -11,7 +12,18 @@ interface ProfileDropdownProps {
 
 export const ProfileDropdown: FC<ProfileDropdownProps> = ({ onClose }) => {
     const { user, logout } = useAuth();
-    const hasAvatar = user && user.avatar !== null;
+    const { fetchImage } = useImage();
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (user?.avatar) {
+            fetchImage(user.avatar as any).then((img) => {
+                if (img?.url) setAvatarUrl(img.url);
+            });
+        } else {
+            setAvatarUrl(null);
+        }
+    }, [user?.avatar, fetchImage]);
 
     if (!user) return null;
 
@@ -20,9 +32,9 @@ export const ProfileDropdown: FC<ProfileDropdownProps> = ({ onClose }) => {
             {/* Header user info */}
             <div className="flex items-center gap-3 px-3 py-3 border-b border-slate-100/60 mb-2">
                 <div className="relative shrink-0">
-                    {hasAvatar && user?.avatar ? (
+                    {avatarUrl ? (
                         <img 
-                            src={user.avatar} 
+                            src={avatarUrl} 
                             alt="Avatar" 
                             className="w-10 h-10 rounded-full object-cover ring-2 ring-slate-100" 
                         />
@@ -43,7 +55,7 @@ export const ProfileDropdown: FC<ProfileDropdownProps> = ({ onClose }) => {
             {/* Menu Links */}
             <div className="space-y-0.5">
                 <Link
-                    href="/profile"
+                    href="/dashboard/profile"
                     onClick={() => onClose()}
                     className="flex items-center gap-3 px-3 py-2 text-sm text-slate-600 font-semibold rounded-xl hover:bg-brand/5 hover:text-brand transition-all duration-150 group"
                 >

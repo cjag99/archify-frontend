@@ -60,6 +60,22 @@ export const useAdminTable = (tableName?: string) => {
         router.push(`/admin/tables/${table}`);
     };
 
+    const fetchDataById = async (id: string | number) => {
+        if (!tableName) return null;
+        const service = servicesMap[tableName];
+        if (!service) {
+            setError(`No service found for table: ${tableName}`);
+            return null;
+        }
+        try {
+            const result = await service.getById(id);
+            return result;
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Unknown error");
+            console.error("Fetch by ID error:", err);
+            return null;
+        }
+    };
     const dropData = async (id: string | number) => {
         if (!tableName) return;
         const service = servicesMap[tableName];
@@ -82,5 +98,5 @@ export const useAdminTable = (tableName?: string) => {
         fetchData();
     }, [fetchData]);
 
-    return { currentTable: tableName, changeTable, data, loading, error, dropData, refreshData: fetchData };
-}
+    return { currentTable: tableName, changeTable, data, loading, error, dropData, refreshData: fetchData, fetchDataById };
+};
