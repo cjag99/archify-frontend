@@ -31,12 +31,12 @@ export const EmptyTable: FC<EmptyTableProps> = ({ label, onClick }) => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center py-16 glass-card rounded-2xl max-w-xl mx-auto px-6">
+        <div className="flex flex-col items-center justify-center py-16 glass-card rounded-2xl max-w-xl mx-auto px-6 dark:bg-slate-950 dark:border dark:border-slate-700">
             <div className="w-14 h-14 bg-brand/8 rounded-xl flex items-center justify-center text-brand mb-6">
                 <Database className="w-8 h-8" />
             </div>
-            <h3 className="text-xl font-bold text-slate-950 mb-2">No records found</h3>
-            <p className="text-slate-500 max-w-sm mx-auto text-center text-sm leading-relaxed mb-6">
+            <h3 className="text-xl font-bold text-slate-950 dark:text-slate-100 mb-2">No records found</h3>
+            <p className="text-slate-500 dark:text-slate-400 max-w-sm mx-auto text-center text-sm leading-relaxed mb-6">
                 This table is currently empty or couldnt be loaded. Check back later or add records in the console.
             </p>
 
@@ -55,8 +55,8 @@ export const EmptyTable: FC<EmptyTableProps> = ({ label, onClick }) => {
                             <CodeLanguageForm />
                         ) : (
                             <div className="space-y-3">
-                                <h2 className="text-xl font-bold text-slate-950">Crear {label || "registro"}</h2>
-                                <p className="text-sm text-slate-500">
+                                <h2 className="text-xl font-bold text-slate-950 dark:text-slate-100">Crear {label || "registro"}</h2>
+                                <p className="text-sm text-slate-500 dark:text-slate-400">
                                     Todavía no hay formulario de creación para esta tabla.
                                 </p>
                             </div>

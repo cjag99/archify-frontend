@@ -8,6 +8,7 @@ import { userService } from "@/core/api/users.service";
 import { useImage } from "@/hooks/useImage";
 import { User } from "@/core/types/auth";
 import Cookies from "js-cookie";
+import { UUID } from "crypto";
 
 export default function ProfilePage() {
   const { user, logout } = useAuth();
@@ -25,7 +26,7 @@ export default function ProfilePage() {
       if (avatarFile) {
         const imageRes = await createImage(avatarFile, "avatar");
         if (imageRes?.id) {
-          avatarId = imageRes.id as any;
+          avatarId = imageRes.id as UUID;
         }
       }
 

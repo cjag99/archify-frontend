@@ -8,7 +8,13 @@
   --muted: #64748b;
   --surface: #ffffff;
   --surface-soft: #f8fafc;
-  --line: #e2e8f0;
+  --surface-strong: #f8fafc;
+  --surface-muted: #e2e8f0;
+  --border: rgba(226, 232, 240, 0.9);
+  --card: rgba(255, 255, 255, 0.86);
+  --shadow: rgba(15, 23, 42, 0.06);
+  --selection: rgba(140, 3, 239, 0.16);
+  --bg-app: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 250, 252, 1) 42%, rgba(241, 245, 249, 1) 100%);
 }
 
 @theme {
@@ -18,6 +24,91 @@
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
+
+/* Variante nativa de modo oscuro para Tailwind v4 basado en clase */
+@variant dark (&:where(.dark, .dark *));
+
+/* ==========================================
+   ESTADOS DE MODO OSCURO (Controlado por clase)
+   ========================================== */
+:root.dark,
+html.dark {
+  color-scheme: dark;
+  --ink: #e2e8f0;
+  --muted: #94a3b8;
+  --surface: #0f172a;
+  --surface-soft: #111827;
+  --surface-strong: #111827;
+  --surface-muted: #1f2937;
+  --border: rgba(148, 163, 184, 0.24);
+  --card: rgba(15, 23, 42, 0.78);
+  --shadow: rgba(0, 0, 0, 0.28);
+  --selection: rgba(140, 3, 239, 0.24);
+  --bg-app: linear-gradient(180deg, rgba(15, 23, 42, 0.92) 0%, rgba(15, 23, 42, 1) 42%, rgba(15, 23, 42, 1) 100%);
+
+  /* Ajustes automáticos de componentes con app-shell y superficies */
+  .app-shell {
+    background-color: var(--surface) !important;
+    background-image:
+      linear-gradient(180deg, rgba(15, 23, 42, 0.82), rgba(15, 23, 42, 0.95)),
+      radial-gradient(circle at 18px 18px, rgba(148, 163, 184, 0.06) 1px, transparent 1px) !important;
+  }
+
+  .section-surface {
+    background: rgba(15, 23, 42, 0.88) !important;
+    border-color: rgba(148, 163, 184, 0.18) !important;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .eyebrow {
+    border-color: rgba(99, 102, 241, 0.22) !important;
+    background: rgba(99, 102, 241, 0.08) !important;
+    color: var(--brand-color-light) !important;
+  }
+
+  .glass-card {
+    background: rgba(15, 23, 42, 0.78) !important;
+    border-color: rgba(148, 163, 184, 0.24) !important;
+  }
+
+  .glass-card-hover:hover {
+    background: rgba(15, 23, 42, 0.94) !important;
+    border-color: rgba(99, 102, 241, 0.24) !important;
+    box-shadow:
+      0 22px 50px rgba(0, 0, 0, 0.38),
+      0 8px 24px rgba(99, 102, 241, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  }
+
+  /* Parches obligatorios para clases estáticas de Tailwind */
+  [class*="bg-white"] { background-color: #111827 !important; }
+  [class*="bg-slate-50"] { background-color: #0f172a !important; }
+  [class*="bg-slate-100"] { background-color: #111827 !important; }
+  [class*="bg-slate-200"] { background-color: #1f2937 !important; }
+  [class*="bg-white/"] { background-color: #111827 !important; }
+  [class*="bg-slate-50/"] { background-color: #0f172a !important; }
+  [class*="bg-slate-100/"] { background-color: #111827 !important; }
+
+  header.sticky, .bg-white\/85 { background-color: rgba(15, 23, 42, 0.85) !important; }
+  header.sticky, .border-slate-200\/70 { border-color: rgba(148, 163, 184, 0.24) !important; }
+  .hover\:bg-slate-50:hover, .hover\:bg-slate-100:hover, .hover\:bg-slate-50\/80:hover { background-color: #111827 !important; }
+
+  [class*="border-slate-100"], [class*="border-slate-200"], [class*="border-slate-300"] {
+    border-color: rgba(148, 163, 184, 0.18) !important;
+  }
+
+  [class*="text-slate-950"], [class*="text-slate-900"] { color: #f8fafc !important; }
+  [class*="text-slate-800"] { color: #f1f5f9 !important; }
+  [class*="text-slate-700"], [class*="text-slate-600"], [class*="text-slate-500"], [class*="text-slate-400"] {
+    color: #94a3b8 !important;
+  }
+  [class*="text-red-600"], [class*="text-red-700"] { color: #fca5a5 !important; }
+  [class*="bg-red-50"] { background-color: rgba(254, 226, 226, 0.15) !important; }
+}
+
+/* ==========================================
+   ESTILOS BASE Y ESTRUCTURA GENERAL
+   ========================================== */
 *,
 *::before,
 *::after {
@@ -25,7 +116,8 @@
 }
 
 html {
-  background: #f8fafc;
+  background-color: var(--surface);
+  transition: background-color 0.3s ease;
 }
 
 body {
@@ -34,38 +126,78 @@ body {
   color: var(--ink);
   line-height: 1.5;
   overflow-x: hidden;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 250, 252, 1) 42%, rgba(241, 245, 249, 1) 100%),
+  background-color: var(--surface); 
+  background-image: 
+    var(--bg-app),
     radial-gradient(circle at 20% 0%, rgba(20, 184, 166, 0.08), transparent 34%),
     radial-gradient(circle at 85% 8%, rgba(140, 3, 239, 0.08), transparent 32%);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 ::selection {
-  background: rgba(140, 3, 239, 0.16);
+  background: var(--selection);
   color: var(--ink);
 }
 
-button,
-a,
-input,
-select,
-textarea {
+button, a, input, select, textarea {
   outline-offset: 3px;
 }
 
+/* ==========================================
+   COMPONENTES DE DISEÑO CUSTOM
+   ========================================== */
+.app-shell {
+  min-height: 100vh;
+  background-color: var(--surface-soft);
+  background-image:
+    linear-gradient(180deg, rgba(248, 250, 252, 0.78), rgba(241, 245, 249, 0.95)),
+    radial-gradient(circle at 18px 18px, rgba(148, 163, 184, 0.18) 1px, transparent 1px);
+  background-size: auto, 28px 28px;
+  transition: background-color 0.3s ease, background-image 0.3s ease;
+}
+
+.page-container {
+  width: 100%;
+  max-width: 82rem;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 2.5vw, 3rem) clamp(1rem, 2vw, 1.5rem);
+}
+
+.section-surface {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 1rem;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 999px;
+  border: 1px solid rgba(140, 3, 239, 0.16);
+  background: rgba(140, 3, 239, 0.07);
+  color: var(--brand-color-dark);
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
 .glass-card {
-  background: rgba(255, 255, 255, 0.86);
+  background: var(--card);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(226, 232, 240, 0.86);
+  border: 1px solid var(--border);
   box-shadow: 
-    0 18px 45px rgba(15, 23, 42, 0.06),
+    0 18px 45px var(--shadow),
     inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .glass-card-hover {
   transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
-
   &:hover {
     background: rgba(255, 255, 255, 0.96);
     border-color: rgba(140, 3, 239, 0.24);
@@ -85,7 +217,6 @@ textarea {
   background: linear-gradient(135deg, #8C03EF 0%, #4F46E5 48%, #0D9488 100%);
   background-size: 200% 200%;
   transition: background-position 0.35s ease, transform 0.2s ease, box-shadow 0.2s ease;
-
   &:hover {
     background-position: right center;
     box-shadow: 0 14px 28px rgba(79, 70, 229, 0.22);
@@ -96,48 +227,21 @@ textarea {
   background: linear-gradient(135deg, #10B981 0%, #0D9488 100%);
   background-size: 200% 200%;
   transition: background-position 0.35s ease, transform 0.2s ease, box-shadow 0.2s ease;
-
   &:hover {
     background-position: right center;
     box-shadow: 0 12px 30px rgba(16, 185, 129, 0.25);
   }
 }
 
-.app-shell {
-  min-height: 100vh;
-  background:
-    linear-gradient(180deg, rgba(248, 250, 252, 0.78), rgba(241, 245, 249, 0.95)),
-    radial-gradient(circle at 18px 18px, rgba(148, 163, 184, 0.18) 1px, transparent 1px);
-  background-size: auto, 28px 28px;
-}
+/* Visibilidad de iconos nativos (Mantenido por compatibilidad alternativa) */
+html.dark .theme-icon-light { display: none !important; }
+html.dark .theme-icon-dark { display: inline-flex !important; }
+html:not(.dark) .theme-icon-dark { display: none !important; }
+html:not(.dark) .theme-icon-light { display: inline-flex !important; }
 
-.page-container {
-  width: 100%;
-  max-width: 82rem;
-  margin: 0 auto;
-  padding: clamp(1.5rem, 2.5vw, 3rem) clamp(1rem, 2vw, 1.5rem);
-}
-
-.section-surface {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  border-radius: 1rem;
-  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
-}
-
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  border-radius: 999px;
-  border: 1px solid rgba(140, 3, 239, 0.16);
-  background: rgba(140, 3, 239, 0.07);
-  color: var(--brand-color-dark);
-  padding: 0.25rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
+/* ==========================================
+   RESPONSIVE Y ACCESIBILIDAD
+   ========================================== */
 @media (max-width: 1024px) {
   .page-container {
     padding-top: 2rem;
@@ -146,17 +250,9 @@ textarea {
 }
 
 @media (max-width: 768px) {
-  .app-shell {
-    background-size: auto, 22px 22px;
-  }
-
-  .page-container {
-    padding: 1.5rem 1rem;
-  }
-
-  .section-surface {
-    border-radius: 0.9rem;
-  }
+  .app-shell { background-size: auto, 22px 22px; }
+  .page-container { padding: 1.5rem 1rem; }
+  .section-surface { border-radius: 0.9rem; }
 }
 
 @media (max-width: 640px) {
@@ -164,7 +260,6 @@ textarea {
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
   }
-
   .eyebrow {
     font-size: 0.68rem;
     letter-spacing: 0.01em;
@@ -172,9 +267,7 @@ textarea {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
