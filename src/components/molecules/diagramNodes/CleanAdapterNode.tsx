@@ -10,7 +10,7 @@ export const CleanAdapterNode: React.FC<{ node: Node }> = ({ node }) => (
     node={node}
     icon={<Server size={24} className="text-brand" />}
     defaultLabel="Adapter"
-    defaultDescription="Adapta datos y llamadas entre la capa de interfaz y el núcleo de la aplicación."
+    defaultDescription="Adapts data and calls between the interface layer and the application core."
     title="Clean Adapter"
     tag="Adapter"
   />

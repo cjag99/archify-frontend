@@ -10,7 +10,7 @@ export const HexagonalDomainNode: React.FC<{ node: Node }> = ({ node }) => (
     node={node}
     icon={<Layers size={24} className="text-brand" />}
     defaultLabel="Domain"
-    defaultDescription="Núcleo de dominio con entidades y reglas en arquitectura hexagonal."
+    defaultDescription="Domain core with entities and rules in hexagonal architecture."
     title="Hexagonal Domain"
     tag="Core"
   />

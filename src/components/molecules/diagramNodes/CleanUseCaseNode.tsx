@@ -10,7 +10,7 @@ export const CleanUseCaseNode: React.FC<{ node: Node }> = ({ node }) => (
     node={node}
     icon={<Package size={24} className="text-brand" />}
     defaultLabel="Use Case"
-    defaultDescription="Orquesta la lógica de negocio y coordina las entidades en Clean Architecture."
+    defaultDescription="Orchestrates business logic and coordinates entities in Clean Architecture."
     title="Clean Use Case"
     tag="Use Case"
   />

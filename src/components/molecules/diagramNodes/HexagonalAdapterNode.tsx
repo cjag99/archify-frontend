@@ -10,7 +10,7 @@ export const HexagonalAdapterNode: React.FC<{ node: Node }> = ({ node }) => (
     node={node}
     icon={<Package size={24} className="text-brand" />}
     defaultLabel="Adapter"
-    defaultDescription="Puertos y adaptadores que conectan el dominio con el exterior."
+    defaultDescription="Ports and adapters that connect the domain to the outside."
     title="Hexagonal Adapter"
     tag="Adapter"
   />

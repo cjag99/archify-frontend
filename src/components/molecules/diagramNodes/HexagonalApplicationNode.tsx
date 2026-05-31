@@ -10,7 +10,7 @@ export const HexagonalApplicationNode: React.FC<{ node: Node }> = ({ node }) => 
     node={node}
     icon={<Cpu size={24} className="text-brand" />}
     defaultLabel="Application"
-    defaultDescription="Capa de aplicación que coordina casos de uso y el dominio."
+    defaultDescription="Application layer that coordinates use cases and the domain."
     title="Hexagonal App"
     tag="App"
   />

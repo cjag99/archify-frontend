@@ -10,7 +10,7 @@ export const CleanFrameworkNode: React.FC<{ node: Node }> = ({ node }) => (
     node={node}
     icon={<HardDrive size={24} className="text-brand" />}
     defaultLabel="Frameworks"
-    defaultDescription="Incluye la infraestructura, la UI y los controladores externos de Clean Architecture."
+    defaultDescription="Includes infrastructure, UI, and external controllers in Clean Architecture."
     title="Clean Framework"
     tag="Infra"
   />

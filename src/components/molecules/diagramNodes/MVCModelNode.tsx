@@ -14,7 +14,7 @@ export const MVCModelNode: React.FC<{ node: Node }> = ({ node }) => {
             node={node}
             icon={<Cpu size={24} className="text-brand" />}
             defaultLabel="Model"
-            defaultDescription="Gestiona la lógica de negocio y los datos del sistema."
+            defaultDescription="Manages business logic and system data."
             title="MVC Model"
             tag="Data"
         />

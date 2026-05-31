@@ -14,7 +14,7 @@ export const MVCControllerNode: React.FC<{ node: Node }> = ({ node }) => {
             node={node}
             icon={<Compass size={24} className="text-brand" />}
             defaultLabel="Controller"
-            defaultDescription="Coordina la interacción entre el modelo y la vista."
+            defaultDescription="Coordinates interaction between the model and the view."
             title="MVC Controller"
             tag="Logic"
         />

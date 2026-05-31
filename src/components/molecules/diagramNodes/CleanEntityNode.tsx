@@ -10,7 +10,7 @@ export const CleanEntityNode: React.FC<{ node: Node }> = ({ node }) => (
     node={node}
     icon={<Box size={24} className="text-brand" />}
     defaultLabel="Entity"
-    defaultDescription="Representa los objetos de dominio y las reglas centrales de Clean Architecture."
+    defaultDescription="Represents domain objects and core rules in Clean Architecture."
     title="Clean Entity"
     tag="Domain"
   />

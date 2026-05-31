@@ -11,7 +11,7 @@ export const UserNode: React.FC<{ node: Node }> = ({ node }) => (
     node={node}
     icon={<User size={24} className="text-brand" />}
     defaultLabel="User"
-    defaultDescription="Representa un usuario o actor en el diagrama."
+    defaultDescription="Represents a user or actor in the diagram."
     title="User Node"
     tag="User"
   />

@@ -10,7 +10,7 @@ export const MVCViewNode: React.FC<{ node: Node }> = ({ node }) => (
     node={node}
     icon={<Binoculars size={24} className="text-brand" />}
     defaultLabel="View"
-    defaultDescription="Renderiza la interfaz y muestra los datos al usuario."
+    defaultDescription="Renders the interface and displays data to the user."
     title="MVC View"
     tag="UI"
   />
