@@ -16,7 +16,6 @@ export interface SchemaCanvasProps {
   readonly?: boolean;
 }
 
-// En X6 v3, es obligatorio renderizar el PortalProvider para que los nodos de React funcionen
 const PortalProvider = getProvider();
 
 export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNodesChange, onEdgesChange, onConnect, readonly = false }: SchemaCanvasProps) {
@@ -54,12 +53,18 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
           thickness: 1,
         },
       },
+      // --- MEJORA 1: Configurar estrategia de conexión global ---
       connecting: {
         snap: true,
         allowBlank: false,
         allowLoop: false,
-        allowNode: true, // Permitir conectar de nodo a nodo directamente
+        allowNode: true, 
         highlight: true,
+        router: {
+          name: 'manhattan', // Fuerza líneas ortogonales limpias (a 90 grados)
+        },
+        anchor: 'center', // Si no se usa un puerto, las flechas apuntan al centro geométrico del nodo de manera uniforme
+        connectionPoint: 'boundary', // Evita que la flecha se meta "dentro" del componente visual
         createEdge() {
           return new Shape.Edge({
             shape: 'edge',
@@ -75,7 +80,6 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
       },
     } as any);
 
-    // Activar el paneo/scroller en v3
     graph.use(
       new Scroller({
         enabled: true,
@@ -83,7 +87,7 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
       })
     );
 
-    // Escuchar cuando los nodos se mueven para actualizar el estado superior
+    // Escuchar movimientos
     graph.on("node:moved", () => {
       if (onNodesChange) {
         onNodesChange(graph.getNodes().map((n) => ({
@@ -95,14 +99,35 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
       }
     });
 
-    // Escuchar cuando el usuario conecta dos nodos
+    // Escuchar conexiones
     graph.on("edge:connected", ({ edge }) => {
       if (onConnect) {
         onConnect({
           id: edge.id,
           source: edge.getSourceCellId(),
+          source_port: (edge.getSource() as any).port,
           target: edge.getTargetCellId(),
+          target_port: (edge.getTarget() as any).port,
+          vertices: edge.getVertices(),
         });
+      }
+    });
+
+    // --- NUEVO: Escuchar cambios en vértices o rutas de las aristas ---
+    graph.on("edge:changed", ({ edge, options }) => {
+      // Solo disparamos el cambio si no viene de una sincronización externa (evita bucles)
+      if (options.external) return;
+      
+      if (onEdgesChange) {
+        const allEdges = graph.getEdges().map(e => ({
+          id: e.id,
+          source: e.getSourceCellId(),
+          source_port: (e.getSource() as any).port,
+          target: e.getTargetCellId(),
+          target_port: (e.getTarget() as any).port,
+          vertices: e.getVertices(),
+        }));
+        onEdgesChange(allEdges);
       }
     });
 
@@ -113,7 +138,7 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
         graph.dispose();
       }
     };
-  }, []); // ¡IMPORTANTE! Array de dependencias vacío para no recrear el gráfico entero en cada render
+  }, []); 
 
   // Sincronizar Nodos
   useEffect(() => {
@@ -121,10 +146,9 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
     if (!graph) return;
 
     nodes.forEach((node) => {
-      if (!node.type) return; // Evitar crash con nodos inválidos
+      if (!node.type) return; 
       
       const shapeName = `custom-${node.type}`;
-      // Solo añadimos el nodo si realmente hemos registrado su forma
       if (nodeTypes[node.type] && !graph.getCellById(node.id)) {
         try {
           graph.addNode({
@@ -135,30 +159,10 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
             data: node.data,
             ports: {
               groups: {
-                top: {
-                  position: 'top',
-                  attrs: {
-                    circle: { r: 5, magnet: true, stroke: '#94a3b8', fill: '#fff', strokeWidth: 2 },
-                  },
-                },
-                bottom: {
-                  position: 'bottom',
-                  attrs: {
-                    circle: { r: 5, magnet: true, stroke: '#94a3b8', fill: '#fff', strokeWidth: 2 },
-                  },
-                },
-                left: {
-                  position: 'left',
-                  attrs: {
-                    circle: { r: 5, magnet: true, stroke: '#94a3b8', fill: '#fff', strokeWidth: 2 },
-                  },
-                },
-                right: {
-                  position: 'right',
-                  attrs: {
-                    circle: { r: 5, magnet: true, stroke: '#94a3b8', fill: '#fff', strokeWidth: 2 },
-                  },
-                },
+                top: { position: 'top', attrs: { circle: { r: 5, magnet: true, stroke: '#94a3b8', fill: '#fff', strokeWidth: 2 } } },
+                bottom: { position: 'bottom', attrs: { circle: { r: 5, magnet: true, stroke: '#94a3b8', fill: '#fff', strokeWidth: 2 } } },
+                left: { position: 'left', attrs: { circle: { r: 5, magnet: true, stroke: '#94a3b8', fill: '#fff', strokeWidth: 2 } } },
+                right: { position: 'right', attrs: { circle: { r: 5, magnet: true, stroke: '#94a3b8', fill: '#fff', strokeWidth: 2 } } },
               },
               items: [
                 { id: 'port-top', group: 'top' },
@@ -169,20 +173,40 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
             },
           });
         } catch (error) {
-          console.warn(`Error al añadir el nodo ${shapeName}:`, error);
+          console.warn(`Error adding node ${shapeName}:`, error);
         }
       }
     });
 
+    // --- MEJORA 2: Forzar recalculación de rutas tras el renderizado de los componentes React ---
     if (readonly) {
-      setTimeout(() => {
-        if (graphRef.current) {
-          graphRef.current.zoomToFit({ padding: 80, maxScale: 1 });
-          graphRef.current.centerContent();
+      const handleResize = () => {
+        const currentGraph = graphRef.current; 
+        if (currentGraph) {
+          currentGraph.getEdges().forEach((edge) => {
+            const view = currentGraph.findViewByCell(edge);
+            if (view) {
+              (view as any).update(); 
+            }
+          });
+          
+          // Padding dinámico según el ancho de la pantalla
+          const fitPadding = window.innerWidth < 768 ? 20 : 80;
+          currentGraph.zoomToFit({ padding: fitPadding, maxScale: 1 });
+          currentGraph.centerContent();
         }
-      }, 150);
+      };
+
+      const timer = setTimeout(handleResize, 300);
+      window.addEventListener("resize", handleResize);
+
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener("resize", handleResize);
+      };
     }
-  }, [nodes, nodeTypes, readonly]);
+    // Añadimos edges a la dependencia para que el zoomToFit ocurra cuando todo el esquema esté listo
+  }, [nodes, edges, nodeTypes, readonly]);
 
   // Sincronizar Aristas
   useEffect(() => {
@@ -192,13 +216,22 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
     edges.forEach((edge) => {
       if (!graph.getCellById(edge.id)) {
         try {
+          // --- MEJORA 3: Asegurar la unión limpia al nodo o puerto ---
           graph.addEdge({
             id: edge.id,
-            source: edge.source,
-            target: edge.target,
+            source: edge.source_port ? { cell: edge.source, port: edge.source_port } : edge.source,
+            target: edge.target_port ? { cell: edge.target, port: edge.target_port } : edge.target,
+            vertices: edge.vertices || [],
+            router: { name: 'manhattan' }, // Mantener el comportamiento ortogonal
+            attrs: {
+              line: {
+                stroke: '#94a3b8',
+                strokeWidth: 2,
+              },
+            },
           });
         } catch (error) {
-          console.warn(`Error al añadir la arista ${edge.id}:`, error);
+          console.warn(`Error adding edge ${edge.id}:`, error);
         }
       }
     });
@@ -207,13 +240,12 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
   return (
     <>
       <PortalProvider />
-      <div className="relative w-full h-full border border-slate-300 pointer-events-auto overflow-hidden">
+      <div className="relative w-full h-full pointer-events-auto overflow-hidden">
         <style>{`
           .x6-graph-svg {
             overflow: visible !important;
           }
         `}</style>
-        {/* Contenedor principal */}
         <div ref={containerRef} className="w-full h-full" />
       </div>
     </>

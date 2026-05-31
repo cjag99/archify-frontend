@@ -56,7 +56,7 @@ export const usePatternCode = () => {
 
         try {
             const result = await patternCodeService.getByPatternId(patternId);
-            setPatternCodes(result);
+            setPatternCodes(Array.isArray(result) ? result : []);
         } catch (err) {
             setError(err instanceof Error ? err.message : "Unknown error");
             console.error("Fetch codes error:", err);

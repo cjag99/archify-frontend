@@ -16,13 +16,19 @@ interface CanvasNodeData {
 interface CanvasEdgeData {
   id: string;
   source: string;
+  source_port?: string;
   target: string;
+  target_port?: string;
+  vertices?: Array<{ x: number; y: number }>;
 }
 
 interface ConnectionPayload {
   id: string;
   source: string;
+  source_port?: string;
   target: string;
+  target_port?: string;
+  vertices?: Array<{ x: number; y: number }>;
 }
 
 interface SchemeEditorProps {
@@ -112,14 +118,20 @@ export default function SchemeEditor({
     setEdges((eds) => {
       // Evitamos duplicar cables idénticos si X6 lanza un doble evento por seguridad
       const exists = eds.some(
-        (e) => e.source === connection.source && e.target === connection.target
+        (e) => 
+          e.source === connection.source && 
+          e.target === connection.target && 
+          e.source_port === connection.source_port
       );
       if (exists) return eds;
 
       return eds.concat({
         id: connection.id || `edge-${crypto.randomUUID()}`,
         source: connection.source,
+        source_port: connection.source_port,
         target: connection.target,
+        target_port: connection.target_port,
+        vertices: connection.vertices || [],
       });
     });
   }, []);

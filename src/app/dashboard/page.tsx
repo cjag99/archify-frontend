@@ -6,6 +6,8 @@ import { ProtectedRoute } from "@/components/organisms/ProtectedRoute";
 import { useAuth } from "@/core/context/AuthContext";
 import { useProject } from "@/hooks/useProject";
 import { useRouter } from "next/navigation";
+import { AlertCircle, ArrowRight, FolderPlus } from "lucide-react";
+import { decodeHtmlEntities } from "@/core/utils/string.utils";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -32,9 +34,7 @@ export default function DashboardPage() {
           {/* Error Banner */}
           {error && (
             <div className="mb-8 p-4 bg-red-50/80 border border-red-100 text-red-700 rounded-2xl text-sm flex items-center gap-3">
-              <svg className="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
+              <AlertCircle className="w-5 h-5 text-red-500 shrink-0" />
               <span>{error}</span>
             </div>
           )}
@@ -65,9 +65,7 @@ export default function DashboardPage() {
           ) : isProjectsEmpty ? (
             <div className="text-center py-16 glass-card rounded-2xl max-w-xl mx-auto px-6">
               <div className="w-14 h-14 bg-brand/8 rounded-xl flex items-center justify-center text-brand mx-auto mb-6">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 13h6m-3-3v6m-9 1V4a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                </svg>
+                <FolderPlus className="w-8 h-8" />
               </div>
               <h2 className="text-xl font-bold text-slate-800 mb-2">No projects found</h2>
               <p className="text-slate-500 mb-6 max-w-sm mx-auto">
@@ -103,7 +101,7 @@ export default function DashboardPage() {
                         </div>
                         <div className="overflow-hidden">
                           <h3 className="font-bold text-slate-800 text-lg group-hover:text-brand transition-colors duration-300 truncate">
-                            {project.name}
+                            {decodeHtmlEntities(project.name)}
                           </h3>
                           <p className="text-xs text-slate-400">
                             Created {project.created_at ? new Date(project.created_at).toLocaleDateString() : 'recently'}
@@ -113,7 +111,7 @@ export default function DashboardPage() {
 
                       {/* Project Description */}
                       <p className="text-slate-500 text-sm leading-relaxed mb-6 line-clamp-2 min-h-10">
-                        {project.description || "No description provided. Click below to view and design this project's architecture."}
+                        {decodeHtmlEntities(project.description || "No description provided. Click below to view and design this project's architecture.")}
                       </p>
                     </div>
 
@@ -123,9 +121,7 @@ export default function DashboardPage() {
                       className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-bold bg-white hover:bg-brand hover:text-white text-slate-700 transition-all duration-300 active:scale-[0.98] border border-slate-200 hover:border-brand cursor-pointer"
                     >
                       View project
-                      <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                      </svg>
+                      <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                     </button>
                   </div>
                 ))}

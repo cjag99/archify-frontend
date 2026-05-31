@@ -7,10 +7,11 @@ import { architectureService } from "@/core/api/architectures.service";
 import { useRouter, useParams, usePathname } from "next/navigation";
 import { ProtectedRoute } from "@/components/organisms/ProtectedRoute";
 import { Button } from "@/components/atoms/Button";
-import { Plus, Folder, FileCode, Workflow, HelpCircle } from "lucide-react";
+import { Plus, Folder, FileCode, Workflow, HelpCircle, AlertCircle, ArrowRight } from "lucide-react";
 import { CountLabel } from "@/components/molecules/CountLabel";
 import { useEffect, useState } from "react";
 import { Project, Pattern, Architecture } from "@/core/types/models";
+import { decodeHtmlEntities } from "@/core/utils/string.utils";
 
 const RESOURCE_CONFIG = {
     projects: {
@@ -126,6 +127,16 @@ export default function GenericResourcesPage() {
     const Icon = config.icon;
     const EmptyIcon = config.emptyIcon;
     const isItemsEmpty = !loading && items.length === 0;
+    
+    // Authorization check: Can user create items?
+    const canCreate = user?.is_authorized || resource === "projects";
+    
+    // For projects only, filter to show only user's own items (if not authorized)
+    let displayItems = items;
+    if (resource === "projects" && !user?.is_authorized) {
+      displayItems = items.filter((item) => (item as Project).user_id === user?.id);
+    }
+    const isDisplayItemsEmpty = !loading && displayItems.length === 0;
 
     return (
         <ProtectedRoute>
@@ -146,9 +157,7 @@ export default function GenericResourcesPage() {
                     {/* Error Banner */}
                     {error && (
                         <div className="mb-8 p-4 bg-red-50/80 border border-red-100 text-red-700 rounded-2xl text-sm flex items-center gap-3">
-                            <svg className="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
+                            <AlertCircle className="w-5 h-5 text-red-500 shrink-0" />
                             <span>{error}</span>
                         </div>
                     )}
@@ -175,9 +184,9 @@ export default function GenericResourcesPage() {
                                 ))}
                             </div>
                         </div>
-                    ) : isItemsEmpty ? (
+                    ) : isDisplayItemsEmpty ? (
                         <div className="flex flex-col items-center justify-center space-y-4">
-                            <CountLabel label={config.title} count={items.length} />
+                            <CountLabel label={config.title} count={displayItems.length} />
                             <div className="text-center py-16 glass-card rounded-2xl max-w-xl mx-auto px-6 w-full">
                                 <div className="w-14 h-14 bg-brand/8 rounded-xl flex items-center justify-center text-brand mx-auto mb-6">
                                     <EmptyIcon className="w-8 h-8" />
@@ -186,35 +195,44 @@ export default function GenericResourcesPage() {
                                 <p className="text-slate-500 mb-6 max-w-sm mx-auto">
                                     {config.emptyDescription}
                                 </p>
-                                <Button
-                                    onClick={() => router.push(`/dashboard/${resource}/new`)}
-                                    variant="success"
-                                    fullWidth={false}
-                                    className="mt-4"
-                                >
-                                    <Plus className="w-5 h-5" />
-                                    {config.createButtonText}
-                                </Button>
+                                {canCreate && (
+                                    <Button
+                                        onClick={() => router.push(`/dashboard/${resource}/new`)}
+                                        variant="success"
+                                        fullWidth={false}
+                                        className="mt-4"
+                                    >
+                                        <Plus className="w-5 h-5" />
+                                        {config.createButtonText}
+                                    </Button>
+                                )}
+                                {!canCreate && (
+                                    <p className="text-sm text-slate-500 mt-4">
+                                        You don't have permission to create {resource}. Contact an administrator if you need access.
+                                    </p>
+                                )}
                             </div>
                         </div>
                     ) : (
                         <div>
                             {/* Action Bar */}
                             <div className="flex items-center justify-between mb-8">
-                                <CountLabel label={config.title} count={items.length} />
-                                <Button
-                                    onClick={() => router.push(`/dashboard/${resource}/new`)}
-                                    variant="success"
-                                    fullWidth={false}
-                                >
-                                    <Plus className="w-5 h-5" />
-                                    {config.newButtonText}
-                                </Button>
+                                <CountLabel label={config.title} count={displayItems.length} />
+                                {canCreate && (
+                                    <Button
+                                        onClick={() => router.push(`/dashboard/${resource}/new`)}
+                                        variant="success"
+                                        fullWidth={false}
+                                    >
+                                        <Plus className="w-5 h-5" />
+                                        {config.newButtonText}
+                                    </Button>
+                                )}
                             </div>
 
                             {/* Items Grid */}
                             <div className="grid grid-cols-12 gap-6">
-                                {items.map((item) => (
+                                {displayItems.map((item) => (
                                     <div
                                         key={item.id}
                                         className="col-span-12 md:col-span-6 lg:col-span-4 glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between group"
@@ -227,7 +245,7 @@ export default function GenericResourcesPage() {
                                                 </div>
                                                 <div className="overflow-hidden">
                                                     <h3 className="font-bold text-slate-800 text-lg group-hover:text-brand transition-colors duration-300 truncate">
-                                                        {item.name}
+                                                        {decodeHtmlEntities(item.name)}
                                                     </h3>
                                                     <p className="text-xs text-slate-400">
                                                         Created {item.created_at ? new Date(item.created_at).toLocaleDateString() : 'recently'}
@@ -237,7 +255,7 @@ export default function GenericResourcesPage() {
 
                                             {/* Item Description */}
                                             <p className="text-slate-500 text-sm leading-relaxed mb-6 line-clamp-2 min-h-10">
-                                                {item.description || `No description provided. Click below to view and configure this ${resource.replace(/s$/, "")}.`}
+                                                {decodeHtmlEntities(item.description || `No description provided. Click below to view and configure this ${resource.replace(/s$/, "")}.`)}
                                             </p>
                                         </div>
 
@@ -247,9 +265,7 @@ export default function GenericResourcesPage() {
                                             className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-bold bg-white hover:bg-brand hover:text-white text-slate-700 transition-all duration-300 active:scale-[0.98] border border-slate-200 hover:border-brand cursor-pointer"
                                         >
                                             {config.viewButtonText}
-                                            <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                                            </svg>
+                                            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                                         </button>
                                     </div>
                                 ))}

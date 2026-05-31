@@ -5,13 +5,13 @@ export const patternList: SidebarNodeItem[] = [
     {
         type: "user",
         label: "User",
-        description: "Representa un usuario o actor en el diagrama.",
+        description: "Represents a user or actor in the diagram.",
         icon: <User size={20} className="text-brand" />
     },
     {
         type: "singleton",
         label: "Singleton",
-        description: "Instancia única global en toda la aplicación",
+        description: "Single global instance throughout the application.",
         icon: <Boxes size={20} className="text-brand" />
     }
 ]

@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { Button } from "../atoms/Button";
 import { HeroVisual } from "../atoms/HeroVisual";
+import { ArrowRight } from "lucide-react";
 
 export const HeroSection: FC = () => {
   return (
@@ -26,19 +27,7 @@ export const HeroSection: FC = () => {
             >
               Start designing now
               <span className="leading-none flex items-center transition-transform duration-300 ease-in-out group-hover:translate-x-1">
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2.5"
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
+                <ArrowRight className="h-5 w-5" />
               </span>
             </Button>
           </div>

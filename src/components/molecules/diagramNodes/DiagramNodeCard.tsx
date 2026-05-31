@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { Node } from "@antv/x6";
 
 interface DiagramNodeCardProps {
-  // ✨ En AntV X6, la instancia del nodo se pasa directamente en la propiedad 'node'
+  // ✨ In AntV X6, the node instance is passed directly in the 'node' property
   node: Node;
   icon: ReactNode;
   defaultLabel: string;
@@ -22,10 +22,10 @@ export function DiagramNodeCard({
   title,
   tag,
 }: DiagramNodeCardProps) {
-  // 🧭 En X6 los datos personalizados se guardan y leen a través de node.getData()
-  // Añadida validación de seguridad por si en v3 la propiedad se inyecta tarde o con otro formato
+  // 🧭 In X6 custom data is stored and read via node.getData()
+  // Added security validation in case in v3 the property is injected late or with another format
   if (!node || typeof node.getData !== 'function') {
-    return <div className="p-2 text-xs bg-red-100 text-red-600 rounded-lg">Cargando nodo...</div>;
+    return <div className="p-2 text-xs bg-red-100 text-red-600 rounded-lg">Loading node...</div>;
   }
   
   const data = node.getData() || {};
@@ -64,7 +64,7 @@ export function DiagramNodeCard({
       className="group flex flex-col items-center justify-center rounded-xl border border-brand/20 bg-brand/5 p-3 shadow-sm transition-all duration-300 hover:border-brand/40 hover:bg-brand/10 hover:shadow-md w-24 h-24"
     >
       
-      {/* Contenido Visual del Nodo */}
+      {/* Node Visual Content */}
       <div className="flex flex-col items-center gap-1 select-none">
         {icon}
         <span className="text-xs font-semibold text-slate-700 text-center truncate max-w-20">
@@ -72,7 +72,7 @@ export function DiagramNodeCard({
         </span>
       </div>
 
-      {/* 💡 Tooltip flotante con Portal para evitar recortes de SVG/foreignObject */}
+      {/* 💡 Floating tooltip with Portal to avoid SVG/foreignObject clipping */}
       {mounted && isHovered && rect && createPortal(
         <div 
           className="fixed z-[99999] pointer-events-none transition-opacity duration-150 animate-in fade-in zoom-in-95"
@@ -93,7 +93,7 @@ export function DiagramNodeCard({
             </div>
             <p className="leading-relaxed text-slate-600">{description}</p>
             
-            {/* Triangulito de la parte inferior */}
+            {/* Bottom triangle arrow */}
             <div className="absolute top-full left-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 border-b border-r border-slate-200 bg-white" />
           </div>
         </div>,

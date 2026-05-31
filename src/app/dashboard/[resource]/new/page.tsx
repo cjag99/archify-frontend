@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useParams, usePathname } from "next/navigation";
+import { useAuth } from "@/core/context/AuthContext";
 import { ProtectedRoute } from "@/components/organisms/ProtectedRoute";
 import { BackLink } from "@/components/atoms/BackLink";
 import { dashboardResourceList } from "@/lib/routes";
@@ -12,6 +13,7 @@ import { ArchitectureStep1 } from "@/components/molecules/ArchitectureStep1";
 import { ArchitectureStep2 } from "@/components/molecules/ArchitectureStep2";
 import { Button } from "@/components/atoms/Button";
 import { useArchitecture } from "@/hooks/useArchitecture";
+import { Lock } from "lucide-react";
 interface CanvasNodeData {
   id: string;
   type?: string;
@@ -40,6 +42,7 @@ interface PatternPayload {
 export default function NewResourcePage() {
     const params = useParams();
     const pathname = usePathname();
+    const { user, loading: authLoading } = useAuth();
     const [architecturePayload, setArchitecturePayload] = useState<ArchitecturePayload | null>(null);
     const [patternPayload, setPatternPayload] = useState<PatternPayload | null>(null);
     const [patternId, setPatternId] = useState<string | null>(null);
@@ -47,6 +50,39 @@ export default function NewResourcePage() {
 
     const resource = (typeof params?.resource === "string" ? params.resource : (pathname.split("/")[2] || ""));
     const { createArchitecture } = useArchitecture();
+    
+    // Authorization check: Only authorized users can create patterns and architectures
+    const isAuthorized = user?.is_authorized || user?.role === "admin";
+    const canCreateResource = isAuthorized || resource === "projects";
+    
+    // Show access denied if not authorized for this resource type
+    if (!authLoading && !canCreateResource && (resource === "patterns" || resource === "architectures")) {
+        return (
+            <ProtectedRoute>
+                <div className="app-shell flex flex-col items-center justify-center p-6">
+                    <div className="w-full max-w-300 glass-card rounded-2xl p-8 border border-slate-200">
+                        <div className="mb-6">
+                            <BackLink
+                                href={dashboardResourceList(resource)}
+                                label={`Volver a ${resource}`}
+                            />
+                        </div>
+                        <div className="text-center py-12 space-y-6">
+                            <div className="w-14 h-14 bg-red-500/8 rounded-xl flex items-center justify-center text-red-500 mx-auto">
+                                <Lock className="w-8 h-8" />
+                            </div>
+                            <div>
+                                <h2 className="text-xl font-bold text-slate-800 mb-2">Access Denied</h2>
+                                <p className="text-slate-500">
+                                    You don't have permission to create {resource}. Only authorized users can create this resource type.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ProtectedRoute>
+        );
+    }
     const handlePatternNext = (payload: PatternPayload) => {
         setPatternPayload(payload);
         setStep(2);

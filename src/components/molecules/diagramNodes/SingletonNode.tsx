@@ -11,7 +11,7 @@ export const SingletonNode: React.FC<{ node: Node }> = ({ node }) => (
     node={node}
     icon={<Boxes className="w-6 h-6 text-brand" />}
     defaultLabel="Singleton"
-    defaultDescription="Instancia única global en toda la aplicación. Restringe la creación de objetos de una clase a un solo espécimen compartido por todos los clientes."
+    defaultDescription="Single global instance throughout the application. Restricts the creation of objects of a class to a single specimen shared by all clients."
     title="Creational Pattern"
     tag="Singleton"
   />

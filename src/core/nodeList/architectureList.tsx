@@ -4,67 +4,67 @@ export const architectureList: SidebarNodeItem[] = [
     {
         type: "user",
         label: "User",
-        description: "Representa un usuario o actor en el diagrama.",
+        description: "Represents a user or actor in the diagram.",
         icon: <User size={20} className="text-brand" />
     },
     {
         type: "mvc-controller",
         label: "MVC Controller",
-        description: "Controlador de la arquitectura MVC",
+        description: "Controller in the MVC architecture.",
         icon: <Compass size={20} className="text-brand" />
     },
     {
         type: "mvc-model",
         label: "MVC Model",
-        description: "Modelo de la arquitectura MVC",
+        description: "Model in the MVC architecture.",
         icon: <Cpu size={20} className="text-brand" />
     },
     {
         type: "mvc-view",
         label: "MVC View",
-        description: "Vista de la arquitectura MVC",
+        description: "View in the MVC architecture.",
         icon: <Binoculars size={20} className="text-brand" />
     },
     {
         type: "clean-entity",
         label: "Clean Entity",
-        description: "Entidad de dominio en Clean Architecture",
+        description: "Domain entity in Clean Architecture.",
         icon: <Box size={20} className="text-brand" />
     },
     {
         type: "clean-usecase",
         label: "Clean Use Case",
-        description: "Caso de uso para coordinar la lógica de negocio",
+        description: "Use case to coordinate business logic.",
         icon: <Package size={20} className="text-brand" />
     },
     {
         type: "clean-adapter",
         label: "Clean Adapter",
-        description: "Adaptador entre la capa de interfaz y el dominio",
+        description: "Adapter between the interface layer and the domain.",
         icon: <Server size={20} className="text-brand" />
     },
     {
         type: "clean-framework",
         label: "Clean Framework",
-        description: "Infraestructura y drivers externos de Clean Architecture",
+        description: "Infrastructure and external drivers in Clean Architecture.",
         icon: <HardDrive size={20} className="text-brand" />
     },
     {
         type: "hex-domain",
         label: "Hexagonal Domain",
-        description: "Núcleo de dominio en arquitectura hexagonal",
+        description: "Domain core in hexagonal architecture.",
         icon: <Layers size={20} className="text-brand" />
     },
     {
         type: "hex-application",
         label: "Hexagonal Application",
-        description: "Capa de aplicación y casos de uso",
+        description: "Application layer and use cases.",
         icon: <Cpu size={20} className="text-brand" />
     },
     {
         type: "hex-adapter",
         label: "Hexagonal Adapter",
-        description: "Puertos y adaptadores que conectan el dominio con el exterior",
+        description: "Ports and adapters connecting the domain with the outside world.",
         icon: <Package size={20} className="text-brand" />
     }
 ];

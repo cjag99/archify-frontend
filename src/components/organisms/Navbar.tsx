@@ -11,7 +11,7 @@ import { LoginForm } from "./LoginForm";
 import { ProfileMenu } from "../molecules/ProfileMenu";
 import { AuthQueryHandler } from "../molecules/AuthQueryHandler";
 import { ROUTES } from "@/lib/routes";
-
+import { Menu, X, Sun, Moon } from "lucide-react";
 export const Navbar: FC = () => {
   const [modalType, setModalType] = useState<"login" | "register" | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -73,26 +73,10 @@ export const Navbar: FC = () => {
             className="relative z-10 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
           >
             {/* Icono de la Luna: Se muestra por defecto, se oculta en modo oscuro */}
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              className="h-5 w-5 block dark:hidden" // 💡 block por defecto, hidden en oscuro
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-            </svg>
+            <Moon className="h-5 w-5 block dark:hidden" />
 
             {/* Icono del Sol: Se oculta por defecto, se muestra en modo oscuro */}
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              className="h-5 w-5 hidden dark:block" // 💡 hidden por defecto, block en oscuro
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364-6.364l-1.414 1.414M7.05 16.95l-1.414 1.414m12.728 0l-1.414-1.414M7.05 7.05L5.636 5.636M12 8a4 4 0 100 8 4 4 0 000-8z" />
-            </svg>
+            <Sun className="h-5 w-5 hidden dark:block" />
           </button>
             {isAuthenticated ? (
               <ProfileMenu />
@@ -120,13 +104,9 @@ export const Navbar: FC = () => {
               className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white p-2 text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 md:hidden"
             >
               {mobileMenuOpen ? (
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <X className="h-5 w-5" />
               ) : (
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.2" d="M4 7h16M4 12h16M4 17h16" />
-                </svg>
+                <Menu className="h-5 w-5" />
               )}
             </button>
           </div>
