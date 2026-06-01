@@ -3,15 +3,15 @@ import type { FC } from "react";
 export const HeroVisual: FC = () => {
   return (
     <div className="relative mx-auto w-full max-w-[36rem] lg:ml-auto">
-      <div className="absolute -top-6 left-0 z-20 hidden w-44 rounded-xl border border-slate-200 bg-white p-3 shadow-xl md:block lg:-left-6 lg:w-48 lg:p-4">
+      <div className="absolute -top-6 left-0 z-20 hidden w-44 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 shadow-xl md:block lg:-left-6 lg:w-48 lg:p-4 transition-colors duration-300">
         <p className="mb-2 text-[10px] font-bold uppercase text-slate-400">Pattern</p>
         <div className="mb-2 flex items-center gap-2">
           <div className="h-3 w-3 rounded-full bg-brand" />
-          <span className="text-xs font-semibold text-slate-700">Hexagonal Arch</span>
+          <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">Hexagonal Arch</span>
         </div>
         <div className="space-y-1">
-          <div className="h-1.5 w-full rounded bg-slate-100" />
-          <div className="h-1.5 w-2/3 rounded bg-slate-100" />
+          <div className="h-1.5 w-full rounded bg-slate-100 dark:bg-slate-800" />
+          <div className="h-1.5 w-2/3 rounded bg-slate-100 dark:bg-slate-800" />
         </div>
       </div>
       <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-950 shadow-2xl transition-transform duration-500 hover:-translate-y-1 sm:rounded-3xl">

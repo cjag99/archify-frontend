@@ -84,7 +84,7 @@ export const Navbar: FC = () => {
               <>
                 <button
                   onClick={() => openModal("login")}
-                  className="hidden rounded-xl px-3 py-2 text-sm font-bold text-slate-600 transition-colors hover:bg-slate-100 hover:text-brand lg:block"
+                  className="hidden rounded-xl px-3 py-2 text-sm font-bold text-slate-600 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-brand lg:block"
                 >
                   Log in
                 </button>
@@ -101,7 +101,7 @@ export const Navbar: FC = () => {
               onClick={() => setMobileMenuOpen((value) => !value)}
               aria-expanded={mobileMenuOpen}
               aria-label="Toggle navigation menu"
-              className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white p-2 text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 md:hidden"
+              className="inline-flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 p-2 text-slate-600 dark:text-slate-200 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100 md:hidden"
             >
               {mobileMenuOpen ? (
                 <X className="h-5 w-5" />
@@ -120,7 +120,7 @@ export const Navbar: FC = () => {
                   <div className="grid grid-cols-1 gap-2">
                     <button
                       onClick={() => openModal("login")}
-                      className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                      className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-200 transition hover:bg-slate-50 dark:hover:bg-slate-800"
                     >
                       Log in
                     </button>

@@ -24,10 +24,10 @@ export const StepSection: FC = () => {
       <div className="mx-auto max-w-7xl">
         <div className="mb-12 text-center sm:mb-14 lg:mb-16">
           <span className="eyebrow mb-4">Workflow</span>
-          <h2 className="mb-4 text-3xl font-bold text-slate-950 sm:text-4xl lg:text-5xl">
+          <h2 className="mb-4 text-3xl font-bold text-slate-950 dark:text-slate-100 sm:text-4xl lg:text-5xl">
             Design your system in 3 steps
           </h2>
-          <p className="mx-auto max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
+          <p className="mx-auto max-w-2xl text-base leading-relaxed text-slate-600 dark:text-slate-400 sm:text-lg">
             From idea to structured code without getting lost in initial
             configurations.
           </p>
@@ -48,12 +48,12 @@ export const StepSection: FC = () => {
                 >
                   {step.number}
                 </div>
-                <div className="ml-4 h-px flex-1 bg-slate-200" />
+                <div className="ml-4 h-px flex-1 bg-slate-200 dark:bg-slate-800" />
               </div>
-              <h3 className="mb-3 text-xl font-bold text-slate-950">
+              <h3 className="mb-3 text-xl font-bold text-slate-950 dark:text-slate-100">
                 {step.title}
               </h3>
-              <p className="text-sm leading-relaxed text-slate-600 sm:text-base">
+              <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400 sm:text-base">
                 {step.text}
               </p>
             </div>

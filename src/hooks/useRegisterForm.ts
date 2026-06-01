@@ -83,12 +83,34 @@ export const useRegisterForm = (onSuccess?: () => void) => {
         password: data.password as string,
       });
       onSuccess?.();
-    } catch (err: Error | unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Unknown error");
+    } catch (err: any) {
+      let userFriendlyMessage = "An unexpected error occurred during registration. Please try again.";
+      const serverError = err.cause;
+      
+      // Normalizamos el error del servidor (revisamos .detail y .error)
+      const detail = serverError?.detail || serverError?.error;
+
+      if (detail) {
+        if (typeof detail === "string") {
+          const lowerDetail = detail.toLowerCase();
+          if (lowerDetail.includes("already exists") || lowerDetail.includes("registered")) {
+            userFriendlyMessage = "An account with this email or username already exists.";
+          } else {
+            userFriendlyMessage = detail;
+          }
+        } else if (Array.isArray(detail)) {
+          userFriendlyMessage = detail[0]?.msg || "Invalid data provided.";
+        }
+      } else if (err instanceof Error) {
+        const message = err.message.toLowerCase();
+        if (message.includes("already exists") || message.includes("registered")) {
+          userFriendlyMessage = "An account with this email or username already exists.";
+        } else {
+          userFriendlyMessage = err.message;
+        }
       }
+
+      setError(userFriendlyMessage);
     } finally {
       setLoading(false);
     }

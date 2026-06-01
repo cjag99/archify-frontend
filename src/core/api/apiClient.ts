@@ -37,20 +37,20 @@ class ApiClient {
         if (body) {
             config.body = body instanceof FormData ? body : JSON.stringify(body);
         }
-        // Always log POST and PATCH payloads for easier debugging
-        if (method === "POST" || method === "PATCH") {
-            try {
-                console.log(`[API ${method}] ${url} payload:`, body);
-            } catch (e) {
-                console.log(`[API ${method}] ${url} payload: <unserializable>`);
-            }
-        }
+    
         try {
             const response = await fetch(url, config);
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
+                
+                // Buscamos un mensaje de error en las propiedades comunes (detail o error)
+                const serverMessage = typeof errorData.detail === "string" 
+                    ? errorData.detail 
+                    : (typeof errorData.error === "string" ? errorData.error : null);
+
+                const errorMessage = serverMessage || `API request failed: ${response.status} ${response.statusText}`;
                 throw new Error(
-                    `API request failed: ${response.status} ${response.statusText}`,
+                    errorMessage,
                     { cause: errorData }
                 );
             }
@@ -67,6 +67,8 @@ class ApiClient {
             throw error;
         }
     }
+
+
 
     public get<T>(endpoint: string, options?: ApiOptions): Promise<T> {
         return this.request<T>(endpoint, "GET", undefined, options);

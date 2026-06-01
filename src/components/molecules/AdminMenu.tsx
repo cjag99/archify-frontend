@@ -52,8 +52,8 @@ export const AdminMenu: FC = () => {
     ];
 
     return (
-        <nav className="flex flex-col gap-1.5 p-4 glass-card rounded-2xl w-full" >
-            <p className="text-[10px] font-bold uppercase text-slate-400 px-3 mb-2">
+        <nav className="grid grid-cols-5 md:grid-cols-1 md:flex md:flex-col place-items-center md:items-start md:justify-start gap-2 md:gap-1.5 p-2 md:p-3 glass-card rounded-2xl w-full" >
+            <p className="hidden md:block text-[9px] md:text-[10px] font-bold uppercase text-slate-400 px-3 mb-2">
                 Tables
             </p>
             {
@@ -65,21 +65,23 @@ export const AdminMenu: FC = () => {
                             key={table.href}
                             href={table.href}
                             onClick={() => changeTable(table.apiRoute)}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer active:scale-[0.98] ${isActive
-                                ? "bg-brand/10 text-brand"
-                                : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                            className={`flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-0 md:px-3 py-1.5 md:py-2 md:w-full rounded-xl font-semibold text-xs md:text-sm transition-all duration-200 cursor-pointer active:scale-[0.98] ${isActive
+                                ? "bg-brand/10 text-brand ring-2 ring-brand"
+                                : "text-slate-500 dark:text-slate-400 hover:bg-slate-50 hover:text-slate-900 dark:hover:bg-brand/10 dark:hover:text-brand"
                                 }`}
                         >
-                            {IconComponent && (
-                                <IconComponent
-                                    className={`w-5 h-5 transition-colors duration-200 ${isActive ? "text-brand" : "text-slate-400"}`}
-                                />
-                            )}
-                            {table.label}
+                            <div className="flex items-center justify-center rounded-lg mb-1 md:mb-0 w-10 h-10 md:w-11 md:h-11">
+                                {IconComponent && (
+                                    <IconComponent
+                                        className={`transition-colors duration-200 ${isActive ? "text-brand w-6 h-6" : "text-slate-400 dark:text-slate-300 w-5 h-5"}`}
+                                    />
+                                )}
+                            </div>
+                            <span className="hidden md:inline ml-2">{table.label}</span>
                         </a>
                     );
                 })
             }
-        </nav >
+        </nav>
     );
 }

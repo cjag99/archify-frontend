@@ -145,7 +145,7 @@ export default function GenericResourcesPage() {
                     <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-8">
                         <div>
                             <span className="eyebrow mb-3 capitalize">{resource}</span>
-                            <h1 className="text-3xl md:text-4xl font-extrabold text-slate-950 mb-2">
+                            <h1 className="text-3xl md:text-4xl font-extrabold text-slate-950 dark:text-slate-100 mb-2">
                                 {config.title}
                             </h1>
                             <p className="text-slate-500">
@@ -191,7 +191,7 @@ export default function GenericResourcesPage() {
                                 <div className="w-14 h-14 bg-brand/8 rounded-xl flex items-center justify-center text-brand mx-auto mb-6">
                                     <EmptyIcon className="w-8 h-8" />
                                 </div>
-                                <h2 className="text-xl font-bold text-slate-800 mb-2">{config.emptyTitle}</h2>
+                                <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">{config.emptyTitle}</h2>
                                 <p className="text-slate-500 mb-6 max-w-sm mx-auto">
                                     {config.emptyDescription}
                                 </p>
@@ -244,7 +244,7 @@ export default function GenericResourcesPage() {
                                                     <Icon className="w-6 h-6" />
                                                 </div>
                                                 <div className="overflow-hidden">
-                                                    <h3 className="font-bold text-slate-800 text-lg group-hover:text-brand transition-colors duration-300 truncate">
+                                                    <h3 className="font-bold text-slate-800 dark:text-slate-100 text-lg group-hover:text-brand transition-colors duration-300 truncate">
                                                         {decodeHtmlEntities(item.name)}
                                                     </h3>
                                                     <p className="text-xs text-slate-400">

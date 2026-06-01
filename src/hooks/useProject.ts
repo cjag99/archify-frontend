@@ -30,10 +30,49 @@ export const useProject = () => {
         }
     }, [user]);
 
+    const fetchProjectById = useCallback(async (id: string): Promise<Project | null> => {
+        try {
+            const result = await projectService.getById(id);
+            return result || null;
+        } catch (err) {
+            console.error("Error fetching project by ID:", err);
+            return null;
+        }
+    }, []);
+
+    const updateProject = useCallback(async (id: string, data: Partial<Project>): Promise<Project | null> => {
+        try {
+            console.log("Updating project payload:", data);
+            const result = await projectService.update(id, data);
+            return result || null;
+        } catch (err) {
+            console.error("Error updating project:", err);
+            return null;
+        }
+    }, []);
+
+    const deleteProject = useCallback(async (id: string): Promise<boolean> => {
+        try {
+            await projectService.delete(id);
+            setProjects(prev => prev.filter(p => p.id !== id));
+            return true;
+        } catch (err) {
+            console.error("Error deleting project:", err);
+            return false;
+        }
+    }, []);
+
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchProjects();
     }, [fetchProjects]);
 
-    return { projects, loading, error };
+    return { 
+        projects, 
+        loading, 
+        error, 
+        fetchProjectById, 
+        updateProject, 
+        deleteProject 
+    };
 }

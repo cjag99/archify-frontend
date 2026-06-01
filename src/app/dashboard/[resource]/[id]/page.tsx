@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { ProtectedRoute } from "@/components/organisms/ProtectedRoute";
 import { PatternView } from "@/components/organisms/PatternView";
 import { ArchitectureView } from "@/components/organisms/ArchitectureView";
+import { ProjectView } from "@/components/organisms/ProjectView";
 import { BackLink } from "@/components/atoms/BackLink";
 import { dashboardResourceList } from "@/lib/routes";
 import { Briefcase } from "lucide-react";
@@ -39,7 +40,15 @@ export default function ResourceDetailPage() {
         );
     }
 
-    // Placeholder for projects that don't have a detailed view component yet
+    if (resource === "projects") {
+        return (
+            <ProtectedRoute>
+                <ProjectView projectId={id} />
+            </ProtectedRoute>
+        );
+    }
+
+    // Placeholder for other resources
     return (
         <ProtectedRoute>
             <div className="app-shell flex flex-col items-center justify-center p-6">

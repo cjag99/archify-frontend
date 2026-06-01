@@ -2,17 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useArchitecture } from "@/hooks/useArchitecture";
+import { useProject } from "@/hooks/useProject";
 import { useAuth } from "@/core/context/AuthContext";
 import { BackLink } from "@/components/atoms/BackLink";
 import { Button } from "@/components/atoms/Button";
-import { Lock } from "lucide-react";
+import { FolderOpen } from "lucide-react";
 import { ROUTES } from "@/lib/routes";
 import SchemaCanvas from "@/components/organisms/SchemaCanvas";
 import Modal from "@/components/organisms/Modal";
 import { DeleteModal } from "@/components/organisms/DeleteModal";
-import { ArchitectureStep1 } from "@/components/molecules/ArchitectureStep1";
-import { ArchitectureStep2 } from "@/components/molecules/ArchitectureStep2";
+import { ProjectStep1 } from "@/components/molecules/ProjectStep1";
+import { ProjectStep2 } from "@/components/molecules/ProjectStep2";
 import { UserNode } from "@/components/molecules/diagramNodes/UserNode";
 import { MVCViewNode } from "@/components/molecules/diagramNodes/MVCViewNode";
 import { MVCModelNode } from "@/components/molecules/diagramNodes/MVCModelNode";
@@ -25,12 +25,16 @@ import { HexagonalDomainNode } from "@/components/molecules/diagramNodes/Hexagon
 import { HexagonalApplicationNode } from "@/components/molecules/diagramNodes/HexagonalApplicationNode";
 import { HexagonalAdapterNode } from "@/components/molecules/diagramNodes/HexagonalAdapterNode";
 import { decodeHtmlEntities } from "@/core/utils/string.utils";
+import Image from "next/image";
+import { UUID } from "crypto";
+import { useImage } from "@/hooks/useImage";
+import { ImageType } from "@/core/types/models";
 
-interface ArchitectureViewProps {
-  architectureId: string;
+interface ProjectViewProps {
+  projectId: string;
 }
 
-const architectureNodeTypes = {
+const projectNodeTypes = {
   user: UserNode,
   "mvc-view": MVCViewNode,
   "mvc-model": MVCModelNode,
@@ -44,7 +48,7 @@ const architectureNodeTypes = {
   "hex-adapter": HexagonalAdapterNode,
 };
 
-type ArchitectureSchema = {
+type ProjectSchema = {
   nodes?: Array<{
     id: string;
     type?: string;
@@ -61,27 +65,50 @@ type ArchitectureSchema = {
   }>;
 };
 
-export function ArchitectureView({ architectureId }: ArchitectureViewProps) {
+interface ProjectPayload {
+  name: string;
+  description: string;
+  logo_id?: string;
+}
+
+interface ProjectNodeNameMap {
+  [nodeType: string]: string;
+}
+
+export function ProjectView({ projectId }: ProjectViewProps) {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
-  const isAuthorized = user?.is_authorized || user?.role === "admin";
-  const {
-    architecture,
-    fetchArchitecture,
-    updateArchitecture,
-    deleteArchitecture,
-    loading,
-  } = useArchitecture();
+  const { fetchProjectById, updateProject, deleteProject } = useProject();
+  const { fetchImage } = useImage();
+  const [project, setProject] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [imageObj, setImageObj] = useState<ImageType | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editPayload, setEditPayload] = useState<{ name: string; description: string; enabled: boolean } | null>(null);
+  const [editPayload, setEditPayload] = useState<ProjectPayload | null>(null);
+
+  const isAuthorized = user && project && user.id === project.user_id;
 
   useEffect(() => {
     let active = true;
 
     const loadData = async () => {
-      if (active) {
-        await fetchArchitecture(architectureId);
+      setLoading(true);
+      try {
+        const data = await fetchProjectById(projectId);
+        if (active) {
+          setProject(data || null);
+          if (data?.project_logo) {
+            const fetchedImage = await fetchImage(data.project_logo as UUID);
+            if (active && fetchedImage) {
+              setImageObj(fetchedImage);
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Error loading project data:", err);
+      } finally {
+        if (active) setLoading(false);
       }
     };
 
@@ -90,47 +117,73 @@ export function ArchitectureView({ architectureId }: ArchitectureViewProps) {
     return () => {
       active = false;
     };
-  }, [architectureId, fetchArchitecture]);
+  }, [projectId, fetchProjectById, fetchImage]);
 
-  const schema = architecture?.base_structure as ArchitectureSchema | undefined;
+  const schema = project?.architecture as ProjectSchema | undefined;
   const hasSchema = Boolean(schema?.nodes?.length || schema?.edges?.length);
 
-  if (isEditing && architecture) {
+  const handleProjectEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleProjectDelete = async () => {
+    const deleted = await deleteProject(projectId);
+    if (deleted) {
+      router.push(ROUTES.projects);
+    }
+  };
+
+  const handleEditStep1Next = (payload: ProjectPayload) => {
+    setEditPayload(payload);
+  };
+
+  const handleEditStep2Finish = async (
+    architecture_id: string,
+    nodeNameMap: ProjectNodeNameMap,
+    updatedSchema: { nodes: any[]; edges: any[] }
+  ) => {
+    if (!project) return;
+
+    const updateData = {
+      name: editPayload?.name || project.name,
+      description: editPayload?.description || project.description,
+      project_logo: editPayload?.logo_id ? (editPayload.logo_id as any) : project.project_logo,
+      architecture: updatedSchema as unknown as JSON,
+    };
+
+    const result = await updateProject(projectId, updateData);
+    if (result) {
+      setProject(result);
+      setIsEditing(false);
+      setEditPayload(null);
+    }
+  };
+
+  if (isEditing && project) {
     const currentEditPayload = editPayload ?? {
-      name: decodeHtmlEntities(architecture.name),
-      description: decodeHtmlEntities(architecture.description || ""),
-      enabled: architecture.enabled ?? true,
+      name: decodeHtmlEntities(project.name),
+      description: decodeHtmlEntities(project.description || ""),
+      logo_id: project.project_logo,
     };
 
     return (
       <div className="app-shell p-6 md:p-12">
         <div className="max-w-5xl mx-auto space-y-8">
-          <BackLink href={ROUTES.architectures} label="Back to Architectures" />
+          <BackLink href={ROUTES.projects} label="Back to Projects" />
           <div className="glass-card rounded-2xl p-8 border border-slate-200">
             {!editPayload ? (
-              <ArchitectureStep1
+              <ProjectStep1
                 initialName={currentEditPayload.name}
                 initialDescription={currentEditPayload.description}
-                initialEnabled={currentEditPayload.enabled}
-                onNext={(payload) => setEditPayload(payload)}
+                onNext={handleEditStep1Next}
               />
             ) : (
-              <ArchitectureStep2
-                architectureName={currentEditPayload.name}
-                architectureDescription={currentEditPayload.description}
-                enabled={currentEditPayload.enabled}
-                initialNodes={schema?.nodes || []}
-                initialEdges={schema?.edges || []}
+              <ProjectStep2
+                projectName={currentEditPayload.name}
+                projectDescription={currentEditPayload.description}
+                logo_id={currentEditPayload.logo_id}
                 onBack={() => setEditPayload(null)}
-                onFinish={async (updatedSchema, payload) => {
-                  await updateArchitecture(architectureId, {
-                    ...payload,
-                    base_structure: updatedSchema as unknown as JSON,
-                  });
-                  await fetchArchitecture(architectureId);
-                  setIsEditing(false);
-                  setEditPayload(null);
-                }}
+                onFinish={handleEditStep2Finish}
               />
             )}
           </div>
@@ -142,7 +195,7 @@ export function ArchitectureView({ architectureId }: ArchitectureViewProps) {
   return (
     <div className="app-shell p-4 md:p-8 lg:p-12">
       <div className="max-w-6xl mx-auto mb-6">
-        <BackLink href={ROUTES.architectures} label="Back to Architectures" />
+        <BackLink href={ROUTES.projects} label="Back to Projects" />
       </div>
 
       <div className="max-w-6xl mx-auto overflow-hidden bg-white/60 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 transition-all duration-300">
@@ -155,14 +208,9 @@ export function ArchitectureView({ architectureId }: ArchitectureViewProps) {
 
         <Modal isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)}>
           <DeleteModal
-            id={architectureId}
+            id={projectId}
             onClose={() => setIsDeleteOpen(false)}
-            onConfirm={async () => {
-              const deleted = await deleteArchitecture(architectureId);
-              if (deleted) {
-                router.push(ROUTES.architectures);
-              }
-            }}
+            onConfirm={handleProjectDelete}
           />
         </Modal>
 
@@ -172,21 +220,21 @@ export function ArchitectureView({ architectureId }: ArchitectureViewProps) {
             <div className="flex-1 space-y-4 w-full">
               <div className="flex flex-col md:flex-row items-center gap-4 md:gap-5">
                 <div className="p-3 bg-white rounded-2xl shadow-xl border border-slate-100/50 text-brand shrink-0">
-                  <Lock size={28} />
+                  <FolderOpen size={28} />
                 </div>
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight break-words w-full">
-                  {loading ? "Loading..." : decodeHtmlEntities(architecture?.name || "Architecture Details")}
+                  {loading ? "Loading..." : decodeHtmlEntities(project?.name || "Project Details")}
                 </h1>
               </div>
-              {!loading && architecture?.description && (
+              {!loading && project?.description && (
                 <p className="text-base md:text-xl text-slate-500 max-w-3xl leading-relaxed whitespace-pre-line mx-auto md:mx-0">
-                  {decodeHtmlEntities(architecture.description)}
+                  {decodeHtmlEntities(project.description)}
                 </p>
               )}
             </div>
-            {!loading && architecture && isAuthorized && (
+            {!loading && project && isAuthorized && (
               <div className="flex gap-3 pb-2 justify-center md:justify-end">
-                <Button variant="secondary" onClick={() => setIsEditing(true)} className="rounded-2xl px-6">
+                <Button variant="secondary" onClick={handleProjectEdit} className="rounded-2xl px-6">
                   Edit
                 </Button>
                 <Button variant="danger" onClick={() => setIsDeleteOpen(true)} className="rounded-2xl px-6">
@@ -196,18 +244,42 @@ export function ArchitectureView({ architectureId }: ArchitectureViewProps) {
             )}
           </div>
 
+          {/* Project Logo Section */}
+          {imageObj && (
+            <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm">
+              <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
+                <div className="w-2 h-8 bg-brand rounded-full"></div>
+                Project Logo
+              </h3>
+              <div className="w-full relative h-32 md:h-48 rounded-[2rem] shadow-inner overflow-hidden border border-slate-200 bg-white flex items-center justify-center">
+                {imageObj?.url ? (
+                  <Image 
+                    src={imageObj.url} 
+                    alt={project?.name || "Project logo"} 
+                    width={200} 
+                    height={200} 
+                    className="object-contain" 
+                    unoptimized 
+                  />
+                ) : (
+                  <p className="text-slate-400">No logo available</p>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Schema Section */}
           {hasSchema ? (
             <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm">
               <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
                 <div className="w-2 h-8 bg-brand rounded-full"></div>
-                Schema
+                Architecture Schema
               </h3>
               <div className="w-full h-[350px] sm:h-[500px] md:h-150 border border-slate-200 rounded-[2rem] shadow-inner overflow-hidden bg-slate-50/50 relative pointer-events-none">
                 <SchemaCanvas
                   nodes={schema?.nodes || []}
                   edges={schema?.edges || []}
-                  nodeTypes={architectureNodeTypes}
+                  nodeTypes={projectNodeTypes}
                   readonly={true}
                 />
               </div>
@@ -216,7 +288,7 @@ export function ArchitectureView({ architectureId }: ArchitectureViewProps) {
             !loading && (
               <div className="p-12 bg-white/40 border border-white/50 rounded-3xl text-center shadow-sm">
                 <p className="text-slate-500 font-medium text-lg">
-                  No schema available for this architecture yet.
+                  No architecture schema available for this project yet.
                 </p>
               </div>
             )

@@ -31,12 +31,12 @@ export default function Modal({ isOpen, onClose, children, maxWidth }: ModalProp
 
         <button 
           onClick={onClose}
-          className="absolute top-3 right-3 md:top-4 md:right-4 p-1.5 md:p-2 rounded-full bg-white text-slate-400 shadow-sm border border-slate-200 hover:bg-slate-50 hover:text-slate-900 transition-all z-20"
+          className="absolute top-3 right-3 md:top-4 md:right-4 p-1.5 md:p-2 rounded-full bg-white dark:bg-slate-900 text-slate-400 dark:text-slate-500 shadow-sm border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100 transition-all z-20"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <div className="p-7 lg:p-9">
+        <div className="px-7 pb-7 pt-12 lg:px-9 lg:pb-9 lg:pt-14">
           {children}
         </div>
       </div>

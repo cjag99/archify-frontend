@@ -6,16 +6,16 @@ import { ArrowRight } from "lucide-react";
 export const HeroSection: FC = () => {
   return (
     <div className="relative overflow-hidden">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] bg-size-[24px_24px] opacity-45 sm:bg-size-[28px_28px]" />
-      <div className="absolute inset-x-0 top-0 -z-10 h-48 bg-gradient-to-b from-brand/8 to-transparent" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] dark:bg-[radial-gradient(#334155_1px,transparent_1px)] bg-size-[24px_24px] opacity-45 sm:bg-size-[28px_28px]" />
+      <div className="absolute inset-x-0 top-0 -z-10 h-48 bg-linear-to-b from-brand/8 to-transparent" />
       <section className="mx-auto grid min-h-[70vh] max-w-7xl grid-cols-1 items-center gap-10 px-4 py-14 sm:gap-12 sm:px-6 sm:py-16 lg:min-h-[82vh] lg:grid-cols-[1.05fr_0.95fr] lg:gap-20 lg:py-20">
         <div className="z-10 flex flex-col items-start text-left">
           <span className="eyebrow mb-4 sm:mb-5">Architecture workspace</span>
-          <h1 className="mb-5 text-4xl leading-[1.08] font-extrabold text-slate-950 sm:mb-6 sm:text-5xl lg:text-6xl">
+          <h1 className="mb-5 text-4xl leading-[1.08] font-extrabold text-slate-950 dark:text-slate-100 sm:mb-6 sm:text-5xl lg:text-6xl">
             Your architecture, <br />
             <span className="text-brand">ready to code.</span>
           </h1>
-          <p className="mb-7 max-w-xl text-base leading-relaxed text-slate-600 sm:mb-8 sm:text-lg lg:text-xl">
+          <p className="mb-7 max-w-xl text-base leading-relaxed text-slate-600 dark:text-slate-400 sm:mb-8 sm:text-lg lg:text-xl">
             Great programming starts with great design. Choose your architectural
             pattern, define your domain and generate a professional scaffolding
             in seconds.

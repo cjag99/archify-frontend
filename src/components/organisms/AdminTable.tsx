@@ -4,10 +4,11 @@ import { useAdminTable } from "@/hooks/useAdminTable";
 import { useParams } from "next/navigation";
 import { EmptyTable } from "./EmptyTable";
 import { Button } from "@/components/atoms/Button";
-import { Plus } from "lucide-react";
+import { Plus, Pencil, Trash2 } from "lucide-react";
 import Modal from "./Modal";
 import { CodeLanguageForm } from "./CodeLanguageForm";
 import { DeleteModal } from "./DeleteModal";
+import { NoTableSelected } from "@/components/molecules/NoTableSelected";
 
 export const AdminTable: FC = () => {
     const [modalType, setModalType] = useState<string | null>(null);
@@ -20,6 +21,11 @@ export const AdminTable: FC = () => {
     let columns: string[] = [];
     type TableRow = { item: Record<string, unknown>; values: unknown[] };
     let rows: TableRow[] = [];
+
+    // ✨ Si no hay tabla seleccionada, mostrar componente
+    if (!tablename) {
+        return <NoTableSelected />;
+    }
 
     if (loading) {
         return (
@@ -44,13 +50,13 @@ export const AdminTable: FC = () => {
     
     if (!data || data.length === 0) {
         return (
-            <div className="p-8 max-w-7xl mx-auto">
-                <div className="flex items-center justify-between mb-8">
-                    <div>
-                        <h1 className="text-3xl font-extrabold text-slate-950 dark:text-slate-100 capitalize mb-2">
+            <div className="p-4 md:p-8 max-w-7xl mx-auto">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-0 mb-6 md:mb-8">
+                    <div className="flex-1 min-w-0">
+                        <h1 className="text-2xl md:text-3xl font-extrabold text-slate-950 dark:text-slate-100 capitalize mb-1 md:mb-2 truncate">
                             {`${currentTable} Directory`}
                         </h1>
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                        <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400">
                             View and manage {currentTable} records in the system.
                         </p>
                     </div>
@@ -70,13 +76,13 @@ export const AdminTable: FC = () => {
     }));
 
     return (
-        <div className="p-8 max-w-7xl mx-auto">
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <h1 className="text-3xl font-extrabold text-slate-950 dark:text-slate-100 capitalize mb-2">
+        <div className="p-4 md:p-8 max-w-7xl mx-auto">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-0 mb-6 md:mb-8">
+                <div className="flex-1 min-w-0">
+                    <h1 className="text-2xl md:text-3xl font-extrabold text-slate-950 dark:text-slate-100 capitalize mb-1 md:mb-2 truncate">
                         {`${currentTable} Directory`}
                     </h1>
-                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                    <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400">
                         View and manage {currentTable} records in the system.
                     </p>
                 </div>
@@ -84,14 +90,15 @@ export const AdminTable: FC = () => {
                 <Button
                     onClick={() => setModalType(`${singularTable}-create`)}
                     variant="success"
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 w-full md:w-auto justify-center md:justify-start flex-shrink-0"
                 >
                     <Plus className="w-5 h-5" />
-                    New {singularTable.replace("-", " ")}
+                    <span className="hidden md:inline">New {singularTable.replace("-", " ")}</span>
+                    <span className="md:hidden">New</span>
                 </Button>
             </div>
 
-            {/* ✨ ÚNICO CONTENEDOR DE MODALES GLOBAL (Fuera de las tablas) */}
+            {/* ✨ ÚNICO CONTENEDOR DE MODALES GLOBAL (Fuera de las listas) */}
             <Modal isOpen={modalType !== null} onClose={closeModal}>
                 {modalType === "code-language-create" && (
                     <CodeLanguageForm
@@ -114,61 +121,82 @@ export const AdminTable: FC = () => {
                 )}
             </Modal>
 
-            <div className="overflow-hidden glass-card rounded-2xl dark:bg-slate-950 dark:border-slate-700">
-                <div className="overflow-x-auto">
-                    <table className="w-full border-collapse">
-                        <thead>
-                            <tr className="border-b border-slate-100 bg-slate-50/50 dark:border-slate-700 dark:bg-slate-950/80">
-                                {columns.map((col: string, i: number) => (
-                                    <th key={i} className="px-6 py-4 text-left text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
-                                        {col.replace("_", " ")}
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
-                            {rows.map((row: TableRow, i: number) => (
-                                <tr key={i} className="hover:bg-slate-50/80 dark:hover:bg-slate-800 transition-colors group">
-                                    {row.values.map((cell: unknown, j: number) => (
-                                        <td key={j} className="px-6 py-4 text-sm text-slate-600 dark:text-slate-300 font-medium">
-                                            {j === row.values.length - 1 ? (
-                                                <div className="flex items-center justify-between gap-4">
-                                                    <span className="truncate max-w-37.5">
-                                                        {cell === null || cell === undefined ? "-" : String(cell)}
-                                                    </span>
-                                                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                                        <button 
-                                                            onClick={() => {
-                                                                setSelectedItem(row.item);
-                                                                setModalType(`${singularTable}-edit`);
-                                                            }} 
-                                                            className="text-xs font-semibold bg-slate-50 dark:bg-slate-800 dark:hover:bg-brand/10 hover:bg-brand/10 hover:text-brand dark:text-slate-200 text-slate-600 px-3 py-1.5 rounded-lg transition-all active:scale-95 cursor-pointer"
-                                                        >
-                                                            Edit
-                                                        </button>
-                                                        <button 
-                                                            onClick={() => {
-                                                                setSelectedItem(row.item); // Guardamos el elemento que queremos borrar
-                                                                setModalType(`${singularTable}-delete`);
-                                                            }} 
-                                                            className="text-xs font-semibold bg-red-50 dark:bg-red-900 hover:bg-red-500 hover:text-white dark:text-red-300 text-red-600 px-3 py-1.5 rounded-lg transition-all active:scale-95 cursor-pointer"
-                                                        >
-                                                            Delete
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <span className="truncate max-w-50 block">
-                                                    {cell === null || cell === undefined ? "-" : String(cell)}
-                                                </span>
-                                            )}
-                                        </td>
-                                    ))}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+            <div className="space-y-2 md:space-y-3">
+                <ul className="space-y-2 md:space-y-3">
+                    {rows.map((row: TableRow, i: number) => {
+                        // Determinar el campo a mostrar según la tabla
+                        let displayField = "name";
+                        if (currentTable === "images") displayField = "file_name";
+                        else if (currentTable === "users") displayField = "username";
+                        
+                        const itemName = (row.item[displayField] as string) || `Item ${i + 1}`;
+
+                        return (
+                            <li
+                                key={i}
+                                onClick={() => {
+                                    // Click en el li abre la vista (sin implementar por ahora)
+                                    console.log("Open view for:", row.item);
+                                }}
+                                className="group flex items-center justify-between px-4 md:px-6 py-3 md:py-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all cursor-pointer"
+                            >
+                                <span className="text-sm md:text-base font-medium text-slate-700 dark:text-slate-300 truncate flex-1 pr-4">
+                                    {itemName}
+                                </span>
+
+                                <div className="flex items-center gap-2 flex-shrink-0">
+                                    {/* Mobile: Solo iconos */}
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setSelectedItem(row.item);
+                                            setModalType(`${singularTable}-edit`);
+                                        }}
+                                        className="md:hidden p-1.5 text-slate-500 hover:text-brand hover:bg-brand/10 dark:hover:bg-brand/20 rounded-lg transition-all active:scale-95"
+                                        title="Edit"
+                                    >
+                                        <Pencil className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setSelectedItem(row.item);
+                                            setModalType(`${singularTable}-delete`);
+                                        }}
+                                        className="md:hidden p-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all active:scale-95"
+                                        title="Delete"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+
+                                    {/* Desktop: Botones con texto */}
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setSelectedItem(row.item);
+                                            setModalType(`${singularTable}-edit`);
+                                        }}
+                                        className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold text-xs rounded-lg transition-all active:scale-95 flex-shrink-0"
+                                    >
+                                        <Pencil className="w-4 h-4" />
+                                        Edit
+                                    </button>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setSelectedItem(row.item);
+                                            setModalType(`${singularTable}-delete`);
+                                        }}
+                                        className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-red-50 dark:bg-red-900/40 hover:bg-red-100 dark:hover:bg-red-900 text-red-600 dark:text-red-400 font-semibold text-xs rounded-lg transition-all active:scale-95 flex-shrink-0"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                        Delete
+                                    </button>
+                                </div>
+                            </li>
+                        );
+                    })}
+                </ul>
             </div>
         </div>
     );

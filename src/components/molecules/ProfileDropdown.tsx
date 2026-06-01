@@ -39,13 +39,13 @@ export const ProfileDropdown: FC<ProfileDropdownProps> = ({ onClose }) => {
                             className="w-10 h-10 rounded-full object-cover ring-2 ring-slate-100" 
                         />
                     ) : (
-                        <div className="w-10 h-10 rounded-full bg-brand/5 text-brand flex items-center justify-center font-bold text-base ring-2 ring-slate-100">
+                        <div className="w-10 h-10 rounded-full bg-brand/5 text-brand flex items-center justify-center font-bold text-base ring-2 ring-slate-100 dark:ring-slate-800">
                             {user.first_name ? user.first_name.charAt(0).toUpperCase() : "U"}
                         </div>
                     )}
                 </div>
                 <div className="overflow-hidden">
-                    <h4 className="text-sm font-bold text-slate-800 truncate leading-tight">
+                    <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 truncate leading-tight">
                         {user.first_name} {user.last_name}
                     </h4>
                     <p className="text-[11px] text-slate-400 truncate mt-0.5">{user.email}</p>
@@ -57,7 +57,7 @@ export const ProfileDropdown: FC<ProfileDropdownProps> = ({ onClose }) => {
                 <Link
                     href="/dashboard/profile"
                     onClick={() => onClose()}
-                    className="flex items-center gap-3 px-3 py-2 text-sm text-slate-600 font-semibold rounded-xl hover:bg-brand/5 hover:text-brand transition-all duration-150 group"
+                    className="flex items-center gap-3 px-3 py-2 text-sm text-slate-600 dark:text-slate-400 font-semibold rounded-xl hover:bg-brand/5 dark:hover:bg-brand/10 hover:text-brand transition-all duration-150 group"
                 >
                     <User className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-brand transition-colors" />
                     <span>My Profile</span>
@@ -66,7 +66,7 @@ export const ProfileDropdown: FC<ProfileDropdownProps> = ({ onClose }) => {
                 <Link
                     href="/settings"
                     onClick={() => onClose()}
-                    className="flex items-center gap-3 px-3 py-2 text-sm text-slate-600 font-semibold rounded-xl hover:bg-brand/5 hover:text-brand transition-all duration-150 group"
+                    className="flex items-center gap-3 px-3 py-2 text-sm text-slate-600 dark:text-slate-400 font-semibold rounded-xl hover:bg-brand/5 dark:hover:bg-brand/10 hover:text-brand transition-all duration-150 group"
                 >
                     <Settings className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-brand transition-colors" />
                     <span>Settings</span>
@@ -76,7 +76,7 @@ export const ProfileDropdown: FC<ProfileDropdownProps> = ({ onClose }) => {
                     <Link
                         href="/admin"
                         onClick={() => onClose()}
-                        className="flex items-center gap-3 px-3 py-2 text-sm text-slate-600 font-semibold rounded-xl hover:bg-brand/5 hover:text-brand transition-all duration-150 group"
+                        className="flex items-center gap-3 px-3 py-2 text-sm text-slate-600 dark:text-slate-400 font-semibold rounded-xl hover:bg-brand/5 dark:hover:bg-brand/10 hover:text-brand transition-all duration-150 group"
                     >
                         <Settings className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-brand transition-colors" />
                         <span>Admin panel</span>

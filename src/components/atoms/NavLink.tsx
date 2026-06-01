@@ -19,8 +19,8 @@ export const NavLink: FC<{
       onClick={onClick}
       className={`relative rounded-xl px-3 py-2 text-sm font-semibold transition-colors duration-200 group ${
         isActive
-          ? "bg-brand/8 text-brand"
-          : "text-slate-600 hover:bg-slate-100 hover:text-brand"
+          ? "bg-brand/8 text-brand dark:bg-brand/15"
+          : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-brand"
       }`}
     >
       {children}

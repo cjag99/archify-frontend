@@ -3,9 +3,11 @@ import { AdminMenu } from "../molecules/AdminMenu";
 
 export const AdminNavBar: FC = () => {
     return (
-        <div className="w-max h-full">
-            <div className="max-w-7xl py-4 flex items-center justify-between">
-                <AdminMenu />
+        <div className="w-full">
+            <div className="flex items-center justify-center md:justify-start w-full">
+                <div className="w-full">
+                    <AdminMenu />
+                </div>
             </div>
         </div>
     );
