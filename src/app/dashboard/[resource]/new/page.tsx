@@ -11,8 +11,12 @@ import { PatternStep2 } from "@/components/molecules/PatternStep2";
 import { PatternStep3 } from "@/components/molecules/PatternStep3";
 import { ArchitectureStep1 } from "@/components/molecules/ArchitectureStep1";
 import { ArchitectureStep2 } from "@/components/molecules/ArchitectureStep2";
+import { ProjectStep1 } from "@/components/molecules/ProjectStep1";
+import { ProjectStep2 } from "@/components/molecules/ProjectStep2";
 import { Button } from "@/components/atoms/Button";
 import { useArchitecture } from "@/hooks/useArchitecture";
+import { useRouter } from "next/navigation";
+import { projectService } from "@/core/api/projects.service";
 import { Lock } from "lucide-react";
 interface CanvasNodeData {
   id: string;
@@ -38,15 +42,30 @@ interface PatternPayload {
     graphicType: number;
 }
 
+interface ProjectPayload {
+    name: string;
+    description: string;
+    logo_id?: string;
+    architecture?: JSON;
+}
+
+interface ProjectNodeNameMap {
+    [nodeType: string]: string;
+}
+
 
 export default function NewResourcePage() {
     const params = useParams();
     const pathname = usePathname();
+    const router = useRouter();
     const { user, loading: authLoading } = useAuth();
     const [architecturePayload, setArchitecturePayload] = useState<ArchitecturePayload | null>(null);
     const [patternPayload, setPatternPayload] = useState<PatternPayload | null>(null);
+    const [projectPayload, setProjectPayload] = useState<ProjectPayload | null>(null);
     const [patternId, setPatternId] = useState<string | null>(null);
     const [step, setStep] = useState<1 | 2 | 3>(1);
+    const [isCreatingProject, setIsCreatingProject] = useState(false);
+    const [createError, setCreateError] = useState<string | null>(null);
 
     const resource = (typeof params?.resource === "string" ? params.resource : (pathname.split("/")[2] || ""));
     const { createArchitecture } = useArchitecture();
@@ -115,6 +134,48 @@ export default function NewResourcePage() {
       void createArchitecture(finalPayload);
     };
 
+    const handleProjectNext = (payload: ProjectPayload) => {
+        setProjectPayload(payload);
+        setStep(2);
+    };
+
+    const handleProjectBack = () => setStep(1);
+
+    const handleProjectFinish = async (
+        architecture_id: string,
+        nodeNameMap: ProjectNodeNameMap,
+        schema: { nodes: CanvasNodeData[]; edges: CanvasEdgeData[] }
+    ) => {
+        setIsCreatingProject(true);
+      setCreateError(null);
+      if (!user?.id) {
+        console.error("Cannot create project: missing user id");
+        setCreateError("No authenticated user found. Please sign in and try again.");
+        setIsCreatingProject(false);
+        return;
+      }
+        try {
+            // Create the project with the selected architecture and updated schema
+            const payload = {
+              name: projectPayload?.name || "Untitled Project",
+              description: projectPayload?.description || "",
+              project_logo: projectPayload?.logo_id as any,
+              architecture: schema as unknown as JSON,
+              user_id: user?.id,
+            } as const;
+            console.log("Creating project payload:", payload);
+            await projectService.create(payload as any);
+
+            // Redirect to projects dashboard
+            router.push("/dashboard/projects");
+        } catch (err) {
+            console.error("Failed to create project:", err);
+          setCreateError("Failed to create project. See console for details.");
+        } finally {
+            setIsCreatingProject(false);
+        }
+    };
+
     const renderArchitectureSteps = () => {
       if (step === 1 || !architecturePayload) {
         return <ArchitectureStep1 onNext={handleArchitectureNext} />;
@@ -131,6 +192,23 @@ export default function NewResourcePage() {
       } else {
 
       }
+    };
+
+    const renderProjectSteps = () => {
+      if (step === 1 || !projectPayload) {
+        return <ProjectStep1 onNext={handleProjectNext} />;
+      } else if (step === 2 && projectPayload) {
+        return (
+          <ProjectStep2
+            projectName={projectPayload.name}
+            projectDescription={projectPayload.description}
+            logo_id={projectPayload.logo_id}
+            onBack={handleProjectBack}
+            onFinish={handleProjectFinish}
+          />
+        );
+      }
+      return <ProjectStep1 onNext={handleProjectNext} />;
     };
 
     const renderPatternSteps = () => {
@@ -173,6 +251,8 @@ export default function NewResourcePage() {
           return renderPatternSteps();
         case "architectures":
           return renderArchitectureSteps();
+        case "projects":
+          return renderProjectSteps();
         default:
           return (
             <div className="text-center py-6">
@@ -206,6 +286,11 @@ export default function NewResourcePage() {
                     {renderResourceContent()}
                 </div>
             </div>
+            {createError && (
+              <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4">
+                <p className="text-sm text-red-600 font-semibold">{createError}</p>
+              </div>
+            )}
         </ProtectedRoute>
     );
 }

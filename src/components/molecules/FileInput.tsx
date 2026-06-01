@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
+import { X, CloudUpload } from "lucide-react";
 
 interface FileInputProps {
   label?: string;

@@ -37,6 +37,14 @@ class ApiClient {
         if (body) {
             config.body = body instanceof FormData ? body : JSON.stringify(body);
         }
+        // Always log POST and PATCH payloads for easier debugging
+        if (method === "POST" || method === "PATCH") {
+            try {
+                console.log(`[API ${method}] ${url} payload:`, body);
+            } catch (e) {
+                console.log(`[API ${method}] ${url} payload: <unserializable>`);
+            }
+        }
         try {
             const response = await fetch(url, config);
             if (!response.ok) {

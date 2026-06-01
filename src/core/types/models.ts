@@ -7,9 +7,10 @@ export interface Project {
     id: string;
     name: string;
     description: string | null;
-    created_at?: string;
-    updated_at?: string;
+    project_logo?: UUID | null;
+    created_at?: Date;
     user_id?: string;
+    architecture?: JSON;
 }
 
 export interface Architecture {
