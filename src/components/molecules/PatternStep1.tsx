@@ -1,3 +1,4 @@
+// Composite UI component used by views and forms for PatternStep1
 "use client";
 
 import { FC, useState, FormEvent } from "react";
@@ -80,3 +81,4 @@ export const PatternStep1: FC<PatternStep1Props> = ({
     </form>
   );
 };
+

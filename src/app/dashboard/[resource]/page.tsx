@@ -1,3 +1,4 @@
+// Dynamic dashboard page for a selected resource type
 "use client";
 
 import { useAuth } from "@/core/context/AuthContext";
@@ -128,10 +129,10 @@ export default function GenericResourcesPage() {
     const EmptyIcon = config.emptyIcon;
     const isItemsEmpty = !loading && items.length === 0;
     
-    // Authorization check: Can user create items?
+
     const canCreate = user?.is_authorized || resource === "projects";
     
-    // For projects only, filter to show only user's own items (if not authorized)
+
     let displayItems = items;
     if (resource === "projects" && !user?.is_authorized) {
       displayItems = items.filter((item) => (item as Project).user_id === user?.id);
@@ -154,7 +155,7 @@ export default function GenericResourcesPage() {
                         </div>
                     </div>
 
-                    {/* Error Banner */}
+                    {}
                     {error && (
                         <div className="mb-8 p-4 bg-red-50/80 border border-red-100 text-red-700 rounded-2xl text-sm flex items-center gap-3">
                             <AlertCircle className="w-5 h-5 text-red-500 shrink-0" />
@@ -215,7 +216,7 @@ export default function GenericResourcesPage() {
                         </div>
                     ) : (
                         <div>
-                            {/* Action Bar */}
+                            {}
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
                                 <CountLabel label={config.title} count={displayItems.length} />
                                 {canCreate && (
@@ -230,7 +231,7 @@ export default function GenericResourcesPage() {
                                 )}
                             </div>
 
-                            {/* Items Grid */}
+                            {}
                             <div className="grid grid-cols-12 gap-6">
                                 {displayItems.map((item) => (
                                     <div
@@ -238,7 +239,7 @@ export default function GenericResourcesPage() {
                                         className="col-span-12 md:col-span-6 lg:col-span-4 glass-card glass-card-hover rounded-2xl p-6 flex flex-col justify-between group"
                                     >
                                         <div>
-                                            {/* Item Header */}
+                                            {}
                                             <div className="flex items-center gap-3 mb-4">
                                                 <div className="w-12 h-12 rounded-xl bg-brand/8 text-brand flex items-center justify-center font-bold text-lg group-hover:bg-brand group-hover:text-white transition-colors duration-300 shrink-0">
                                                     <Icon className="w-6 h-6" />
@@ -253,13 +254,13 @@ export default function GenericResourcesPage() {
                                                 </div>
                                             </div>
 
-                                            {/* Item Description */}
+                                            {}
                                             <p className="text-slate-500 text-sm leading-relaxed mb-6 line-clamp-2 min-h-10">
                                                 {decodeHtmlEntities(item.description || `No description provided. Click below to view and configure this ${resource.replace(/s$/, "")}.`)}
                                             </p>
                                         </div>
 
-                                        {/* Action Button */}
+                                        {}
                                         <button
                                             onClick={() => router.push(`/dashboard/${resource}/${item.id}`)}
                                             className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-bold bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 hover:bg-brand hover:text-white hover:border-brand transition-all duration-300 active:scale-[0.98] cursor-pointer"
@@ -277,3 +278,4 @@ export default function GenericResourcesPage() {
         </ProtectedRoute>
     );
 }
+

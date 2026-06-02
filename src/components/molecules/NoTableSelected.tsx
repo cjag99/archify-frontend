@@ -1,3 +1,4 @@
+// Composite UI component used by views and forms for NoTableSelected
 "use client";
 
 import { FC } from "react";
@@ -33,3 +34,4 @@ export const NoTableSelected: FC = () => {
         </div>
     );
 };
+

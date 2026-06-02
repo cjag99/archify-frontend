@@ -1,3 +1,4 @@
+// Composite UI component used by views and forms for CountLabel
 import type { FC } from "react";
 import { CountBadge } from "../atoms/CountBadge";
 
@@ -14,3 +15,4 @@ export const CountLabel: FC<{
         </div>
     );
 };
+

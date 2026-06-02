@@ -1,3 +1,4 @@
+// Composite UI component used by views and forms for AdminMenu
 "use client";
 
 import { useAdminTable } from "@/hooks/useAdminTable";
@@ -85,3 +86,4 @@ export const AdminMenu: FC = () => {
         </nav>
     );
 }
+

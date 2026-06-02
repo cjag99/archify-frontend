@@ -1,3 +1,4 @@
+// Page-level UI component that renders the Footer interface
 import { FC } from "react";
 import 'devicon/devicon.min.css';
 import Link from "next/link";
@@ -127,3 +128,4 @@ export const Footer: FC = () => {
     </footer>
   );
 };
+

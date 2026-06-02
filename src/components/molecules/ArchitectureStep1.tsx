@@ -1,3 +1,4 @@
+// Composite UI component used by views and forms for ArchitectureStep1
 "use client";
 
 import { FC, useState, FormEvent } from "react";
@@ -58,7 +59,7 @@ export const ArchitectureStep1: FC<ArchitectureStep1Props> = ({
           placeholder="Describe the architecture in a few sentences"
         />
 
-        {/* Enabled Switch */}
+        {}
         <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-300 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800 dark:bg-slate-950">
           <div>
             <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">Enabled</label>
@@ -88,3 +89,4 @@ export const ArchitectureStep1: FC<ArchitectureStep1Props> = ({
     </form>
   );
 };
+

@@ -1,3 +1,4 @@
+// Custom React hook for useAdminTable state and behavior
 "use client";
 
 import { useEffect, useState, useCallback } from "react";

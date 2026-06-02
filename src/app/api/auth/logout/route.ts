@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+// API route handler for a backend endpoint
+﻿import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -50,3 +51,4 @@ export async function POST(_req: NextRequest) {
         );
     }
 }
+

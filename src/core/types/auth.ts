@@ -1,4 +1,5 @@
-import { UUID } from "crypto";
+// Type definitions for auth
+﻿import { UUID } from "crypto";
 
 export interface RegisterCredentials {
     first_name: string;
@@ -35,3 +36,4 @@ export interface AuthContextType {
     isAuthenticated: boolean;
     loading: boolean;
 }
+

@@ -1,4 +1,5 @@
-import { SidebarNodeItem } from "@/components/organisms/NodeSidebar"
+// Architecture node palette definitions used in schema diagrams
+﻿import { SidebarNodeItem } from "@/components/organisms/NodeSidebar"
 import { Compass, Cpu, Binoculars, Box, Layers, Package, Server, HardDrive, User } from "lucide-react";
 export const architectureList: SidebarNodeItem[] = [
     {
@@ -68,3 +69,4 @@ export const architectureList: SidebarNodeItem[] = [
         icon: <Package size={20} className="text-brand" />
     }
 ];
+

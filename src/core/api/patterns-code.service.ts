@@ -1,3 +1,4 @@
+// API service module for patterns-code operations
 import { CrudService } from "./crud.service";
 import { PatternCode } from "../types/models";
 
@@ -16,3 +17,4 @@ export class PatternCodeService extends CrudService<PatternCode, CodeSnippetCrea
 }
 
 export const patternCodeService = new PatternCodeService("/patterns-code");
+

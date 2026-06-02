@@ -1,3 +1,4 @@
+// Reusable atom UI component for CountBadge
 import type { FC } from "react";
 
 export const CountBadge: FC<{ count: number }> = ({ count }) => {

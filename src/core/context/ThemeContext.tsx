@@ -1,3 +1,4 @@
+// React context provider and hook for ThemeContext
 "use client";
 
 import * as React from "react";
@@ -12,3 +13,5 @@ export function ThemeProvider({ children, ...props }: React.ComponentProps<typeo
 }
 
 export const useTheme = useNextTheme;
+
+

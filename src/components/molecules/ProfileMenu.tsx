@@ -1,3 +1,4 @@
+// Composite UI component used by views and forms for ProfileMenu
 "use client";
 
 import { useState, useRef, useEffect } from "react";

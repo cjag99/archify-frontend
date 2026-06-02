@@ -1,4 +1,5 @@
-export const ROUTES = {
+// Application route helpers and navigation constants from routes
+﻿export const ROUTES = {
   home: "/",
   dashboard: "/dashboard",
   projects: "/dashboard/projects",
@@ -34,3 +35,4 @@ export function getPostLoginPath(
   }
   return user.is_authorized ? ROUTES.admin : ROUTES.dashboard;
 }
+

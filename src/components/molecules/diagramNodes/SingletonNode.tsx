@@ -1,3 +1,4 @@
+// Diagram node component used in the schema editor palette
 "use client";
 
 import React from "react";
@@ -5,7 +6,7 @@ import { Node } from "@antv/x6";
 import { DiagramNodeCard } from "./DiagramNodeCard";
 import { Boxes } from "lucide-react";
 
-// Forzamos a que extienda NodeProps para que XYFlow lo maneje de forma nativa
+
 export const SingletonNode: React.FC<{ node: Node }> = ({ node }) => (
   <DiagramNodeCard
     node={node}

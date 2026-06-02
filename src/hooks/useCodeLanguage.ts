@@ -1,3 +1,4 @@
+// Custom React hook for useCodeLanguage state and behavior
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
@@ -66,22 +67,51 @@ export const useCodeLanguage = ({
         }
     }, [logErrors]);
 
-    const createCodeLanguage = useCallback(async (name: string, file_extension: string, icon: string) => {
+    const createCodeLanguage = useCallback(async (name: string, file_extension: string, icon?: string | null) => {
         setLoading(true);
         setError(null);
 
         const payload = {
             name,
             file_extension,
-            icon: icon || null,
+            icon: icon ?? null,
         };
 
         try {
             const result = await codeLanguageService.create(payload);
             setCodeLanguages((prevCodeLanguages) => [...prevCodeLanguages, result]);
+            return true;
         } catch (err) {
             setError(err instanceof Error ? err.message : "Unknown error");
             console.error("Create error:", err);
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    const updateCodeLanguage = useCallback(async (id: string, name: string, file_extension: string, icon?: string | null) => {
+        setLoading(true);
+        setError(null);
+
+        const payload: Partial<CodeLanguage> = {
+            name,
+            file_extension,
+            icon: icon ? (icon as CodeLanguage["icon"]) : undefined,
+        };
+
+        try {
+            const result = await codeLanguageService.update(id, payload);
+            setCodeLanguages((prevCodeLanguages) =>
+                prevCodeLanguages.map((language) =>
+                    String(language.id) === String(id) ? result : language
+                )
+            );
+            return true;
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Unknown error");
+            console.error("Update error:", err);
+            return false;
         } finally {
             setLoading(false);
         }
@@ -134,6 +164,8 @@ export const useCodeLanguage = ({
         fetchCodeLanguage,
         fetchCodeLanguages,
         createCodeLanguage,
+        updateCodeLanguage,
         dropCodeLanguage,
     };
 };
+

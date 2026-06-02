@@ -1,3 +1,4 @@
+// Application layout wrapper for global page structure
 "use client";
 import { AdminNavBar } from "@/components/organisms/AdminNavBar";
 import { AdminProtectedRoute } from "@/components/organisms/AdminProtectedRoute";
@@ -18,3 +19,5 @@ export default function TableLayout({ children }: { children: React.ReactNode })
         </AdminProtectedRoute>
     );
 }
+
+

@@ -1,3 +1,4 @@
+// API service module for code-languages operations
 import { CrudService } from "./crud.service";
 import { CodeLanguage } from "../types/models";
 
@@ -8,3 +9,4 @@ export type CodeLanguageCreatePayload = {
 };
 
 export const codeLanguageService = new CrudService<CodeLanguage, CodeLanguageCreatePayload>("/code-languages");
+

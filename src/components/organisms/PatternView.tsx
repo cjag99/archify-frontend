@@ -1,3 +1,4 @@
+// Page-level UI component that renders the PatternView interface
 "use client";
 
 import { useEffect, useState } from "react";
@@ -25,6 +26,7 @@ import { decodeHtmlEntities } from "@/core/utils/string.utils";
 
 interface PatternViewProps {
   patternId: string;
+  hideActions?: boolean;
 }
 
 const patternNodeTypes = {
@@ -48,7 +50,7 @@ function LanguageLogo({ src, alt, size = 20 }: { src: string; alt: string; size?
   );
 }
 
-export function PatternView({ patternId }: PatternViewProps) {
+export function PatternView({ patternId, hideActions = false }: PatternViewProps) {
   const router = useRouter();
   const { loading: authLoading, user } = useAuth();
   const isAuthorized = user?.is_authorized || user?.role === "admin";
@@ -176,7 +178,7 @@ export function PatternView({ patternId }: PatternViewProps) {
     return (
       <div className="app-shell p-6 md:p-12">
         <div className="max-w-5xl mx-auto space-y-8">
-          <BackLink href={ROUTES.patterns} label="Back to Patterns" />
+          {!hideActions && <BackLink href={ROUTES.patterns} label="Back to Patterns" />}
           <div className="glass-card rounded-2xl p-8 border border-slate-200">
             {!editPayload ? (
               <PatternStep1
@@ -212,11 +214,11 @@ export function PatternView({ patternId }: PatternViewProps) {
   return (
     <div className="app-shell p-4 md:p-8 lg:p-12">
       <div className="max-w-6xl mx-auto mb-6">
-        <BackLink href={ROUTES.patterns} label="Back to Patterns" />
+        {!hideActions && <BackLink href={ROUTES.patterns} label="Back to Patterns" />}
       </div>
 
       <div className="max-w-6xl mx-auto overflow-hidden bg-white/60 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 transition-all duration-300 dark:bg-slate-900/60 dark:border-slate-700/60">
-        {/* Premium Header Area */}
+        {}
         <div className="relative h-32 md:h-44 w-full bg-linear-to-br from-brand/10 via-brand/5 to-transparent overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
           <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-brand/20 rounded-full blur-3xl"></div>
@@ -237,7 +239,7 @@ export function PatternView({ patternId }: PatternViewProps) {
         </Modal>
 
         <div className="px-6 md:px-10 pb-10 -mt-16 md:-mt-20 relative z-10 space-y-10">
-          {/* Title and Actions Section */}
+          {}
           <div className="flex flex-col md:flex-row gap-6 items-center md:items-end justify-between text-center md:text-left">
             <div className="flex-1 space-y-4 w-full">
               <div className="flex flex-col md:flex-row items-center gap-4 md:gap-5">
@@ -254,7 +256,7 @@ export function PatternView({ patternId }: PatternViewProps) {
                 </p>
               )}
             </div>
-            {!loading && pattern && isAuthorized && (
+            {!loading && pattern && isAuthorized && !hideActions && (
               <div className="flex gap-3 pb-2 justify-center md:justify-end">
                 <Button variant="secondary" onClick={() => setIsEditing(true)} className="rounded-2xl px-6">
                   Edit
@@ -266,7 +268,7 @@ export function PatternView({ patternId }: PatternViewProps) {
             )}
           </div>
           
-          {/* Schema Section */}
+          {}
           {hasSchema ? (
             <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm dark:bg-slate-900/40 dark:border-slate-700/50">
               <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
@@ -284,8 +286,8 @@ export function PatternView({ patternId }: PatternViewProps) {
             </div>
           ) : (
             !loading && (
-              <div className="p-12 bg-white/40 border border-white/50 rounded-3xl text-center shadow-sm">
-                <p className="text-slate-500 font-medium text-lg">
+              <div className="p-12 bg-white/40 border border-white/50 rounded-3xl text-center shadow-sm dark:bg-slate-900/40 dark:border-slate-700/50">
+                <p className="text-slate-500 font-medium text-lg dark:text-slate-300">
                   No schema available for this pattern yet.
                 </p>
               </div>
@@ -304,7 +306,7 @@ export function PatternView({ patternId }: PatternViewProps) {
             </div>
           )}
           
-          {/* Code Snippets Section */}
+          {}
           <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm">
             <div className="flex items-center justify-between">
               <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
@@ -312,7 +314,7 @@ export function PatternView({ patternId }: PatternViewProps) {
                 Code Snippets
               </h3>
               
-              {/* Custom Mini Select */}
+              {}
               {!codesLoading && !loading && !languagesLoading && !codesError && !languagesError && Array.isArray(patternCodes) && patternCodes.length > 0 && (
                 <div className="relative z-20">
                   <button 
@@ -376,8 +378,8 @@ export function PatternView({ patternId }: PatternViewProps) {
                 </div>
               </div>
             ) : (
-              <div className="p-8 bg-white border border-slate-200 rounded-2xl text-center">
-                <p className="text-slate-500 font-medium text-lg">
+              <div className="p-8 bg-white/40 border border-white/50 rounded-2xl text-center shadow-sm dark:bg-slate-900/40 dark:border-slate-700/50">
+                <p className="text-slate-500 font-medium text-lg dark:text-slate-300">
                   {codesError || languagesError
                     ? "An error occurred or you are not authorized to view code snippets." 
                     : "No code snippets available for this pattern yet."}
@@ -390,3 +392,4 @@ export function PatternView({ patternId }: PatternViewProps) {
     </div>
   );
 }
+

@@ -1,3 +1,4 @@
+// Page-level UI component that renders the HeroSection interface
 import { FC } from "react";
 import { Button } from "../atoms/Button";
 import { HeroVisual } from "../atoms/HeroVisual";
@@ -39,3 +40,4 @@ export const HeroSection: FC = () => {
     </div>
   );
 };
+

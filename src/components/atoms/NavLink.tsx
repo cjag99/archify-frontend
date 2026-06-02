@@ -1,3 +1,4 @@
+// Reusable atom UI component for NavLink
 "use client";
 
 import Link from "next/link";
@@ -34,3 +35,4 @@ export const NavLink: FC<{
     </Link>
   );
 };
+

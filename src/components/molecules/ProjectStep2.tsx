@@ -1,3 +1,4 @@
+// Composite UI component used by views and forms for ProjectStep2
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -52,14 +53,14 @@ export const ProjectStep2: React.FC<ProjectStep2Props> = ({
   const router = useRouter();
   const { architectures, loading: architecturesLoading } = useArchitecture();
 
-  // ✨ Recuperamos el ID de la arquitectura desde el prop directo o desde el interior del JSON
+
   const effectiveInitialArchId = initialArchitectureId || initialSchema?.architecture_id;
   const [selectedArchitectureId, setSelectedArchitectureId] = useState<string>(effectiveInitialArchId || "");
   const [selectedArchitecture, setSelectedArchitecture] = useState<any>(null);
   const [nodeNameMap, setNodeNameMap] = useState<NodeNameMap>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  // Get list of nodes excluding "user"
+
   const getArchitectureNodes = () => {
     if (!selectedArchitecture?.base_structure) return [];
     
@@ -74,9 +75,9 @@ export const ProjectStep2: React.FC<ProjectStep2Props> = ({
       const arch = architectures.find((a) => a.id === selectedArchitectureId);
       setSelectedArchitecture(arch);
       
-      // Initialize node names
-      // Si estamos editando y la arquitectura seleccionada coincide con la original del proyecto,
-      // usamos los nombres que ya están guardados en el esquema.
+
+
+
       if (initialSchema && selectedArchitectureId === effectiveInitialArchId) {
         const initialNodeMap: NodeNameMap = {};
         (initialSchema.nodes || []).forEach((node: CanvasNodeData) => {
@@ -86,7 +87,7 @@ export const ProjectStep2: React.FC<ProjectStep2Props> = ({
         });
         setNodeNameMap(initialNodeMap);
       } else if (arch?.base_structure) {
-        // Si es una arquitectura nueva o distinta, inicializamos con los valores por defecto de la plantilla
+
         const nodes = (arch.base_structure as any).nodes || [];
         const initialNodeMap: NodeNameMap = {};
         nodes.forEach((node: CanvasNodeData) => {
@@ -111,7 +112,7 @@ export const ProjectStep2: React.FC<ProjectStep2Props> = ({
 
     setIsLoading(true);
     try {
-      // Build schema with updated node names
+
       if (selectedArchitecture?.base_structure) {
         const baseStructure = selectedArchitecture.base_structure as any;
         const updatedNodes: CanvasNodeData[] = (baseStructure.nodes || []).map((node: CanvasNodeData) => {
@@ -130,7 +131,7 @@ export const ProjectStep2: React.FC<ProjectStep2Props> = ({
         const schema = {
           nodes: updatedNodes,
           edges: baseStructure.edges || [],
-          architecture_id: selectedArchitectureId, // 💾 Guardamos el ID dentro del JSON
+          architecture_id: selectedArchitectureId,
         };
 
         await onFinish(selectedArchitectureId, nodeNameMap, schema);
@@ -248,3 +249,4 @@ export const ProjectStep2: React.FC<ProjectStep2Props> = ({
     </div>
   );
 };
+

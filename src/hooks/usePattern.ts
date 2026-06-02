@@ -1,3 +1,4 @@
+// Custom React hook for usePattern state and behavior
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -117,3 +118,4 @@ export const usePatterns = () => {
 
     return { patterns, loading, error, fetchPatterns, fetchPatternById, createPattern, updatePattern, deletePattern };
 };
+

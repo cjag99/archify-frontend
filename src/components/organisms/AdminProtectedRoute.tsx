@@ -1,3 +1,4 @@
+// Page-level UI component that renders the AdminProtectedRoute interface
 "use client";
 
 import { useEffect } from "react";
@@ -36,3 +37,4 @@ export function AdminProtectedRoute({ children }: { children: React.ReactNode })
 
   return <>{children}</>;
 }
+

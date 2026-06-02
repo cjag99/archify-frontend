@@ -1,3 +1,4 @@
+// Custom React hook for useImage state and behavior
 "use client";
 
 import { useState, useCallback } from "react";

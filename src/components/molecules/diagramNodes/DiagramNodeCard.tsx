@@ -1,3 +1,4 @@
+// Diagram node component used in the schema editor palette
 "use client";
 
 import React, { ReactNode, useState, useRef, useEffect } from "react";
@@ -5,7 +6,7 @@ import { createPortal } from "react-dom";
 import { Node } from "@antv/x6";
 
 interface DiagramNodeCardProps {
-  // ✨ In AntV X6, the node instance is passed directly in the 'node' property
+
   node: Node;
   icon: ReactNode;
   defaultLabel: string;
@@ -22,8 +23,8 @@ export function DiagramNodeCard({
   title,
   tag,
 }: DiagramNodeCardProps) {
-  // 🧭 In X6 custom data is stored and read via node.getData()
-  // Added security validation in case in v3 the property is injected late or with another format
+
+
   if (!node || typeof node.getData !== 'function') {
     return <div className="p-2 text-xs bg-red-100 text-red-600 rounded-lg">Loading node...</div>;
   }
@@ -61,18 +62,18 @@ export function DiagramNodeCard({
       ref={cardRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="group flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition-all duration-300 hover:border-brand/40 hover:bg-slate-50 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700 dark:hover:bg-slate-800 w-24 h-24"
+      className="group flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-white p-2 sm:p-3 shadow-sm transition-all duration-300 hover:border-brand/40 hover:bg-slate-50 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700 dark:hover:bg-slate-800 w-16 h-16 sm:w-24 sm:h-24"
     >
       
-      {/* Node Visual Content */}
+      {}
       <div className="flex flex-col items-center gap-1 select-none text-slate-500 dark:text-slate-400 group-hover:text-brand transition-colors">
         {icon}
-        <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 text-center truncate max-w-20">
+        <span className="text-[11px] sm:text-xs font-semibold text-slate-900 dark:text-slate-100 text-center truncate max-w-20">
           {label}
         </span>
       </div>
 
-      {/* 💡 Floating tooltip with Portal to avoid SVG/foreignObject clipping */}
+      {}
       {mounted && isHovered && rect && createPortal(
         <div 
           className="fixed z-[99999] pointer-events-none transition-opacity duration-150 animate-in fade-in zoom-in-95"
@@ -93,7 +94,7 @@ export function DiagramNodeCard({
             </div>
             <p className="leading-relaxed text-slate-600 dark:text-slate-300">{description}</p>
             
-            {/* Bottom triangle arrow */}
+            {}
             <div className="absolute top-full left-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 border-b border-r border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800" />
           </div>
         </div>,
@@ -103,3 +104,4 @@ export function DiagramNodeCard({
     </div>
   );
 }
+

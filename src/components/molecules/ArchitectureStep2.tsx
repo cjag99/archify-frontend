@@ -1,3 +1,4 @@
+// Composite UI component used by views and forms for ArchitectureStep2
 "use client";
 
 import React, { useCallback, useState } from "react";
@@ -18,7 +19,7 @@ import { HexagonalApplicationNode } from "./diagramNodes/HexagonalApplicationNod
 import { HexagonalAdapterNode } from "./diagramNodes/HexagonalAdapterNode";
 import { UserNode } from "./diagramNodes/UserNode";
 
-// Unified domain interfaces for your new SchemaCanvas
+
 interface CanvasNodeData {
   id: string;
   type?: string;
@@ -45,7 +46,7 @@ interface ArchitectureStep2Props {
   initialNodes?: CanvasNodeData[];
   initialEdges?: CanvasEdgeData[];
   onBack: () => void;
-  // ✨ Tipado actualizado con tus nuevos modelos limpios
+
   onFinish: (
     schema: { nodes: CanvasNodeData[]; edges: CanvasEdgeData[] },
     payload: { name: string; description: string; enabled: boolean }
@@ -76,11 +77,11 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
   onFinish,
 }) => {
   const router = useRouter();
-  // 📦 Pure React state (goodbye React Flow)
+
   const [nodes, setNodes] = useState<CanvasNodeData[]>(initialNodes);
   const [edges, setEdges] = useState<CanvasEdgeData[]>(initialEdges);
 
-  // 1. Synchronizers that feed from the X6 internal cycle
+
   const handleNodesChange = useCallback((updatedNodes: CanvasNodeData[]) => {
     setNodes(updatedNodes);
   }, []);
@@ -89,7 +90,7 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
     setEdges(updatedEdges);
   }, []);
 
-  // 2. Insert components via direct click in the sidebar
+
   const handleAddNode = useCallback((type: string, label: string) => {
     const id = crypto.randomUUID();
     const newNode: CanvasNodeData = {
@@ -104,7 +105,7 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
     setNodes((current) => current.concat(newNode));
   }, []);
 
-  // 3. Mecanismo de arrastre (Drag & Drop) relativo al lienzo contenedor
+
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
@@ -119,7 +120,7 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
       const item = architectureList.find((node) => node.type === type);
       const label = item ? item.label : "Component";
 
-      // Coordinates calculated relative to the bounding box to avoid drift in the X6 canvas
+
       const rect = event.currentTarget.getBoundingClientRect();
       const clientX = event.clientX - rect.left;
       const clientY = event.clientY - rect.top;
@@ -128,7 +129,7 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
       const newNode: CanvasNodeData = {
         id,
         type,
-        position: { x: clientX - 48, y: clientY - 48 }, // Centered relative to the mouse
+        position: { x: clientX - 48, y: clientY - 48 },
         data: { label },
       };
 
@@ -137,7 +138,7 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
     []
   );
 
-  // 4. Simplified reactive cable orchestration (smart Manhattan routing for X6)
+
   const onConnect = useCallback((connection: ConnectionPayload) => {
     setEdges((currentEdges) => {
       const exists = currentEdges.some(
@@ -180,7 +181,7 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
         </div>
       </div>
 
-      <div className="flex h-[calc(100vh-340px)] gap-6">
+      <div className="flex flex-col sm:flex-row h-[calc(100vh-340px)] gap-4 sm:gap-6">
         <NodeSidebar
           title="Architecture Components"
           subtitle="Drag or click a node to add it to the canvas."
@@ -211,7 +212,6 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
         <Button
           variant="success"
           onClick={handleFinishAction}
-          disabled={nodes.length === 0}
         >
           Finish Architecture
         </Button>
@@ -219,3 +219,4 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
     </div>
   );
 };
+

@@ -1,3 +1,4 @@
+// Page-level UI component that renders the HTTPToast interface
 "use client";
 
 import { useEffect, useState } from "react";
@@ -78,7 +79,7 @@ export default function HTTPToast() {
 
       setToasts((t) => [item, ...t]);
 
-      // auto-dismiss after 5s
+
       setTimeout(() => {
         setToasts((t) => t.filter((x) => x.id !== item.id));
       }, 5000);
@@ -135,3 +136,4 @@ export default function HTTPToast() {
     </div>
   );
 }
+

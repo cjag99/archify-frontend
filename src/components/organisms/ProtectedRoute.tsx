@@ -1,3 +1,4 @@
+// Page-level UI component that renders the ProtectedRoute interface
 "use client";
 
 import { useAuth } from "@/core/context/AuthContext";
@@ -25,3 +26,4 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
   return isAuthenticated ? <>{children}</> : null;
 };
+

@@ -1,3 +1,4 @@
+// React context provider and hook for AuthContext
 "use client";
 
 import {
@@ -46,21 +47,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [router]);
 
-  // Listen for forced logout events (dispatched globally by the API client)
+
   useEffect(() => {
-    // Toast state is handled below via React state
+
     const handleForceLogout = (e: Event) => {
       const ce = e as CustomEvent | undefined;
       const detail = ce?.detail as { message?: string; status?: number } | undefined;
       const serverMessage = detail?.message || "Your session has expired. Please log in again.";
 
-      // show a brief toast before/while logging out
+
       setToast({ visible: true, message: serverMessage });
 
-      // hide after a short delay
+
       setTimeout(() => setToast((t) => ({ ...t, visible: false })), 5000);
 
-      // perform logout (redirects to '/'), keep it async but fire-and-forget
+
       void logout();
     };
 
@@ -73,7 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return;
   }, [logout]);
 
-  // Toast UI state
+
   const [toast, setToast] = useState<{ visible: boolean; message: string }>({ visible: false, message: "" });
 
   useEffect(() => {
@@ -123,10 +124,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       <>
         {children}
 
-        {/* Global HTTP toasts (success / error) */}
+        {}
         <HTTPToast />
 
-        {/* Simple toast for global notifications (e.g., forced logout) */}
+        {}
         <div aria-live="polite" className="pointer-events-none">
           {toast.visible && (
             <div className="fixed bottom-6 right-6 z-50 pointer-events-auto">
@@ -150,3 +151,4 @@ export const useAuth = () => {
   }
   return context;
 };
+

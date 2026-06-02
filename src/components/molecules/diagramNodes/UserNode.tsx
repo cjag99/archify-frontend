@@ -1,3 +1,4 @@
+// Diagram node component used in the schema editor palette
 "use client";
 
 import React from "react";
@@ -17,3 +18,4 @@ export const UserNode: React.FC<{ node: Node }> = ({ node }) => (
   />
   </div>
 );
+

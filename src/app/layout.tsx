@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+// Application layout wrapper for global page structure
+﻿import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/organisms/Navbar";
@@ -44,3 +45,4 @@ export default function RootLayout({
     </html>
   );
 }
+

@@ -1,6 +1,7 @@
+// Page-level UI component that renders the SchemaCanvas interface
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { Graph, Node, Shape, Scroller } from "@antv/x6";
 import { register, getProvider } from "@antv/x6-react-shape";
@@ -23,8 +24,25 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
   const containerRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<Graph | null>(null);
   const { resolvedTheme } = useTheme();
+  const [isCollapsedViewport, setIsCollapsedViewport] = useState(false);
 
-  // Inicialización del grafo
+  useEffect(() => {
+    const check = () => {
+      if (typeof window === "undefined") return;
+      const collapsed = window.innerWidth < 900;
+      setIsCollapsedViewport(collapsed);
+      if (collapsed) {
+        try {
+          if (onNodesChange && (nodes?.length || 0) > 0) onNodesChange([]);
+          if (onEdgesChange && (edges?.length || 0) > 0) onEdgesChange([]);
+        } catch {}
+      }
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, [onNodesChange, onEdgesChange, nodes, edges]);
+
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -33,7 +51,7 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
     const gridColor = isDarkMode ? "#475569" : "#e2e8f0";
     const edgeStrokeColor = isDarkMode ? "#64748b" : "#94a3b8";
 
-    // Registro de nodos
+
     Object.entries(nodeTypes).forEach(([type, component]) => {
       try {
         register({
@@ -43,7 +61,7 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
           component: component as CustomNodeComponent,
         });
       } catch {
-        // Evitar errores de registro duplicado en Hot Reload
+
       }
     });
 
@@ -60,7 +78,7 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
           thickness: 1,
         },
       },
-      // --- MEJORA 1: Configurar estrategia de conexión global ---
+
       connecting: {
         snap: true,
         allowBlank: false,
@@ -68,10 +86,10 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
         allowNode: true, 
         highlight: true,
         router: {
-          name: 'manhattan', // Fuerza líneas ortogonales limpias (a 90 grados)
+          name: 'manhattan',
         },
-        anchor: 'center', // Si no se usa un puerto, las flechas apuntan al centro geométrico del nodo de manera uniforme
-        connectionPoint: 'boundary', // Evita que la flecha se meta "dentro" del componente visual
+        anchor: 'center',
+        connectionPoint: 'boundary',
         createEdge() {
           return new Shape.Edge({
             shape: 'edge',
@@ -94,7 +112,7 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
       })
     );
 
-    // Escuchar movimientos
+
     graph.on("node:moved", () => {
       if (onNodesChange) {
         onNodesChange(graph.getNodes().map((n) => ({
@@ -106,7 +124,7 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
       }
     });
 
-    // Escuchar conexiones
+
     graph.on("edge:connected", ({ edge }) => {
       if (onConnect) {
         onConnect({
@@ -120,9 +138,9 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
       }
     });
 
-    // --- NUEVO: Escuchar cambios en vértices o rutas de las aristas ---
+
     graph.on("edge:changed", ({ options }) => {
-      // Solo disparamos el cambio si no viene de una sincronización externa (evita bucles)
+
       if (options.external) return;
       
       if (onEdgesChange) {
@@ -140,14 +158,64 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
 
     graphRef.current = graph;
 
+
+    if (containerRef.current) {
+      const ro = new ResizeObserver(() => {
+        try {
+          const c = containerRef.current;
+          if (c && graphRef.current) {
+            graphRef.current.resize(c.clientWidth, c.clientHeight);
+
+            try {
+              graphRef.current.drawBackground({ color: backgroundColor });
+              graphRef.current.grid.update({ color: gridColor } as any);
+            } catch {}
+
+
+            const isSmall = c.clientWidth < 640;
+            const targetW = isSmall ? 64 : 96;
+            const targetH = isSmall ? 64 : 96;
+
+
+            graphRef.current.getNodes().forEach((n) => {
+              try {
+                n.resize(targetW, targetH);
+                const view = graphRef.current!.findViewByCell(n);
+                if (view) (view as any).update();
+              } catch (e) {
+
+              }
+            });
+
+
+            graphRef.current.getEdges().forEach((e) => {
+              try {
+                const view = graphRef.current!.findViewByCell(e);
+                if (view) (view as any).update();
+              } catch {}
+            });
+          }
+        } catch (e) {
+
+        }
+      });
+      ro.observe(containerRef.current);
+
+      (graph as any).__resizeObserver = ro;
+    }
+
     return () => {
       if (graph) {
+        try {
+          const ro = (graph as any).__resizeObserver as ResizeObserver | undefined;
+          if (ro && containerRef.current) ro.unobserve(containerRef.current);
+        } catch {}
         graph.dispose();
       }
     };
   }, [nodeTypes, onConnect, onEdgesChange, onNodesChange, readonly]);
 
-  // Sincronizar Nodos
+
   useEffect(() => {
     const graph = graphRef.current;
     if (!graph) return;
@@ -158,11 +226,23 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
       const shapeName = `custom-${node.type}`;
       if (nodeTypes[node.type] && !graph.getCellById(node.id)) {
         try {
-          graph.addNode({
+          const cwidth = containerRef.current?.clientWidth || window.innerWidth || 1024;
+          const small = cwidth < 640;
+          const nodeW = small ? 64 : 96;
+          const nodeH = small ? 64 : 96;
+
+
+          const rect = containerRef.current?.getBoundingClientRect();
+          const centerX = rect ? Math.floor(rect.width / 2 - nodeW / 2) : (node.position?.x ?? 0);
+          const centerY = rect ? Math.floor(rect.height / 2 - nodeH / 2) : (node.position?.y ?? 0);
+
+          const added = graph.addNode({
             id: node.id,
             shape: shapeName,
-            x: node.position?.x || 0,
-            y: node.position?.y || 0,
+            x: typeof node.position?.x === 'number' ? node.position.x : centerX,
+            y: typeof node.position?.y === 'number' ? node.position.y : centerY,
+            width: nodeW,
+            height: nodeH,
             data: node.data,
             ports: {
               groups: {
@@ -179,13 +259,31 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
               ],
             },
           });
+
+
+          if (typeof node.position?.x !== 'number' || typeof node.position?.y !== 'number') {
+            try {
+              const rect = containerRef.current?.getBoundingClientRect();
+              if (rect) {
+                const clientCenter = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+                const clientToLocal = (graph as any).clientToLocalPoint || (graph as any).clientToLocal;
+                const local = clientToLocal ? clientToLocal.call(graph, clientCenter.x, clientCenter.y) : { x: centerX, y: centerY };
+
+                (added as any).position(local.x - nodeW / 2, local.y - nodeH / 2);
+                const view = graph.findViewByCell(added);
+                if (view) (view as any).update();
+              }
+            } catch (err) {
+
+            }
+          }
         } catch (error) {
           console.warn(`Error adding node ${shapeName}:`, error);
         }
       }
     });
 
-    // --- MEJORA 2: Forzar recalculación de rutas tras el renderizado de los componentes React ---
+
     if (readonly) {
       const handleResize = () => {
         const currentGraph = graphRef.current; 
@@ -197,7 +295,7 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
             }
           });
           
-          // Padding dinámico según el ancho de la pantalla
+
           const fitPadding = window.innerWidth < 768 ? 20 : 80;
           currentGraph.zoomToFit({ padding: fitPadding, maxScale: 1 });
           currentGraph.centerContent();
@@ -212,10 +310,10 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
         window.removeEventListener("resize", handleResize);
       };
     }
-    // Añadimos edges a la dependencia para que el zoomToFit ocurra cuando todo el esquema esté listo
+
   }, [nodes, edges, nodeTypes, readonly]);
 
-  // Sincronizar Aristas
+
   useEffect(() => {
     const graph = graphRef.current;
     if (!graph) return;
@@ -226,13 +324,13 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
     edges.forEach((edge) => {
       if (!graph.getCellById(edge.id)) {
         try {
-          // --- MEJORA 3: Asegurar la unión limpia al nodo o puerto ---
+
           graph.addEdge({
             id: edge.id,
             source: edge.source_port ? { cell: edge.source, port: edge.source_port } : edge.source,
             target: edge.target_port ? { cell: edge.target, port: edge.target_port } : edge.target,
             vertices: edge.vertices || [],
-            router: { name: 'manhattan' }, // Mantener el comportamiento ortogonal
+            router: { name: 'manhattan' },
             attrs: {
               line: {
                 stroke: edgeStrokeColor,
@@ -247,7 +345,7 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
     });
   }, [edges]);
 
-  // ✨ Actualización dinámica del tema sin destruir el grafo
+
   useEffect(() => {
     const graph = graphRef.current;
     if (!graph) return;
@@ -258,11 +356,23 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
     const edgeStrokeColor = isDarkMode ? "#64748b" : "#94a3b8";
 
     graph.drawBackground({ color: backgroundColor });
-    graph.grid.update({ args: { color: gridColor } });
+    graph.grid.update({ color: gridColor } as any);
     graph.getEdges().forEach(edge => {
       edge.attr('line/stroke', edgeStrokeColor);
     });
   }, [resolvedTheme]);
+
+  if (isCollapsedViewport) {
+    return (
+      <div className="w-full h-full flex items-center justify-center min-h-[240px]">
+        <div className="max-w-md rounded-2xl border border-slate-700 bg-slate-900/60 p-6 text-center">
+          <h3 className="text-lg font-semibold text-white mb-2">Editor not available on mobile</h3>
+          <p className="text-sm text-slate-300 mb-2">For the best experience please edit the schema on a desktop or laptop. The visual editor is disabled on small screens.</p>
+          <p className="text-xs text-slate-400">Schema will be saved as an empty JSON on mobile.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

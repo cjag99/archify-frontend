@@ -1,3 +1,4 @@
+// Page-level UI component that renders the RegisterForm interface
 "use client";
 
 import { useRegisterForm } from "@/hooks/useRegisterForm";
@@ -48,14 +49,14 @@ export const RegisterForm = ({ onSwitch, onSuccess }: RegisterFormProps) => {
         label="Password"
         name="password"
         type="password"
-        placeholder="••••••••"
+        placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
         error={formError?.password || ""}
       />
       <Input
         label="Confirm Password"
         name="confirmPassword"
         type="password"
-        placeholder="••••••••"
+        placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
         error={formError?.confirmPassword || ""}
       />
       <Button type="submit" variant="primary" isLoading={loading} fullWidth>
@@ -76,3 +77,5 @@ export const RegisterForm = ({ onSwitch, onSuccess }: RegisterFormProps) => {
     </form>
   );
 };
+
+

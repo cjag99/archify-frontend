@@ -1,3 +1,4 @@
+// User profile page for viewing and editing account details
 "use client";
 
 import { useState } from "react";
@@ -22,7 +23,7 @@ export default function ProfilePage() {
     try {
       let avatarId = user.avatar;
       
-      // Upload new avatar if provided using the hook which passes usage_type
+
       if (avatarFile) {
         const imageRes = await createImage(avatarFile, "avatar");
         if (imageRes?.id) {
@@ -30,20 +31,20 @@ export default function ProfilePage() {
         }
       }
 
-      // Update the user details
+
       const updatedUser = await userService.update(user.id, {
         ...updatedData,
         avatar: avatarId
       });
 
-      // Update local cookie data directly so on reload it's fresh
+
       Cookies.set("user_data", JSON.stringify(updatedUser), {
         expires: 7,
         sameSite: "lax",
         path: "/",
       });
       
-      // Reload to reflect changes globally since AuthContext lacks an updateUser method
+
       window.location.reload();
       
     } catch (error) {
@@ -61,7 +62,7 @@ export default function ProfilePage() {
       setIsLoading(true);
       try {
         await userService.delete(user.id);
-        await logout(); // Logout and redirect
+        await logout();
       } catch (error) {
         console.error("Failed to delete profile", error);
         alert("Failed to delete profile. Please try again.");
@@ -83,3 +84,4 @@ export default function ProfilePage() {
     </ProtectedRoute>
   );
 }
+

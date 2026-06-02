@@ -1,3 +1,4 @@
+// Page-level UI component that renders the EmptyTable interface
 "use client";
 
 import { FC, useState } from "react";
@@ -17,9 +18,7 @@ export const EmptyTable: FC<EmptyTableProps> = ({ label, onClick }) => {
     const [modalType, setModalType] = useState<string | null>(null);
     const closeModal = () => setModalType(null);
     const handleClick = () => {
-        if (label != "project" && label != "pattern" && label != "architecture") {
-            setModalType(label || "record");
-        } else {
+        if (label === "project" || label === "pattern" || label === "architecture") {
             const resource =
                 label === "project"
                     ? "projects"
@@ -27,7 +26,15 @@ export const EmptyTable: FC<EmptyTableProps> = ({ label, onClick }) => {
                       ? "patterns"
                       : "architectures";
             router.push(`/dashboard/${resource}/new`);
+            return;
         }
+
+        if (onClick) {
+            onClick();
+            return;
+        }
+
+        setModalType(label || "record");
     };
 
     return (
@@ -40,7 +47,7 @@ export const EmptyTable: FC<EmptyTableProps> = ({ label, onClick }) => {
                 This table is currently empty or couldnt be loaded. Check back later or add records in the console.
             </p>
 
-            {onClick && (
+            {onClick && label !== "image" && (
                 <>
                     <Button
                         onClick={() => handleClick()}
@@ -67,3 +74,4 @@ export const EmptyTable: FC<EmptyTableProps> = ({ label, onClick }) => {
         </div>
     );
 }
+

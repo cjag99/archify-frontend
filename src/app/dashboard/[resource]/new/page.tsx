@@ -1,7 +1,8 @@
+// Dashboard route for creating a new resource item
 "use client";
 
-import { useState } from "react";
-import { useParams, usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/core/context/AuthContext";
 import { ProtectedRoute } from "@/components/organisms/ProtectedRoute";
 import { BackLink } from "@/components/atoms/BackLink";
@@ -15,7 +16,6 @@ import { ProjectStep1 } from "@/components/molecules/ProjectStep1";
 import { ProjectStep2 } from "@/components/molecules/ProjectStep2";
 import { Button } from "@/components/atoms/Button";
 import { useArchitecture } from "@/hooks/useArchitecture";
-import { useRouter } from "next/navigation";
 import { projectService } from "@/core/api/projects.service";
 import { Lock } from "lucide-react";
 interface CanvasNodeData {
@@ -58,6 +58,7 @@ export default function NewResourcePage() {
     const params = useParams();
     const pathname = usePathname();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const { user, loading: authLoading } = useAuth();
     const [architecturePayload, setArchitecturePayload] = useState<ArchitecturePayload | null>(null);
     const [patternPayload, setPatternPayload] = useState<PatternPayload | null>(null);
@@ -70,11 +71,11 @@ export default function NewResourcePage() {
     const resource = (typeof params?.resource === "string" ? params.resource : (pathname.split("/")[2] || ""));
     const { createArchitecture } = useArchitecture();
     
-    // Authorization check: Only authorized users can create patterns and architectures
+
     const isAuthorized = user?.is_authorized || user?.role === "admin";
     const canCreateResource = isAuthorized || resource === "projects";
     
-    // Show access denied if not authorized for this resource type
+
     if (!authLoading && !canCreateResource && (resource === "patterns" || resource === "architectures")) {
         return (
             <ProtectedRoute>
@@ -111,6 +112,25 @@ export default function NewResourcePage() {
         setPatternId(createdPatternId);
         setStep(3);
     };
+
+    useEffect(() => {
+        if (resource !== "patterns") {
+            return;
+        }
+
+        const queryPatternId = searchParams.get("patternId");
+        const queryPatternName = searchParams.get("patternName");
+
+        if (queryPatternId) {
+            setPatternId(queryPatternId);
+            setPatternPayload({
+                name: queryPatternName ?? "Selected pattern",
+                description: "",
+                graphicType: 0,
+            });
+            setStep(3);
+        }
+    }, [resource, searchParams]);
 
 
     const handleArchitectureNext = (payload: ArchitecturePayload) => {
@@ -155,12 +175,12 @@ export default function NewResourcePage() {
         return;
       }
         try {
-            // Create the project with the selected architecture and updated schema
+
             const payload = {
               name: projectPayload?.name || "Untitled Project",
               description: projectPayload?.description || "",
               project_logo: projectPayload?.logo_id as any,
-              architecture: { ...schema, architecture_id } as unknown as JSON, // ✨ Inyectamos el ID
+              architecture: { ...schema, architecture_id } as unknown as JSON,
               architecture_id: architecture_id,
               user_id: user?.id,
             } as const;
@@ -292,3 +312,4 @@ export default function NewResourcePage() {
         </ProtectedRoute>
     );
 }
+

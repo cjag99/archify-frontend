@@ -1,3 +1,4 @@
+// Reusable atom UI component for Textarea
 import React from "react";
 
 interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -31,3 +32,4 @@ export const Textarea = ({ label, error, ...props }: TextareaProps) => {
     </div>
   );
 };
+

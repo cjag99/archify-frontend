@@ -1,3 +1,4 @@
+// Page-level UI component that renders the StepSection interface
 import { FC } from "react";
 
 const steps = [
@@ -63,3 +64,4 @@ export const StepSection: FC = () => {
     </section>
   );
 };
+

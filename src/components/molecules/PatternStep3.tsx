@@ -1,3 +1,4 @@
+// Composite UI component used by views and forms for PatternStep3
 "use client";
 
 import React, { useState } from "react";
@@ -145,3 +146,4 @@ export const PatternStep3: React.FC<PatternStep3Props> = ({
     </div>
   );
 };
+

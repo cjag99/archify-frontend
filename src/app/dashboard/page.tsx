@@ -1,3 +1,4 @@
+// Dashboard home page showing authenticated user content
 "use client";
 
 import { ProtectedRoute } from "@/components/organisms/ProtectedRoute";
@@ -26,7 +27,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Error Banner */}
+          {}
           {error && (
             <div className="mb-8 p-4 bg-red-50/80 border border-red-100 text-red-700 rounded-2xl text-sm flex items-center gap-3">
               <AlertCircle className="w-5 h-5 text-red-500 shrink-0" />
@@ -40,3 +41,4 @@ export default function DashboardPage() {
     </ProtectedRoute>
   );
 }
+

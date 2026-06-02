@@ -1,3 +1,4 @@
+// Page-level UI component that renders the ProjectView interface
 "use client";
 
 import { useEffect, useState } from "react";
@@ -6,7 +7,7 @@ import { useProject } from "@/hooks/useProject";
 import { useAuth } from "@/core/context/AuthContext";
 import { BackLink } from "@/components/atoms/BackLink";
 import { Button } from "@/components/atoms/Button";
-import { FolderOpen } from "lucide-react";
+import { FolderOpen, Download } from "lucide-react";
 import { ROUTES } from "@/lib/routes";
 import SchemaCanvas from "@/components/organisms/SchemaCanvas";
 import Modal from "@/components/organisms/Modal";
@@ -26,12 +27,13 @@ import { HexagonalApplicationNode } from "@/components/molecules/diagramNodes/He
 import { HexagonalAdapterNode } from "@/components/molecules/diagramNodes/HexagonalAdapterNode";
 import { decodeHtmlEntities } from "@/core/utils/string.utils";
 import Image from "next/image";
-import { UUID } from "crypto";
 import { useImage } from "@/hooks/useImage";
 import { ImageType } from "@/core/types/models";
+import { UUID } from "crypto";
 
 interface ProjectViewProps {
   projectId: string;
+  hideActions?: boolean;
 }
 
 const projectNodeTypes = {
@@ -75,16 +77,17 @@ interface ProjectNodeNameMap {
   [nodeType: string]: string;
 }
 
-export function ProjectView({ projectId }: ProjectViewProps) {
+export function ProjectView({ projectId, hideActions = false }: ProjectViewProps) {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
-  const { fetchProjectById, updateProject, deleteProject } = useProject();
+  const { fetchProjectById, updateProject, deleteProject, downloadProject } = useProject();
   const { fetchImage } = useImage();
   const [project, setProject] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [imageObj, setImageObj] = useState<ImageType | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [editPayload, setEditPayload] = useState<ProjectPayload | null>(null);
 
   const isAuthorized = user && project && user.id === project.user_id;
@@ -137,6 +140,14 @@ export function ProjectView({ projectId }: ProjectViewProps) {
     setEditPayload(payload);
   };
 
+  const handleDownloadProject = async () => {
+    if (!project) return;
+    setIsDownloading(true);
+
+    await downloadProject(projectId, project.name);
+    setIsDownloading(false);
+  };
+
   const handleEditStep2Finish = async (
     architecture_id: string,
     nodeNameMap: ProjectNodeNameMap,
@@ -148,7 +159,7 @@ export function ProjectView({ projectId }: ProjectViewProps) {
       name: editPayload?.name || project.name,
       description: editPayload?.description || project.description,
       project_logo: editPayload?.logo_id ? (editPayload.logo_id as any) : project.project_logo,
-      architecture: { ...updatedSchema, architecture_id } as unknown as JSON, // ✨ ID al JSON
+      architecture: { ...updatedSchema, architecture_id } as unknown as JSON,
       architecture_id: architecture_id,
     };
 
@@ -170,7 +181,7 @@ export function ProjectView({ projectId }: ProjectViewProps) {
     return (
       <div className="app-shell p-6 md:p-12">
         <div className="max-w-5xl mx-auto space-y-8">
-          <BackLink href={ROUTES.projects} label="Back to Projects" />
+          {!hideActions && <BackLink href={ROUTES.projects} label="Back to Projects" />}
           <div className="glass-card rounded-2xl p-8 border border-slate-200 dark:border-slate-800 dark:bg-slate-900/50">
             {!editPayload ? (
               <ProjectStep1
@@ -198,11 +209,11 @@ export function ProjectView({ projectId }: ProjectViewProps) {
   return (
     <div className="app-shell p-4 md:p-8 lg:p-12">
       <div className="max-w-6xl mx-auto mb-6">
-        <BackLink href={ROUTES.projects} label="Back to Projects" />
+        {!hideActions && <BackLink href={ROUTES.projects} label="Back to Projects" />}
       </div>
 
       <div className="max-w-6xl mx-auto overflow-hidden bg-white/60 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 transition-all duration-300 dark:bg-slate-900/60 dark:border-slate-700/60">
-        {/* Premium Header Area */}
+        {}
         <div className="relative h-32 md:h-44 w-full bg-linear-to-br from-brand/10 via-brand/5 to-transparent overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
           <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-brand/20 rounded-full blur-3xl"></div>
@@ -218,7 +229,7 @@ export function ProjectView({ projectId }: ProjectViewProps) {
         </Modal>
 
         <div className="px-6 md:px-10 pb-10 -mt-16 md:-mt-20 relative z-10 space-y-10">
-          {/* Title and Actions Section */}
+          {}
           <div className="flex flex-col md:flex-row gap-6 items-center md:items-end justify-between text-center md:text-left">
             <div className="flex-1 space-y-4 w-full">
               <div className="flex flex-col md:flex-row items-center gap-4 md:gap-5">
@@ -235,8 +246,17 @@ export function ProjectView({ projectId }: ProjectViewProps) {
                 </p>
               )}
             </div>
-            {!loading && project && isAuthorized && (
+            {!loading && project && isAuthorized && !hideActions && (
               <div className="flex gap-3 pb-2 justify-center md:justify-end">
+                <Button 
+                  variant="success" 
+                  onClick={handleDownloadProject} 
+                  isLoading={isDownloading}
+                  className="rounded-2xl px-6"
+                >
+                  <Download className="w-5 h-5" />
+                  Export ZIP
+                </Button>
                 <Button variant="secondary" onClick={handleProjectEdit} className="rounded-2xl px-6">
                   Edit
                 </Button>
@@ -247,7 +267,7 @@ export function ProjectView({ projectId }: ProjectViewProps) {
             )}
           </div>
 
-          {/* Project Logo Section */}
+          {}
           {imageObj && (
             <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm dark:bg-slate-900/40 dark:border-slate-700/50">
               <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-3">
@@ -271,7 +291,7 @@ export function ProjectView({ projectId }: ProjectViewProps) {
             </div>
           )}
 
-          {/* Schema Section */}
+          {}
           {hasSchema ? (
             <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm dark:bg-slate-900/40 dark:border-slate-700/50">
               <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-3">
@@ -301,3 +321,4 @@ export function ProjectView({ projectId }: ProjectViewProps) {
     </div>
   );
 }
+

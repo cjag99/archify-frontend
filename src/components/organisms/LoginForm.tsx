@@ -1,3 +1,4 @@
+// Page-level UI component that renders the LoginForm interface
 "use client";
 
 import { Suspense } from "react";
@@ -34,7 +35,7 @@ function LoginFormInner({ onSwitch, onSuccess }: LoginFormProps) {
         label="Password"
         name="password"
         type="password"
-        placeholder="••••••••"
+        placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
         error={formError?.password || ""}
       />
       <Button type="submit" variant="primary" isLoading={loading} fullWidth>
@@ -61,3 +62,5 @@ export const LoginForm = (props: LoginFormProps) => (
     <LoginFormInner {...props} />
   </Suspense>
 );
+
+

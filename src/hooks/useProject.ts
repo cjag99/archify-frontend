@@ -1,8 +1,9 @@
+// Custom React hook for useProject state and behavior
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/core/context/AuthContext";
-import { projectService } from "@/core/api/projects.service";
+import { projectService, downloadProjectZip } from "@/core/api/projects.service";
 import { Project } from "@/core/types/models";
 
 export const useProject = () => {
@@ -62,6 +63,41 @@ export const useProject = () => {
         }
     }, []);
 
+    const downloadProject = useCallback(async (id: string, projectName: string): Promise<boolean> => {
+    setLoading(true);
+    setError(null);
+    try {
+
+        const blob = await downloadProjectZip(id);
+        
+
+        const url = window.URL.createObjectURL(blob);
+        
+
+        const link = document.createElement("a");
+        link.href = url;
+        
+
+        const safeName = projectName.replace(/[^a-z0-9_-]/gi, '_') || "project";
+        link.setAttribute("download", `${safeName}.zip`);
+        
+        document.body.appendChild(link);
+        link.click();
+        
+
+        link.parentNode?.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        
+        return true;
+    } catch (err) {
+        console.error("Error en la descarga:", err);
+        setError(err instanceof Error ? err.message : "Download failed");
+        return false;
+    } finally {
+        setLoading(false);
+    }
+}, []);
+
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchProjects();
@@ -73,6 +109,7 @@ export const useProject = () => {
         error, 
         fetchProjectById, 
         updateProject, 
-        deleteProject 
+        deleteProject,
+        downloadProject
     };
 }

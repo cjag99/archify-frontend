@@ -1,3 +1,4 @@
+// Custom React hook for useLoginForm state and behavior
 "use client";
 
 import { useState } from "react";
@@ -57,12 +58,12 @@ export const useLoginForm = (onSuccess?: () => void) => {
       let userFriendlyMessage = "An unexpected error occurred. Please try again later.";
       const serverError = err.cause;
       
-      // Normalizamos el error del servidor (revisamos .detail y .error)
+
       const detail = serverError?.detail || serverError?.error;
 
       if (detail) {
         if (typeof detail === "string") {
-          // Si el mensaje contiene palabras clave de fallo de autenticación
+
           const lowerDetail = detail.toLowerCase();
           if (lowerDetail.includes("credentials") || lowerDetail.includes("invalid")) {
             userFriendlyMessage = "The email or password you entered is incorrect.";
@@ -70,11 +71,11 @@ export const useLoginForm = (onSuccess?: () => void) => {
             userFriendlyMessage = detail;
           }
         } else if (Array.isArray(detail)) {
-          // Errores de validación (Pydantic)
+
           userFriendlyMessage = detail[0]?.msg || "Invalid data provided.";
         }
       } else if (err instanceof Error) {
-        // Fallback al mensaje del error (que ya viene procesado por el apiClient)
+
         const message = err.message.toLowerCase();
         if (message.includes("credentials") || message.includes("invalid")) {
           userFriendlyMessage = "The email or password you entered is incorrect.";
@@ -91,3 +92,5 @@ export const useLoginForm = (onSuccess?: () => void) => {
 
   return { handleLogin, loading, error, formError };
 };
+
+

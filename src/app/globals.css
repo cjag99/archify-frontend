@@ -1,3 +1,5 @@
+
+/* Route page: globals.css - minimal description */
 @import "tailwindcss";
 
 :root {
@@ -25,12 +27,10 @@
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
-/* Variante nativa de modo oscuro para Tailwind v4 basado en clase */
+
 @variant dark (&:where(.dark, .dark *));
 
-/* ==========================================
-   ESTADOS DE MODO OSCURO (Controlado por clase)
-   ========================================== */
+
 :root.dark,
 html.dark {
   color-scheme: dark;
@@ -46,7 +46,7 @@ html.dark {
   --selection: rgba(140, 3, 239, 0.24);
   --bg-app: linear-gradient(180deg, rgba(15, 23, 42, 0.92) 0%, rgba(15, 23, 42, 1) 42%, rgba(15, 23, 42, 1) 100%);
 
-  /* Ajustes automáticos de componentes con app-shell y superficies */
+  
   .app-shell {
     background-color: var(--surface);
     background-image:
@@ -81,9 +81,7 @@ html.dark {
   }
 }
 
-/* ==========================================
-   ESTILOS BASE Y ESTRUCTURA GENERAL
-   ========================================== */
+
 *,
 *::before,
 *::after {
@@ -118,9 +116,7 @@ button, a, input, select, textarea {
   outline-offset: 3px;
 }
 
-/* ==========================================
-   COMPONENTES DE DISEÑO CUSTOM
-   ========================================== */
+
 .app-shell {
   min-height: 100vh;
   background-color: var(--surface-soft);
@@ -208,15 +204,13 @@ button, a, input, select, textarea {
   }
 }
 
-/* Visibilidad de iconos nativos (Mantenido por compatibilidad alternativa) */
+
 html.dark .theme-icon-light { display: none !important; }
 html.dark .theme-icon-dark { display: inline-flex !important; }
 html:not(.dark) .theme-icon-dark { display: none !important; }
 html:not(.dark) .theme-icon-light { display: inline-flex !important; }
 
-/* ==========================================
-   RESPONSIVE Y ACCESIBILIDAD
-   ========================================== */
+
 @media (max-width: 1024px) {
   .page-container {
     padding-top: 2rem;

@@ -1,3 +1,4 @@
+// Type definitions for models
 import { User } from "./auth";
 import { UUID } from "crypto";
 
@@ -63,3 +64,4 @@ export interface ImageType {
     usage_type: ImageUsageType;
     created_at: Date;
 }
+

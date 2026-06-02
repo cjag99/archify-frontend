@@ -1,3 +1,4 @@
+// Page-level UI component that renders the DeleteModal interface
 "use client";
 
 import { useState } from "react";
@@ -27,8 +28,8 @@ export const DeleteModal = ({ onConfirm, onClose }: DeleteModalProps) => {
 
     return (
         <div>
-            <h2 className="text-xl font-bold text-slate-950 mb-3">Confirm Deletion</h2>
-            <p className="text-sm text-slate-500 mb-6">
+            <h2 className="text-xl font-bold text-slate-950 dark:text-slate-100 mb-3">Confirm Deletion</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
                 Are you sure you want to delete this item? This action cannot be undone.
             </p>
             <div className="flex justify-end gap-4">
@@ -42,3 +43,4 @@ export const DeleteModal = ({ onConfirm, onClose }: DeleteModalProps) => {
         </div>
     );
 };
+

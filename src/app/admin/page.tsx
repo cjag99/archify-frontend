@@ -1,3 +1,4 @@
+// Admin landing page for managing application data
 "use client";
 import { AdminNavBar } from "@/components/organisms/AdminNavBar";
 import { AdminProtectedRoute } from "@/components/organisms/AdminProtectedRoute";
@@ -10,7 +11,7 @@ export default function AdminPage() {
         <AdminProtectedRoute>
             <div className="app-shell">
                 <div className="max-w-7xl mx-auto px-3 md:px-4 py-3 md:py-6">
-                    {/* Mobile large centered menu */}
+                    {}
                     <div className="block md:hidden w-full flex justify-center mt-5 mb-4">
                         <div className="w-[90vw] max-w-[90vw] mx-auto">
                             <AdminNavBar />
@@ -30,3 +31,5 @@ export default function AdminPage() {
         </AdminProtectedRoute>
     );
 }
+
+

@@ -1,3 +1,4 @@
+// API service module for crud operations
 import { apiClient, type ApiOptions } from "./apiClient";
 
 export class CrudService<T, CreateDto = Partial<T>, UpdateDto = Partial<T>> {
@@ -29,3 +30,4 @@ export class CrudService<T, CreateDto = Partial<T>, UpdateDto = Partial<T>> {
         return apiClient.delete<void>(`${this.endpoint}/${id}`);
     }
 }
+

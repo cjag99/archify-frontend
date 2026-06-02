@@ -1,3 +1,4 @@
+// API service module for patterns operations
 import { CrudService } from "./crud.service";
 import { Pattern } from "../types/models";
 
@@ -9,3 +10,4 @@ export type PatternCreatePayload = {
 };
 
 export const patternService = new CrudService<Pattern, PatternCreatePayload, Partial<PatternCreatePayload>>("/patterns");
+

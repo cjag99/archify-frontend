@@ -1,3 +1,4 @@
+// Reusable atom UI component for BackLink
 "use client";
 
 import Link from "next/link";
@@ -19,3 +20,4 @@ export function BackLink({ href, label = "Back to" }: BackLinkProps) {
     </Link>
   );
 }
+

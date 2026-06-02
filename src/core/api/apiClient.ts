@@ -1,3 +1,4 @@
+// API service module for apiClient operations
 export type ApiOptions = Omit<RequestInit, "body" | "method">;
 
 class ApiClient {
@@ -9,7 +10,7 @@ class ApiClient {
 
     private async getHeaders(customHeaders?: HeadersInit, body?: unknown): Promise<HeadersInit> {
         const isFormData = body instanceof FormData;
-        const defaultHeaders: Record<string, string> = isFormData
+        const defaultHeaders: Record<string, string> = body == null || isFormData
             ? {}
             : {
                 "Content-Type": "application/json",
@@ -38,37 +39,43 @@ class ApiClient {
             config.body = body instanceof FormData ? body : JSON.stringify(body);
         }
     
+        const shouldDispatchToast = (endpoint: string) => {
+            const normalized = endpoint.toLowerCase();
+            return !/(?:\b|\/)(?:auth\/)?(?:login|logout|register)(?:\b|\/)?/.test(normalized);
+        };
+
         try {
             const response = await fetch(url, config);
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
 
-                // Buscamos un mensaje de error en las propiedades comunes (detail o error)
+
                 const serverMessage = typeof errorData.detail === "string"
                     ? errorData.detail
                     : (typeof errorData.error === "string" ? errorData.error : null);
 
-                const errorMessage = serverMessage || `API request failed: ${response.status} ${response.statusText}`;
+                const lower = (serverMessage || "").toString().toLowerCase();
+                const isAuthError = response.status === 401 && (lower.includes("token") || lower.includes("jwt") || lower.includes("expired") || lower.includes("invalid"));
+                const authErrorMessage = isAuthError ? "Session expired. Please log in again." : null;
+                const errorMessage = authErrorMessage || serverMessage || `API request failed: ${response.status} ${response.statusText}`;
 
-                // Emit a global API response event for failures so UI can show toasts
+
                 try {
-                    if (typeof window !== "undefined" && method !== "GET") {
+                    if (typeof window !== "undefined" && method !== "GET" && shouldDispatchToast(endpoint)) {
                         window.dispatchEvent(new CustomEvent("archify:api-response", { detail: { status: response.status, success: false, message: errorMessage } }));
                     }
                 } catch {
-                    // ignore event dispatch errors
+
                 }
 
-                // If we received a 401 that looks like an expired/invalid token, dispatch a global logout event
+
                 try {
-                    const lower = (serverMessage || "").toString().toLowerCase();
-                    const isAuthError = response.status === 401 && (lower.includes("token") || lower.includes("jwt") || lower.includes("expired") || lower.includes("invalid"));
                     if (isAuthError && typeof window !== "undefined") {
                         console.warn("[API Auth Error] dispatching forced logout event due to 401 auth error.");
                         window.dispatchEvent(new CustomEvent("archify:force-logout", { detail: { message: errorMessage, status: response.status } }));
                     }
                 } catch {
-                    // ignore event dispatch errors
+
                 }
 
                 throw new Error(
@@ -78,21 +85,21 @@ class ApiClient {
             }
 
             if (response.status === 204) {
-                // No content - still emit a success event for 204 if desired (but user asked for 200 only)
+
                 return {} as T;
             }
 
-            // Read response body
+
             const data = await response.json().catch(() => null);
 
-            // Emit success only for 200 responses per spec
+
             try {
-                if (response.status === 200 && typeof window !== "undefined" && method !== "GET") {
+                if (response.status === 200 && typeof window !== "undefined" && method !== "GET" && shouldDispatchToast(endpoint)) {
                     const successMessage = data && (data.message || data.detail || data.success) ? (data.message || data.detail || String(data.success)) : "Request succeeded";
                     window.dispatchEvent(new CustomEvent("archify:api-response", { detail: { status: response.status, success: true, message: successMessage } }));
                 }
             } catch {
-                // ignore
+
             }
 
             return (data as T) || ({} as T);

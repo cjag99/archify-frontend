@@ -1,3 +1,4 @@
+// Composite UI component used by views and forms for ProfileDropdown
 "use client";
 
 import { FC, useEffect, useState } from "react";
@@ -29,7 +30,7 @@ export const ProfileDropdown: FC<ProfileDropdownProps> = ({ onClose }) => {
 
     return (
         <div className="glass-card rounded-2xl w-64 absolute top-full right-0 mt-3 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-            {/* Header user info */}
+            {}
             <div className="flex items-center gap-3 px-3 py-3 border-b border-slate-100/60 mb-2">
                 <div className="relative shrink-0">
                     {avatarUrl ? (
@@ -52,7 +53,7 @@ export const ProfileDropdown: FC<ProfileDropdownProps> = ({ onClose }) => {
                 </div>
             </div>
 
-            {/* Menu Links */}
+            {}
             <div className="space-y-0.5">
                 <Link
                     href="/dashboard/profile"

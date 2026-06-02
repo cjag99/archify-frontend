@@ -1,4 +1,5 @@
-import { SidebarNodeItem } from "@/components/organisms/NodeSidebar";
+// Pattern node palette definitions used in schema diagrams
+﻿import { SidebarNodeItem } from "@/components/organisms/NodeSidebar";
 import { Boxes, User } from "lucide-react";
 
 export const patternList: SidebarNodeItem[] = [
@@ -15,3 +16,4 @@ export const patternList: SidebarNodeItem[] = [
         icon: <Boxes size={20} className="text-brand" />
     }
 ]
+

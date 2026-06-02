@@ -1,3 +1,4 @@
+// Page-level UI component that renders the AdminNavBar interface
 import { FC } from "react";
 import { AdminMenu } from "../molecules/AdminMenu";
 

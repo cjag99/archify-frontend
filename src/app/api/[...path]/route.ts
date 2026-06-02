@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+// API route handler for a backend endpoint
+﻿import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -14,9 +15,9 @@ async function handleProxy(req: NextRequest) {
 
         const headers = new Headers();
         
-        const contentType = req.headers.get("content-type");
-        if (contentType) {
-            headers.set("content-type", contentType);
+        const requestContentType = req.headers.get("content-type");
+        if (requestContentType) {
+            headers.set("content-type", requestContentType);
         }
 
         if (token) {
@@ -33,20 +34,33 @@ async function handleProxy(req: NextRequest) {
             body,
         });
 
-        let responseData: unknown;
         if (response.status === 204) {
-            responseData = {};
-        } else {
+            return NextResponse.json({}, { status: response.status });
+        }
+
+        const responseContentType = response.headers.get("content-type") ?? "";
+        if (responseContentType.includes("application/json")) {
+            const json = await response.json().catch(() => null);
+            return NextResponse.json(json ?? {}, { status: response.status });
+        }
+
+        if (responseContentType.startsWith("text/")) {
             const text = await response.text();
             try {
-                responseData = text ? JSON.parse(text) : {};
-            } catch (err) {
-               
-                responseData = { message: text };
+                const parsed = text ? JSON.parse(text) : {};
+                return NextResponse.json(parsed, { status: response.status });
+            } catch {
+                return new NextResponse(text, {
+                    status: response.status,
+                    headers: response.headers,
+                });
             }
         }
 
-        return NextResponse.json(responseData, { status: response.status });
+        return new NextResponse(response.body, {
+            status: response.status,
+            headers: response.headers,
+        });
     } catch (error) {
         console.error(`[BFF Proxy Error] ${req.method} ${req.nextUrl.pathname}:`, error);
         return NextResponse.json(
@@ -61,3 +75,4 @@ export const POST = handleProxy;
 export const PUT = handleProxy;
 export const PATCH = handleProxy;
 export const DELETE = handleProxy;
+

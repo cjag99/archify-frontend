@@ -1,3 +1,4 @@
+// Diagram node component used in the schema editor palette
 "use client";
 
 import React from "react";
@@ -15,3 +16,4 @@ export const CleanEntityNode: React.FC<{ node: Node }> = ({ node }) => (
     tag="Domain"
   />
 );
+

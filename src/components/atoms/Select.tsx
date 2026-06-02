@@ -1,3 +1,4 @@
+// Reusable atom UI component for Select
 import React from 'react';
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
@@ -45,3 +46,4 @@ export const Select = ({ label, error, options, defaultValue = 0, value, ...prop
     </div>
   );
 };
+

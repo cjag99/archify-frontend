@@ -1,6 +1,7 @@
+// Page-level UI component that renders the Navbar interface
 "use client";
 import { useAuth } from "@/core/context/AuthContext";
-import { useState } from "react"; // 💡 Añadimos useEffect
+import { useState } from "react";
 import Link from "next/link";
 import Modal from "./Modal";
 import { useTheme } from "@/core/context/ThemeContext";
@@ -15,7 +16,7 @@ import { Menu, X, Sun, Moon } from "lucide-react";
 export const Navbar: FC = () => {
   const [modalType, setModalType] = useState<"login" | "register" | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isAuthenticated, loading } = useAuth(); // Asegúrate de que useAuth esté importado arriba si faltaba
+  const { isAuthenticated, loading } = useAuth();
   const { resolvedTheme, setTheme } = useTheme();
  
   const currentTheme = resolvedTheme === "dark" ? "dark" : "light";
@@ -72,10 +73,10 @@ export const Navbar: FC = () => {
             aria-label="Toggle theme"
             className="relative z-10 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
           >
-            {/* Icono de la Luna: Se muestra por defecto, se oculta en modo oscuro */}
+            {}
             <Moon className="h-5 w-5 block dark:hidden" />
 
-            {/* Icono del Sol: Se oculta por defecto, se muestra en modo oscuro */}
+            {}
             <Sun className="h-5 w-5 hidden dark:block" />
           </button>
             {isAuthenticated ? (

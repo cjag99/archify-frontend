@@ -1,3 +1,4 @@
+// Composite UI component used by views and forms for AuthQueryHandler
 "use client";
 
 import { Suspense, useEffect } from "react";
@@ -29,3 +30,4 @@ export function AuthQueryHandler(props: AuthQueryHandlerProps) {
     </Suspense>
   );
 }
+

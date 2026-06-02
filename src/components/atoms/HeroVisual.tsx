@@ -1,3 +1,4 @@
+// Reusable atom UI component for HeroVisual
 import type { FC } from "react";
 
 export const HeroVisual: FC = () => {
@@ -84,3 +85,4 @@ export const HeroVisual: FC = () => {
     </div>
   );
 };
+

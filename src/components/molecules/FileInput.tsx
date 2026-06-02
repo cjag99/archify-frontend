@@ -1,3 +1,4 @@
+// Composite UI component used by views and forms for FileInput
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
@@ -9,6 +10,8 @@ interface FileInputProps {
   accept?: string;
   onChange: (file: File | null) => void;
   placeholder?: string;
+  existingPreviewUrl?: string;
+  existingFileName?: string;
 }
 
 export const FileInput = ({
@@ -17,19 +20,31 @@ export const FileInput = ({
   accept = "image/*",
   onChange,
   placeholder = "Drag an image here or click to select",
+  existingPreviewUrl,
+  existingFileName,
 }: FileInputProps) => {
   const [isDragActive, setIsDragActive] = useState(false);
-  const [fileName, setFileName] = useState<string | null>(null);
+  const [localFileName, setLocalFileName] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [localPreviewUrl, setLocalPreviewUrl] = useState<string | null>(null);
+  const [hasClearedPreview, setHasClearedPreview] = useState(false);
 
   useEffect(() => {
     return () => {
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
+      if (localPreviewUrl) {
+        URL.revokeObjectURL(localPreviewUrl);
       }
     };
-  }, [previewUrl]);
+  }, [localPreviewUrl]);
+
+  useEffect(() => {
+    if (existingPreviewUrl) {
+      setHasClearedPreview(false);
+    }
+  }, [existingPreviewUrl]);
+
+  const currentPreviewUrl = hasClearedPreview ? null : (localPreviewUrl || existingPreviewUrl);
+  const currentFileName = localFileName || existingFileName;
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -62,10 +77,11 @@ export const FileInput = ({
 
   const processFile = (file: File) => {
     if (file.type.startsWith("image/")) {
-      setFileName(file.name);
+      setLocalFileName(file.name);
+      setHasClearedPreview(false);
       onChange(file);
       const objectUrl = URL.createObjectURL(file);
-      setPreviewUrl(objectUrl);
+      setLocalPreviewUrl(objectUrl);
     } else {
       alert("Please select a valid image file.");
     }
@@ -77,11 +93,12 @@ export const FileInput = ({
 
   const handleClearImage = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
+    if (localPreviewUrl) {
+      URL.revokeObjectURL(localPreviewUrl);
     }
-    setFileName(null);
-    setPreviewUrl(null);
+    setLocalFileName(null);
+    setLocalPreviewUrl(null);
+    setHasClearedPreview(true);
     onChange(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -104,13 +121,13 @@ export const FileInput = ({
         onChange={handleChange}
       />
 
-      {previewUrl ? (
+      {currentPreviewUrl ? (
         <div className="flex flex-col items-center justify-center min-h-40">
           <div className="relative group w-fit">
-            <div className="relative h-40 w-40 sm:w-52 border border-slate-200 rounded-xl overflow-hidden shadow-sm bg-slate-50 dark:bg-slate-900">
+            <div className="relative h-40 w-40 sm:w-52 border border-slate-200 rounded-xl overflow-hidden shadow-sm bg-slate-50 dark:bg-slate-900 dark:border-slate-800">
               <Image
-                src={previewUrl}
-                alt={`Vista previa de ${fileName}`}
+                src={currentPreviewUrl}
+                alt={`Vista previa de ${currentFileName ?? "imagen"}`}
                 fill
                 unoptimized
                 className="object-contain"
@@ -127,7 +144,7 @@ export const FileInput = ({
           </div>
 
           <p className="mt-3 text-sm font-medium text-slate-500 break-all text-center max-w-xs">
-            <span className="text-brand font-semibold">{fileName}</span>
+            <span className="text-brand font-semibold">{currentFileName ?? "Preview"}</span>
           </p>
         </div>
       ) : (
@@ -169,3 +186,4 @@ export const FileInput = ({
     </div>
   );
 };
+

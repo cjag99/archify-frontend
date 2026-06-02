@@ -1,4 +1,5 @@
-import { LoginCredentials, RegisterCredentials, AuthResponse } from "../types/auth";
+// API service module for auth operations
+﻿import { LoginCredentials, RegisterCredentials, AuthResponse } from "../types/auth";
 import { apiClient } from "./apiClient";
 export const authService = {
     login: (credentials: LoginCredentials): Promise<AuthResponse> => {
@@ -13,3 +14,4 @@ export const authService = {
 }
 
    
+

@@ -1,3 +1,4 @@
+// Composite UI component used by views and forms for NavMenu
 "use client";
 
 import { useAuth } from "@/core/context/AuthContext";
@@ -51,3 +52,4 @@ export const NavMenu: FC<NavMenuProps> = ({ mobile = false, onNavigate }) => {
     </nav>
   );
 };
+

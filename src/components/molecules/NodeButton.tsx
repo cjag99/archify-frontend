@@ -1,3 +1,4 @@
+// Composite UI component used by views and forms for NodeButton
 "use client";
 import { ReactNode } from "react";
 

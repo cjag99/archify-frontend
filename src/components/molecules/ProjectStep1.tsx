@@ -1,3 +1,4 @@
+// Composite UI component used by views and forms for ProjectStep1
 "use client";
 
 import { FC, useState, FormEvent } from "react";
@@ -109,3 +110,4 @@ export const ProjectStep1: FC<ProjectStep1Props> = ({
     </form>
   );
 };
+

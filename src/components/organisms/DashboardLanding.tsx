@@ -1,3 +1,4 @@
+// Page-level UI component that renders the DashboardLanding interface
 "use client";
 
 import { Button } from "@/components/atoms/Button";
@@ -109,3 +110,4 @@ export const DashboardLanding = ({ projectCount, loading }: DashboardLandingProp
     </div>
   );
 };
+

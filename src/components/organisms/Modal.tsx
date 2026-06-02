@@ -1,3 +1,4 @@
+// Page-level UI component that renders the Modal interface
 "use client"
 import { useEffect } from "react"
 import { createPortal } from "react-dom"
@@ -43,3 +44,4 @@ export default function Modal({ isOpen, onClose, children, maxWidth }: ModalProp
     </div>
   ), document.body);
 }
+

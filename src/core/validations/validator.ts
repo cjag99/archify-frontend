@@ -1,4 +1,5 @@
-export class Validator {
+// Validation utilities for validator
+﻿export class Validator {
     static validateString(
         fieldName: string,
         value: string,
@@ -18,3 +19,4 @@ export class Validator {
         return { isValid: true, message: "" };
     }
 }
+

@@ -1,3 +1,4 @@
+// Custom React hook for useRegisterForm state and behavior
 "use client";
 
 import { useState } from "react";
@@ -25,14 +26,14 @@ export const useRegisterForm = (onSuccess?: () => void) => {
         data.first_name as string,
         2,
         255,
-        /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s'-]+$/
+        /^[a-zA-ZÃ¡Ã©Ã­Ã³ÃºÃÃ‰ÃÃ“ÃšÃ±Ã‘\s'-]+$/
       ),
       last_name: Validator.validateString(
         "Last name",
         data.last_name as string,
         2,
         255,
-        /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s'-]+$/
+        /^[a-zA-ZÃ¡Ã©Ã­Ã³ÃºÃÃ‰ÃÃ“ÃšÃ±Ã‘\s'-]+$/
       ),
       username: Validator.validateString(
         "Username",
@@ -87,7 +88,7 @@ export const useRegisterForm = (onSuccess?: () => void) => {
       let userFriendlyMessage = "An unexpected error occurred during registration. Please try again.";
       const serverError = err.cause;
       
-      // Normalizamos el error del servidor (revisamos .detail y .error)
+
       const detail = serverError?.detail || serverError?.error;
 
       if (detail) {
@@ -118,3 +119,5 @@ export const useRegisterForm = (onSuccess?: () => void) => {
 
   return { loading, error, handleRegister, formError };
 };
+
+

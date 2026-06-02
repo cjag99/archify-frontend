@@ -1,3 +1,4 @@
+// Composite UI component used by views and forms for PatternStep2
 "use client";
 
 import React, { useCallback, useState } from "react";
@@ -162,11 +163,9 @@ export const PatternStep2: React.FC<PatternStep2Props> = ({
   const canSubmit =
     graphicType === 1
       ? Boolean(image || initialImageId)
-      : graphicType === 2
-      ? nodes.length > 0
       : true;
 
-  // 6. Final form submission to FastAPI/Supabase
+
   const handleStep3 = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!canSubmit) {
@@ -224,7 +223,7 @@ export const PatternStep2: React.FC<PatternStep2Props> = ({
             </p>
           </div>
 
-          <div className="flex flex-col xl:flex-row h-[calc(100vh-200px)] md:h-[calc(100vh-340px)] gap-4 xl:gap-6">
+          <div className="flex flex-col sm:flex-row h-[calc(100vh-200px)] md:h-[calc(100vh-340px)] gap-4 sm:gap-6">
             <NodeSidebar
               title="Schema Nodes"
               subtitle="Click or drag to add a node to the canvas."
@@ -261,3 +260,4 @@ export const PatternStep2: React.FC<PatternStep2Props> = ({
     </form>
   );
 };
+

@@ -1,3 +1,4 @@
+// Custom React hook for useArchitecture state and behavior
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
@@ -15,7 +16,19 @@ export const useArchitecture = () => {
         setError(null);
         try {
             const result = await architectureService.getAll();
-            setArchitectures(result);
+
+            if (Array.isArray(result)) {
+                setArchitectures(result);
+            } else if (result && Array.isArray((result as any).data)) {
+                setArchitectures((result as any).data);
+            } else if (result && Array.isArray((result as any).results)) {
+                setArchitectures((result as any).results);
+            } else {
+
+                // eslint-disable-next-line no-console
+                console.warn("useArchitecture: unexpected getAll() response shape", result);
+                setArchitectures([]);
+            }
         } catch (err) {
             setError(err instanceof Error ? err.message : "Unknown error");
             setArchitectures([]);
@@ -114,3 +127,4 @@ export const useArchitecture = () => {
         deleteArchitecture,
     };
 };
+
