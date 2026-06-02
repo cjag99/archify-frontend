@@ -216,13 +216,13 @@ export default function GenericResourcesPage() {
                     ) : (
                         <div>
                             {/* Action Bar */}
-                            <div className="flex items-center justify-between mb-8">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
                                 <CountLabel label={config.title} count={displayItems.length} />
                                 {canCreate && (
                                     <Button
                                         onClick={() => router.push(`/dashboard/${resource}/new`)}
                                         variant="success"
-                                        fullWidth={false}
+                                        className="w-full sm:w-auto"
                                     >
                                         <Plus className="w-5 h-5" />
                                         {config.newButtonText}
@@ -262,7 +262,7 @@ export default function GenericResourcesPage() {
                                         {/* Action Button */}
                                         <button
                                             onClick={() => router.push(`/dashboard/${resource}/${item.id}`)}
-                                            className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-bold bg-white hover:bg-brand hover:text-white text-slate-700 transition-all duration-300 active:scale-[0.98] border border-slate-200 hover:border-brand cursor-pointer"
+                                            className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-bold bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 hover:bg-brand hover:text-white hover:border-brand transition-all duration-300 active:scale-[0.98] cursor-pointer"
                                         >
                                             {config.viewButtonText}
                                             <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />

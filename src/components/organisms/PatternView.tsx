@@ -215,7 +215,7 @@ export function PatternView({ patternId }: PatternViewProps) {
         <BackLink href={ROUTES.patterns} label="Back to Patterns" />
       </div>
 
-      <div className="max-w-6xl mx-auto overflow-hidden bg-white/60 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 transition-all duration-300">
+      <div className="max-w-6xl mx-auto overflow-hidden bg-white/60 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 transition-all duration-300 dark:bg-slate-900/60 dark:border-slate-700/60">
         {/* Premium Header Area */}
         <div className="relative h-32 md:h-44 w-full bg-linear-to-br from-brand/10 via-brand/5 to-transparent overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
@@ -241,15 +241,15 @@ export function PatternView({ patternId }: PatternViewProps) {
           <div className="flex flex-col md:flex-row gap-6 items-center md:items-end justify-between text-center md:text-left">
             <div className="flex-1 space-y-4 w-full">
               <div className="flex flex-col md:flex-row items-center gap-4 md:gap-5">
-                <div className="p-3 bg-white rounded-2xl shadow-xl border border-slate-100/50 text-brand shrink-0">
+                <div className="p-3 bg-white rounded-2xl shadow-xl border border-slate-100/50 text-brand shrink-0 dark:bg-slate-900/50 dark:border-slate-700/50">
                   <Code size={28} />
                 </div>
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight break-words w-full">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight break-words w-full">
                   {loading ? "Loading..." : pattern?.name || "Pattern Details"}
                 </h1>
               </div>
               {!loading && pattern?.description && (
-                <p className="text-base md:text-xl text-slate-500 max-w-3xl leading-relaxed whitespace-pre-line mx-auto md:mx-0">
+                <p className="text-base md:text-xl text-slate-500 dark:text-slate-300 max-w-3xl leading-relaxed whitespace-pre-line mx-auto md:mx-0">
                   {decodeHtmlEntities(pattern.description)}
                 </p>
               )}
@@ -268,12 +268,12 @@ export function PatternView({ patternId }: PatternViewProps) {
           
           {/* Schema Section */}
           {hasSchema ? (
-            <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm">
+            <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm dark:bg-slate-900/40 dark:border-slate-700/50">
               <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
                 <div className="w-2 h-8 bg-brand rounded-full"></div>
                 Schema
               </h3>
-              <div className="w-full h-[350px] sm:h-[500px] md:h-150 border border-slate-200 rounded-[2rem] shadow-inner overflow-hidden bg-slate-50/50 relative pointer-events-none">
+              <div className="w-full h-[350px] sm:h-[500px] md:h-150 border border-slate-200 rounded-[2rem] shadow-inner overflow-hidden bg-slate-50/50 dark:bg-slate-900/50 relative pointer-events-none">
                 <SchemaCanvas
                   nodes={patternSchema?.nodes || []}
                   edges={patternSchema?.edges || []}
@@ -293,12 +293,12 @@ export function PatternView({ patternId }: PatternViewProps) {
           )}
 
           {pattern?.image_id && imageObj && (
-            <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm">
+            <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm dark:bg-slate-900/40 dark:border-slate-700/50">
               <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
                 <div className="w-2 h-8 bg-brand rounded-full"></div>
                 Graphic Representation
               </h3>
-              <div className="w-full relative h-100 md:h-150 rounded-[2rem] shadow-inner overflow-hidden border border-slate-200 bg-white">
+              <div className="w-full relative h-100 md:h-150 rounded-[2rem] shadow-inner overflow-hidden border border-slate-200 bg-white dark:bg-slate-900/50 dark:border-slate-700">
                 <Image src={imageObj.url} alt={pattern.name} fill className="object-contain" unoptimized />
               </div>
             </div>

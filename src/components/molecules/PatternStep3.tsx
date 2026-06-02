@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Select } from "@/components/atoms/Select";
 import { Textarea } from "@/components/atoms/Textarea";
 import Modal from "@/components/organisms/Modal";
@@ -19,6 +20,7 @@ export const PatternStep3: React.FC<PatternStep3Props> = ({
   patternName,
   onBackToStart,
 }) => {
+  const router = useRouter();
   const {
     codeLanguages,
     loading: languagesLoading,
@@ -34,21 +36,14 @@ export const PatternStep3: React.FC<PatternStep3Props> = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSubmissionMessage(null);
-  
-    const payloadEstricto = {
-    pattern_id: String(patternId).trim(),
-    code_id: String(selectedLanguage).trim(),
-    code_snippet: { code_snippet: codeSnippet } 
-  };
-
 
     if (!selectedLanguage  || selectedLanguage === "") {
-      setSubmissionMessage("Selecciona un lenguaje antes de continuar.");
+      setSubmissionMessage("Select a language before continuing.");
       return;
     }
 
     if (!codeSnippet.trim()) {
-      setSubmissionMessage("Escribe un snippet de código antes de enviar.");
+      setSubmissionMessage("Enter a code snippet before submitting.");
       return;
     }
    
@@ -59,9 +54,7 @@ export const PatternStep3: React.FC<PatternStep3Props> = ({
     });
 
     if (!createError) {
-      setSubmissionMessage("Snippet subido correctamente.");
-      setCodeSnippet("");
-      setSelectedLanguage("");
+      router.push("/dashboard/patterns");
     }
   };
 
@@ -73,13 +66,13 @@ export const PatternStep3: React.FC<PatternStep3Props> = ({
   return (
     <div className="space-y-6">
       <div className="space-y-2 text-center">
-        <h2 className="text-2xl font-bold text-slate-950">Step 3: Add pattern code</h2>
-        <p className="text-slate-500">
-          Sube un snippet asociado al patrón <strong>{patternName}</strong>.
+        <h2 className="text-2xl font-bold text-slate-950 dark:text-slate-100">Step 3: Add pattern code</h2>
+        <p className="text-slate-500 dark:text-slate-400">
+          Upload a snippet associated with the pattern <strong>{patternName}</strong>.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div className="min-w-0 flex-1 space-y-4">
             <Select
@@ -87,23 +80,23 @@ export const PatternStep3: React.FC<PatternStep3Props> = ({
               value={selectedLanguage}
               onChange={(event) => setSelectedLanguage(event.target.value)}
               options={[
-                { value: "", label: "Selecciona un lenguaje..." },
+                { value: "", label: "Select a language..." },
                 ...(Array.isArray(codeLanguages) ? codeLanguages : []).map((language) => ({
                   value: language.id,
                   label: language.name,
                 }))
               ]}
             />
-            {languagesLoading && <p className="text-sm text-slate-500">Cargando lenguajes...</p>}
+            {languagesLoading && <p className="text-sm text-slate-500">Loading languages...</p>}
             {languagesError && <p className="text-sm text-red-600">{languagesError}</p>}
           </div>
 
           <button
             type="button"
             onClick={() => setIsLanguageModalOpen(true)}
-            className="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            className="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-800"
           >
-            Crear code language
+            Create code language
           </button>
         </div>
 
@@ -112,40 +105,40 @@ export const PatternStep3: React.FC<PatternStep3Props> = ({
             label="Code Snippet"
             value={codeSnippet}
             onChange={(event) => setCodeSnippet(event.target.value)}
-            placeholder="Pega aquí tu snippet de código"
+            placeholder="Paste your code snippet here"
             rows={10}
           />
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-left">
-          <p className="text-sm text-slate-500">Pattern ID:</p>
-          <p className="mt-2 break-all text-base font-medium text-slate-900">{patternId}</p>
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-left dark:border-slate-800 dark:bg-slate-900">
+          <p className="text-sm text-slate-500 dark:text-slate-400">Pattern ID:</p>
+          <p className="mt-2 break-all text-base font-medium text-slate-900 dark:text-slate-100">{patternId}</p>
         </div>
 
-        {createError && <p className="text-sm text-red-600">{createError}</p>}
-        {submissionMessage && <p className="text-sm text-slate-600">{submissionMessage}</p>}
+        {createError && <p className="text-sm text-red-600 dark:text-red-400">{createError}</p>}
+        {submissionMessage && <p className="text-sm text-slate-600 dark:text-slate-300">{submissionMessage}</p>}
 
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
           <button
             type="button"
             onClick={onBackToStart}
-            className="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            className="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-800"
           >
-            Volver
+            Back
           </button>
           <button
             type="submit"
             disabled={creatingSnippet || languagesLoading}
             className="rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {creatingSnippet ? "Subiendo..." : "Subir snippet"}
+            {creatingSnippet ? "Uploading..." : "Upload snippet"}
           </button>
         </div>
       </form>
 
       <Modal isOpen={isLanguageModalOpen} onClose={() => setIsLanguageModalOpen(false)}>
         <div className="space-y-6">
-          <h2 className="text-xl font-semibold text-slate-900">Crear code language</h2>
+          <h2 className="text-xl font-semibold text-slate-900">Create code language</h2>
           <CodeLanguageForm onCreated={handleLanguageCreated} />
         </div>
       </Modal>

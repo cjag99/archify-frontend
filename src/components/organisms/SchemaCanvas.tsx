@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import { useTheme } from "next-themes";
 import { Graph, Node, Shape, Scroller } from "@antv/x6";
 import { register, getProvider } from "@antv/x6-react-shape";
 
@@ -21,10 +22,16 @@ const PortalProvider = getProvider();
 export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNodesChange, onEdgesChange, onConnect, readonly = false }: SchemaCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<Graph | null>(null);
+  const { resolvedTheme } = useTheme();
 
   // Inicialización del grafo
   useEffect(() => {
     if (!containerRef.current) return;
+
+    const isDarkMode = resolvedTheme === "dark" || document.documentElement.classList.contains("dark");
+    const backgroundColor = isDarkMode ? "#0f172a" : "#f8fafc";
+    const gridColor = isDarkMode ? "#475569" : "#e2e8f0";
+    const edgeStrokeColor = isDarkMode ? "#64748b" : "#94a3b8";
 
     // Registro de nodos
     Object.entries(nodeTypes).forEach(([type, component]) => {
@@ -35,7 +42,7 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
           height: 96,
           component: component as CustomNodeComponent,
         });
-      } catch (e) {
+      } catch {
         // Evitar errores de registro duplicado en Hot Reload
       }
     });
@@ -43,13 +50,13 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
     const graph = new Graph({
       container: containerRef.current,
       autoResize: true,
-      background: { color: "#f8fafc" },
+      background: { color: backgroundColor },
       grid: {
         visible: true,
         type: 'mesh',
         size: 10,
         args: {
-          color: '#e2e8f0', // slate-200
+          color: gridColor,
           thickness: 1,
         },
       },
@@ -70,7 +77,7 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
             shape: 'edge',
             attrs: {
               line: {
-                stroke: '#94a3b8',
+                stroke: edgeStrokeColor,
                 strokeWidth: 2,
               },
             },
@@ -114,7 +121,7 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
     });
 
     // --- NUEVO: Escuchar cambios en vértices o rutas de las aristas ---
-    graph.on("edge:changed", ({ edge, options }) => {
+    graph.on("edge:changed", ({ options }) => {
       // Solo disparamos el cambio si no viene de una sincronización externa (evita bucles)
       if (options.external) return;
       
@@ -138,7 +145,7 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
         graph.dispose();
       }
     };
-  }, []); 
+  }, [nodeTypes, onConnect, onEdgesChange, onNodesChange, readonly]);
 
   // Sincronizar Nodos
   useEffect(() => {
@@ -213,6 +220,9 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
     const graph = graphRef.current;
     if (!graph) return;
 
+    const isDarkMode = resolvedTheme === "dark";
+    const edgeStrokeColor = isDarkMode ? "#64748b" : "#94a3b8";
+
     edges.forEach((edge) => {
       if (!graph.getCellById(edge.id)) {
         try {
@@ -225,7 +235,7 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
             router: { name: 'manhattan' }, // Mantener el comportamiento ortogonal
             attrs: {
               line: {
-                stroke: '#94a3b8',
+                stroke: edgeStrokeColor,
                 strokeWidth: 2,
               },
             },
@@ -237,10 +247,27 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
     });
   }, [edges]);
 
+  // ✨ Actualización dinámica del tema sin destruir el grafo
+  useEffect(() => {
+    const graph = graphRef.current;
+    if (!graph) return;
+
+    const isDarkMode = resolvedTheme === "dark";
+    const backgroundColor = isDarkMode ? "#0f172a" : "#f8fafc";
+    const gridColor = isDarkMode ? "#475569" : "#e2e8f0";
+    const edgeStrokeColor = isDarkMode ? "#64748b" : "#94a3b8";
+
+    graph.drawBackground({ color: backgroundColor });
+    graph.grid.update({ args: { color: gridColor } });
+    graph.getEdges().forEach(edge => {
+      edge.attr('line/stroke', edgeStrokeColor);
+    });
+  }, [resolvedTheme]);
+
   return (
     <>
       <PortalProvider />
-      <div className="relative w-full h-full pointer-events-auto overflow-hidden">
+      <div className="relative w-full h-full pointer-events-auto overflow-hidden bg-white dark:bg-slate-950">
         <style>{`
           .x6-graph-svg {
             overflow: visible !important;

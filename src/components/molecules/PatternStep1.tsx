@@ -37,9 +37,9 @@ export const PatternStep1: FC<PatternStep1Props> = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
-        <h2 className="text-2xl font-bold text-slate-950 sm:text-3xl">Step 1: Define Your Pattern</h2>
-        <p className="text-sm text-slate-500">
-          Agrega un nombre y una descripción para tu patrón antes de continuar al siguiente paso.
+        <h2 className="text-2xl font-bold text-slate-950 dark:text-slate-100 sm:text-3xl">Step 1: Define Your Pattern</h2>
+        <p className="text-sm text-slate-500 dark:text-slate-400">
+          Add a name and description for your pattern before continuing to the next step.
         </p>
       </div>
 

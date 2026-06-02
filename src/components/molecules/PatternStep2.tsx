@@ -104,9 +104,7 @@ export const PatternStep2: React.FC<PatternStep2Props> = ({
       const type = event.dataTransfer.getData("application/reactflow") || event.dataTransfer.getData("text/plain");
       if (!type) return;
 
-      const item = patternList.find((node) => node.type === type);
-      const label = item ? item.label : "Component";
-    
+      patternList.find((node) => node.type === type);
       const rect = event.currentTarget.getBoundingClientRect();
       const clientX = event.clientX - rect.left;
       const clientY = event.clientY - rect.top;
@@ -149,12 +147,12 @@ export const PatternStep2: React.FC<PatternStep2Props> = ({
       try {
         const result = await createImage(file, "pattern_graphic");
         if (!result?.id) {
-          setUploadError("No se pudo subir la imagen. Intenta de nuevo.");
+          setUploadError("Image upload failed. Please try again.");
           return;
         }
         setImage(result);
-      } catch (err) {
-        setUploadError("No se pudo subir la imagen. Intenta de nuevo.");
+      } catch {
+        setUploadError("Image upload failed. Please try again.");
       } finally {
         setIsUploadingImage(false);
       }
@@ -168,14 +166,14 @@ export const PatternStep2: React.FC<PatternStep2Props> = ({
       ? nodes.length > 0
       : true;
 
-  // 6. Envío del formulario final a FastAPI/Supabase
+  // 6. Final form submission to FastAPI/Supabase
   const handleStep3 = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!canSubmit) {
       setUploadError(
         graphicType === 1
-          ? "Debes subir una imagen antes de continuar."
-          : "Debes crear al menos un nodo en el editor antes de continuar."
+          ? "You must upload an image before continuing."
+          : "You must create at least one node in the editor before continuing."
       );
       return;
     }
@@ -197,12 +195,12 @@ export const PatternStep2: React.FC<PatternStep2Props> = ({
           : await createPattern(finalPayload);
 
       if (mode !== "edit" && !savedPattern?.id) {
-        throw new Error("El patrón se guardó pero no se recibió el ID.");
+        throw new Error("The pattern was saved but no ID was returned.");
       }
       onFinish(savedPattern?.id || patternId || "");
     } catch (err) {
       console.error("Pattern save failed:", err);
-      setUploadError("No se pudo guardar el patrón. Intenta de nuevo.");
+      setUploadError("Pattern save failed. Please try again.");
     }
   };
 
@@ -212,30 +210,30 @@ export const PatternStep2: React.FC<PatternStep2Props> = ({
         <>
           <FileInput label="Graphic" onChange={uploadImage} accept="image/*" />
           {initialImageId && !image && (
-            <p className="text-sm text-slate-500">La imagen actual se mantendrá si no subes una nueva.</p>
+            <p className="text-sm text-slate-500">The current image will remain unless you upload a new one.</p>
           )}
           {uploadError && <p className="text-sm text-red-600">{uploadError}</p>}
-          {isUploadingImage && <p className="text-sm text-gray-500">Subiendo imagen...</p>}
+          {isUploadingImage && <p className="text-sm text-gray-500">Uploading image...</p>}
         </>
       ) : graphicType === 2 ? (
         <div className="space-y-6">
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-2xl font-bold text-slate-950">Step 2: Design your pattern schema</h2>
-            <p className="mt-2 text-sm text-slate-500">
-              Añade nodos y conexiones para definir la estructura del patrón.
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/50">
+            <h2 className="text-2xl font-bold text-slate-950 dark:text-slate-100">Step 2: Design your pattern schema</h2>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+              Add nodes and connections to define the pattern structure.
             </p>
           </div>
 
           <div className="flex flex-col xl:flex-row h-[calc(100vh-200px)] md:h-[calc(100vh-340px)] gap-4 xl:gap-6">
             <NodeSidebar
               title="Schema Nodes"
-              subtitle="Haz click o arrastra para añadir un nodo al lienzo."
+              subtitle="Click or drag to add a node to the canvas."
               items={patternList}
               onAddNode={handleAddNode}
             />
 
             <div
-              className="grow rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden min-h-[400px]"
+              className="grow rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden min-h-100 dark:border-slate-800 dark:bg-slate-900/50"
               onDragOver={onDragOver}
               onDrop={onDrop}
             >

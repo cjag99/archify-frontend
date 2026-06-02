@@ -92,7 +92,7 @@ export const ProfileView = ({
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto overflow-hidden bg-white/60 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 transition-all duration-300 hover:shadow-[0_8px_40px_rgb(0,0,0,0.08)]">
+    <div className="w-full max-w-4xl mx-auto overflow-hidden bg-white/60 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 transition-all duration-300 hover:shadow-[0_8px_40px_rgb(0,0,0,0.08)] dark:bg-slate-900/60 dark:border-slate-700/60">
       {/* Premium Header Header Area */}
       <div className="relative h-32 md:h-48 w-full bg-linear-to-br from-brand/10 via-brand/5 to-transparent overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
@@ -106,8 +106,8 @@ export const ProfileView = ({
           {/* Avatar and Main Info Section */}
           <div className="flex flex-col md:flex-row gap-6 items-start md:items-end mb-10">
             <div className="relative group">
-              <div className="w-32 h-32 md:w-40 md:h-40 rounded-3xl bg-white p-2 shadow-xl border border-slate-100/50 transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-2xl">
-                <div className="w-full h-full rounded-2xl overflow-hidden bg-linear-to-br from-slate-50 to-slate-100 flex items-center justify-center relative">
+              <div className="w-32 h-32 md:w-40 md:h-40 rounded-3xl bg-white p-2 shadow-xl border border-slate-100/50 transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-2xl dark:bg-slate-900/50 dark:border-slate-700/50">
+                <div className="w-full h-full rounded-2xl overflow-hidden bg-linear-to-br from-slate-50 to-slate-100 dark:bg-slate-900/50 flex items-center justify-center relative">
                    {/* We will let FileInput handle the image visually, but place it smartly */}
                    <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 flex items-center justify-center backdrop-blur-sm">
                       <Camera className="text-white" size={28} />
@@ -129,7 +129,7 @@ export const ProfileView = ({
                    )}
                 </div>
               </div>
-              <div className="absolute -bottom-3 -right-3 bg-brand text-white p-2.5 rounded-xl shadow-lg border-2 border-white transform transition-transform hover:scale-110 hover:rotate-12 cursor-pointer z-0">
+              <div className="absolute -bottom-3 -right-3 bg-brand text-white p-2.5 rounded-xl shadow-lg border-2 border-white transform transition-transform hover:scale-110 hover:rotate-12 cursor-pointer z-0 dark:border-slate-700/50">
                  <Edit3 size={18} />
               </div>
             </div>
@@ -152,7 +152,7 @@ export const ProfileView = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm dark:bg-slate-900/40 dark:border-slate-700/50">
             <div className="space-y-1 group">
               <label className="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1 group-focus-within:text-brand transition-colors">First Name</label>
               <div className="relative">
@@ -211,13 +211,13 @@ export const ProfileView = ({
             </div>
           </div>
           
-          <div className="bg-slate-50/50 p-6 rounded-3xl border border-slate-100 flex items-center justify-between">
+          <div className="bg-slate-50/50 p-6 rounded-3xl border border-slate-100 flex items-center justify-between dark:bg-slate-900/50 dark:border-slate-700">
             <div>
               <h4 className="font-bold text-slate-800 flex items-center gap-2">
                 <Shield size={18} className="text-slate-400" />
                 Account Authorization
               </h4>
-              <p className="text-sm text-slate-500 mt-1">Determine if this user has authorized access to the system.</p>
+              <p className="text-sm text-slate-500 dark:text-slate-300 mt-1">Determine if this user has authorized access to the system.</p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer group">
               <input 

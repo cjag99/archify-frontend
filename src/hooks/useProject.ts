@@ -47,7 +47,7 @@ export const useProject = () => {
             return result || null;
         } catch (err) {
             console.error("Error updating project:", err);
-            return null;
+            throw err;
         }
     }, []);
 
@@ -58,7 +58,7 @@ export const useProject = () => {
             return true;
         } catch (err) {
             console.error("Error deleting project:", err);
-            return false;
+            throw err;
         }
     }, []);
 

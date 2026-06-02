@@ -60,8 +60,8 @@ export const ProjectStep1: FC<ProjectStep1Props> = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
-        <h2 className="text-2xl font-bold text-slate-950 sm:text-3xl">Step 1: Define Your Project</h2>
-        <p className="text-sm text-slate-500">
+        <h2 className="text-2xl font-bold text-slate-950 dark:text-slate-100 sm:text-3xl">Step 1: Define Your Project</h2>
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           Add a name, description and logo for your project before proceeding to the next step.
         </p>
       </div>
@@ -91,8 +91,8 @@ export const ProjectStep1: FC<ProjectStep1Props> = ({
       </div>
 
       {error && (
-        <div className="rounded-xl border border-red-200 bg-red-50 p-4">
-          <p className="text-sm text-red-600 font-semibold">{error}</p>
+        <div className="rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-700 dark:bg-red-900/30">
+          <p className="text-sm text-red-600 dark:text-red-300 font-semibold">{error}</p>
         </div>
       )}
 

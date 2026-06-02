@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
 import SchemaCanvas from "@/components/organisms/SchemaCanvas";
 import NodeSidebar from "@/components/organisms/NodeSidebar";
 import { Button } from "@/components/atoms/Button";
@@ -17,7 +18,7 @@ import { HexagonalApplicationNode } from "./diagramNodes/HexagonalApplicationNod
 import { HexagonalAdapterNode } from "./diagramNodes/HexagonalAdapterNode";
 import { UserNode } from "./diagramNodes/UserNode";
 
-// Interfaces de Dominio unificadas con tu nuevo SchemaCanvas
+// Unified domain interfaces for your new SchemaCanvas
 interface CanvasNodeData {
   id: string;
   type?: string;
@@ -48,7 +49,7 @@ interface ArchitectureStep2Props {
   onFinish: (
     schema: { nodes: CanvasNodeData[]; edges: CanvasEdgeData[] },
     payload: { name: string; description: string; enabled: boolean }
-  ) => void;
+  ) => Promise<void> | void;
 }
 
 const architectureNodeTypes = {
@@ -74,11 +75,12 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
   onBack,
   onFinish,
 }) => {
-  // 📦 Estados nativos puros de React (Adiós React Flow)
+  const router = useRouter();
+  // 📦 Pure React state (goodbye React Flow)
   const [nodes, setNodes] = useState<CanvasNodeData[]>(initialNodes);
   const [edges, setEdges] = useState<CanvasEdgeData[]>(initialEdges);
 
-  // 1. Sincronizadores que se alimentan del ciclo interno de X6
+  // 1. Synchronizers that feed from the X6 internal cycle
   const handleNodesChange = useCallback((updatedNodes: CanvasNodeData[]) => {
     setNodes(updatedNodes);
   }, []);
@@ -87,7 +89,7 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
     setEdges(updatedEdges);
   }, []);
 
-  // 2. Insertar componentes mediante click manual directo en la sidebar
+  // 2. Insert components via direct click in the sidebar
   const handleAddNode = useCallback((type: string, label: string) => {
     const id = crypto.randomUUID();
     const newNode: CanvasNodeData = {
@@ -117,7 +119,7 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
       const item = architectureList.find((node) => node.type === type);
       const label = item ? item.label : "Component";
 
-      // Coordenadas calculadas en base a la bounding box para evitar desvíos en el canvas de X6
+      // Coordinates calculated relative to the bounding box to avoid drift in the X6 canvas
       const rect = event.currentTarget.getBoundingClientRect();
       const clientX = event.clientX - rect.left;
       const clientY = event.clientY - rect.top;
@@ -126,7 +128,7 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
       const newNode: CanvasNodeData = {
         id,
         type,
-        position: { x: clientX - 48, y: clientY - 48 }, // Centramos respecto al ratón
+        position: { x: clientX - 48, y: clientY - 48 }, // Centered relative to the mouse
         data: { label },
       };
 
@@ -135,7 +137,7 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
     []
   );
 
-  // 4. Orquestación de cables reactivos simplificados (Manhattan inteligente de X6)
+  // 4. Simplified reactive cable orchestration (smart Manhattan routing for X6)
   const onConnect = useCallback((connection: ConnectionPayload) => {
     setEdges((currentEdges) => {
       const exists = currentEdges.some(
@@ -151,20 +153,29 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
     });
   }, []);
 
+  const handleFinishAction = async () => {
+    await onFinish(
+      { nodes, edges },
+      { name: architectureName, description: architectureDescription, enabled }
+    );
+
+    router.push("/dashboard/architectures");
+  };
+
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/50">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-slate-950">Step 2: Design your architecture</h2>
-            <p className="mt-2 text-sm text-slate-500 max-w-2xl">
-              Diseña la estructura visual de <strong>{architectureName}</strong>. Añade nodos, conecta capas y define la arquitectura usando el editor.
+            <h2 className="text-2xl font-bold text-slate-950 dark:text-slate-100">Step 2: Design your architecture</h2>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 max-w-2xl">
+              Design the visual structure of <strong>{architectureName}</strong>. Add nodes, connect layers, and define the architecture using the editor.
             </p>
           </div>
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            <p className="font-semibold text-slate-900">Status</p>
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
+            <p className="font-semibold text-slate-900 dark:text-slate-100">Status</p>
             <p>{enabled ? "Enabled" : "Disabled"}</p>
-            <p className="mt-1 text-xs text-slate-500">{architectureDescription}</p>
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{architectureDescription}</p>
           </div>
         </div>
       </div>
@@ -178,7 +189,7 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
         />
 
         <div
-          className="grow rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden"
+          className="grow rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden dark:border-slate-800 dark:bg-slate-900/50"
           onDragOver={onDragOver}
           onDrop={onDrop}
         >
@@ -199,12 +210,7 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
         </Button>
         <Button
           variant="success"
-          onClick={() =>
-            onFinish(
-              { nodes, edges },
-              { name: architectureName, description: architectureDescription, enabled }
-            )
-          }
+          onClick={handleFinishAction}
           disabled={nodes.length === 0}
         >
           Finish Architecture

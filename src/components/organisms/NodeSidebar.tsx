@@ -18,19 +18,19 @@ interface SidebarProps {
 }
 
 export default function NodeSidebar({ 
-  title = "Componentes", 
-  subtitle = "Haz click o arrastra para añadir al lienzo.", 
+  title = "Components", 
+  subtitle = "Click or drag to add to the canvas.", 
   items, 
   onAddNode,
   className = "",
 }: SidebarProps) {
   return (
-    <aside className={`z-10 flex h-auto w-full select-none flex-col gap-4 rounded-2xl border border-slate-200 bg-white/95 p-4 sm:gap-5 sm:p-5 xl:h-full xl:w-56 xl:rounded-none xl:border-y-0 xl:border-l-0 ${className}`}>
+    <aside className={`z-10 flex h-auto w-full select-none flex-col gap-4 rounded-2xl border border-slate-200 bg-white/95 p-4 sm:gap-5 sm:p-5 xl:h-full xl:w-56 xl:rounded-none xl:border-y-0 xl:border-l-0 dark:border-slate-700 dark:bg-slate-900/50 ${className}`}>
       <div>
-        <h3 className="font-bold text-sm text-slate-950">
+        <h3 className="font-bold text-sm text-slate-950 dark:text-slate-100">
           {title}
         </h3>
-        <p className="text-xs text-slate-500 mt-1">
+        <p className="text-xs text-slate-500 mt-1 dark:text-slate-400">
           {subtitle}
         </p>
       </div>
@@ -46,7 +46,7 @@ export default function NodeSidebar({
               event.dataTransfer.effectAllowed = "move";
             }}
             onClick={() => onAddNode(node.type, node.label)}
-            className="group relative flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-brand/40 hover:bg-brand/10 focus:outline-none focus:ring-4 focus:ring-brand/10 sm:h-12 sm:w-12"
+            className="group relative flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-slate-300 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:border-slate-600 sm:h-12 sm:w-12"
           >
             {node.icon}
             <span className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 hidden -translate-x-1/2 whitespace-nowrap rounded-lg bg-slate-950 px-2 py-1 text-xs text-white shadow-lg transition-opacity duration-200 group-hover:block">

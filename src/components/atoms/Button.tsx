@@ -22,8 +22,8 @@ export const Button = ({
 
   const variants = {
     primary: "refraction-gradient-hover text-white shadow-lg shadow-brand/15 hover:-translate-y-0.5",
-    secondary: "bg-white text-slate-800 border border-slate-200 shadow-sm hover:bg-slate-50 hover:border-slate-300",
-    outline: "border border-slate-200 bg-white/70 text-slate-700 shadow-sm hover:border-brand/40 hover:text-brand hover:bg-brand/5",
+    secondary: "bg-white text-slate-800 border border-slate-200 shadow-sm hover:bg-slate-50 hover:border-slate-300 dark:bg-slate-950 dark:text-slate-100 dark:border-slate-700 dark:hover:bg-slate-800 dark:hover:border-slate-600",
+    outline: "border border-slate-200 bg-white/70 text-slate-700 shadow-sm hover:border-brand/40 hover:text-brand hover:bg-brand/5 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-200 dark:hover:bg-slate-800",
     success: "success-gradient-hover text-white shadow-lg shadow-emerald-500/15 hover:-translate-y-0.5",
     danger: "bg-red-500 text-white shadow-lg shadow-red-500/15 hover:bg-red-600 hover:-translate-y-0.5",
   };

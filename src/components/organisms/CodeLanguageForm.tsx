@@ -31,7 +31,7 @@ export const CodeLanguageForm = ({ onCreated }: CodeLanguageFormProps) => {
             try {
                 const result = await createImage(file, "code_logo");
                 if (!result?.id) {
-                    setUploadError("No se pudo subir la imagen. Intenta de nuevo.");
+                    setUploadError("Image upload failed. Please try again.");
                     return;
                 }
 
@@ -46,17 +46,17 @@ export const CodeLanguageForm = ({ onCreated }: CodeLanguageFormProps) => {
         e.preventDefault();
 
         if (!user) {
-            setUploadError("Debes iniciar sesión para crear un lenguaje.");
+            setUploadError("You must be signed in to create a language.");
             return;
         }
 
         if (!iconId) {
-            setUploadError("Sube una imagen antes de crear el lenguaje.");
+            setUploadError("Upload an image before creating the language.");
             return;
         }
 
         if (isUploadingIcon) {
-            setUploadError("Espera a que termine la subida de la imagen.");
+            setUploadError("Please wait for the image upload to finish.");
             return;
         }
 

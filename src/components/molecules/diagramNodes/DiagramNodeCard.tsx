@@ -61,13 +61,13 @@ export function DiagramNodeCard({
       ref={cardRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="group flex flex-col items-center justify-center rounded-xl border border-brand/20 bg-brand/5 p-3 shadow-sm transition-all duration-300 hover:border-brand/40 hover:bg-brand/10 hover:shadow-md w-24 h-24"
+      className="group flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition-all duration-300 hover:border-brand/40 hover:bg-slate-50 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700 dark:hover:bg-slate-800 w-24 h-24"
     >
       
       {/* Node Visual Content */}
-      <div className="flex flex-col items-center gap-1 select-none">
+      <div className="flex flex-col items-center gap-1 select-none text-slate-500 dark:text-slate-400 group-hover:text-brand transition-colors">
         {icon}
-        <span className="text-xs font-semibold text-slate-700 text-center truncate max-w-20">
+        <span className="text-xs font-semibold text-slate-900 dark:text-slate-100 text-center truncate max-w-20">
           {label}
         </span>
       </div>
@@ -82,8 +82,8 @@ export function DiagramNodeCard({
             transform: 'translate(-50%, -100%)' 
           }}
         >
-          <div className="w-48 rounded-xl border border-slate-200 bg-white p-3 text-xs text-slate-700 shadow-xl">
-            <div className="mb-2 flex items-center justify-between border-b border-slate-100 pb-2">
+          <div className="w-48 rounded-xl border border-slate-200 bg-white p-3 text-xs text-slate-900 shadow-xl dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">
+            <div className="mb-2 flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-2">
               <span className="font-bold uppercase text-brand text-[10px]">
                 {title}
               </span>
@@ -91,10 +91,10 @@ export function DiagramNodeCard({
                 {tag}
               </span>
             </div>
-            <p className="leading-relaxed text-slate-600">{description}</p>
+            <p className="leading-relaxed text-slate-600 dark:text-slate-300">{description}</p>
             
             {/* Bottom triangle arrow */}
-            <div className="absolute top-full left-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 border-b border-r border-slate-200 bg-white" />
+            <div className="absolute top-full left-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 border-b border-r border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800" />
           </div>
         </div>,
         document.body

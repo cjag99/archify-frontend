@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 import { Select } from "@/components/atoms/Select";
@@ -29,23 +30,31 @@ interface ProjectStep2Props {
   projectName: string;
   projectDescription: string;
   logo_id?: string;
+  initialArchitectureId?: string;
+  initialSchema?: { nodes: CanvasNodeData[]; edges: CanvasEdgeData[]; architecture_id?: string };
   onBack: () => void;
   onFinish: (
     architecture_id: string,
     nodeNameMap: NodeNameMap,
     schema: { nodes: CanvasNodeData[]; edges: CanvasEdgeData[] }
-  ) => void;
+  ) => Promise<void> | void;
 }
 
 export const ProjectStep2: React.FC<ProjectStep2Props> = ({
   projectName,
   projectDescription,
   logo_id,
+  initialArchitectureId,
+  initialSchema,
   onBack,
   onFinish,
 }) => {
+  const router = useRouter();
   const { architectures, loading: architecturesLoading } = useArchitecture();
-  const [selectedArchitectureId, setSelectedArchitectureId] = useState<string>("");
+
+  // ✨ Recuperamos el ID de la arquitectura desde el prop directo o desde el interior del JSON
+  const effectiveInitialArchId = initialArchitectureId || initialSchema?.architecture_id;
+  const [selectedArchitectureId, setSelectedArchitectureId] = useState<string>(effectiveInitialArchId || "");
   const [selectedArchitecture, setSelectedArchitecture] = useState<any>(null);
   const [nodeNameMap, setNodeNameMap] = useState<NodeNameMap>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -65,8 +74,19 @@ export const ProjectStep2: React.FC<ProjectStep2Props> = ({
       const arch = architectures.find((a) => a.id === selectedArchitectureId);
       setSelectedArchitecture(arch);
       
-      // Initialize node names from the selected architecture
-      if (arch?.base_structure) {
+      // Initialize node names
+      // Si estamos editando y la arquitectura seleccionada coincide con la original del proyecto,
+      // usamos los nombres que ya están guardados en el esquema.
+      if (initialSchema && selectedArchitectureId === effectiveInitialArchId) {
+        const initialNodeMap: NodeNameMap = {};
+        (initialSchema.nodes || []).forEach((node: CanvasNodeData) => {
+          if (node.type !== "user") {
+            initialNodeMap[node.type || node.id] = (node.data?.label as string) || "";
+          }
+        });
+        setNodeNameMap(initialNodeMap);
+      } else if (arch?.base_structure) {
+        // Si es una arquitectura nueva o distinta, inicializamos con los valores por defecto de la plantilla
         const nodes = (arch.base_structure as any).nodes || [];
         const initialNodeMap: NodeNameMap = {};
         nodes.forEach((node: CanvasNodeData) => {
@@ -77,7 +97,7 @@ export const ProjectStep2: React.FC<ProjectStep2Props> = ({
         setNodeNameMap(initialNodeMap);
       }
     }
-  }, [selectedArchitectureId, architectures]);
+  }, [selectedArchitectureId, architectures, effectiveInitialArchId, initialSchema]);
 
   const handleNodeNameChange = (nodeType: string, newName: string) => {
     setNodeNameMap((prev) => ({
@@ -110,9 +130,12 @@ export const ProjectStep2: React.FC<ProjectStep2Props> = ({
         const schema = {
           nodes: updatedNodes,
           edges: baseStructure.edges || [],
+          architecture_id: selectedArchitectureId, // 💾 Guardamos el ID dentro del JSON
         };
 
-        onFinish(selectedArchitectureId, nodeNameMap, schema);
+        await onFinish(selectedArchitectureId, nodeNameMap, schema);
+
+        router.push("/dashboard/projects");
       }
     } finally {
       setIsLoading(false);
@@ -134,17 +157,17 @@ export const ProjectStep2: React.FC<ProjectStep2Props> = ({
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/50">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-slate-950">Step 2: Select Architecture</h2>
-            <p className="mt-2 text-sm text-slate-500 max-w-2xl">
+            <h2 className="text-2xl font-bold text-slate-950 dark:text-slate-100">Step 2: Select Architecture</h2>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 max-w-2xl">
               Choose an architecture and customize the node names for your project <strong>{projectName}</strong>.
             </p>
           </div>
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-            <p className="font-semibold text-slate-900">Project Info</p>
-            <p className="text-xs mt-1">{projectDescription}</p>
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300">
+            <p className="font-semibold text-slate-900 dark:text-slate-100">Project Info</p>
+            <p className="text-xs mt-1 dark:text-slate-400">{projectDescription}</p>
           </div>
         </div>
       </div>
@@ -155,7 +178,7 @@ export const ProjectStep2: React.FC<ProjectStep2Props> = ({
         </div>
       ) : (
         <>
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/50">
             <Select
               label="Architecture"
               value={selectedArchitectureId}
@@ -165,10 +188,10 @@ export const ProjectStep2: React.FC<ProjectStep2Props> = ({
           </div>
 
           {selectedArchitectureId && architectureNodes.length > 0 && (
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4 dark:border-slate-800 dark:bg-slate-900/50">
               <div className="flex items-center gap-2">
-                <h3 className="text-lg font-semibold text-slate-950">Customize Node Names</h3>
-                <p className="text-xs text-slate-500">(Optional - keep default names if you prefer)</p>
+                <h3 className="text-lg font-semibold text-slate-950 dark:text-slate-100">Customize Node Names</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">(Optional - keep default names if you prefer)</p>
               </div>
 
               <div className="space-y-4">

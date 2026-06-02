@@ -16,7 +16,7 @@ export const FileInput = ({
   error,
   accept = "image/*",
   onChange,
-  placeholder = "Arrastra una imagen aquí o haz clic para seleccionar",
+  placeholder = "Drag an image here or click to select",
 }: FileInputProps) => {
   const [isDragActive, setIsDragActive] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
@@ -67,7 +67,7 @@ export const FileInput = ({
       const objectUrl = URL.createObjectURL(file);
       setPreviewUrl(objectUrl);
     } else {
-      alert("Por favor, selecciona un archivo de imagen válido.");
+      alert("Please select a valid image file.");
     }
   };
 
@@ -91,7 +91,7 @@ export const FileInput = ({
   return (
     <div className="w-full space-y-1.5">
       {label && (
-        <label className="block text-sm font-semibold text-slate-700">
+        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
           {label}
         </label>
       )}
@@ -107,7 +107,7 @@ export const FileInput = ({
       {previewUrl ? (
         <div className="flex flex-col items-center justify-center min-h-40">
           <div className="relative group w-fit">
-            <div className="relative h-40 w-40 sm:w-52 border border-slate-200 rounded-xl overflow-hidden shadow-sm bg-slate-50">
+            <div className="relative h-40 w-40 sm:w-52 border border-slate-200 rounded-xl overflow-hidden shadow-sm bg-slate-50 dark:bg-slate-900">
               <Image
                 src={previewUrl}
                 alt={`Vista previa de ${fileName}`}
@@ -119,8 +119,8 @@ export const FileInput = ({
 
             <button
               onClick={handleClearImage}
-              className="absolute -top-2 -right-2 p-1.5 rounded-full bg-red-100 text-red-600 border border-red-200 shadow-md hover:bg-red-200 transition-colors z-10"
-              title="Eliminar imagen"
+              className="absolute -top-2 -right-2 p-1.5 rounded-full bg-red-100 text-red-600 border border-red-200 shadow-md hover:bg-red-200 transition-colors dark:bg-red-900/30 dark:text-red-300 dark:border-red-700 dark:hover:bg-red-900/40 z-10"
+              title="Remove image"
             >
               <X className="h-4 w-4" />
             </button>
@@ -141,28 +141,28 @@ export const FileInput = ({
             relative w-full flex flex-col items-center justify-center p-6 min-h-40
             border-2 border-dashed rounded-xl cursor-pointer transition-all duration-200
             ${error 
-              ? "border-red-300 bg-red-50/60" 
+              ? "border-red-300 bg-red-50/60 dark:bg-red-900/20" 
               : isDragActive
                 ? "border-brand bg-brand/5 ring-2 ring-brand/10"
-                : "border-slate-300 bg-white/80 hover:bg-slate-50 hover:border-brand/40"
+                : "border-slate-300 bg-white/80 dark:bg-slate-900/50 hover:bg-slate-50 dark:hover:bg-slate-950 hover:border-brand/40"
             }
           `}
         >
           <div className="text-center pointer-events-none">
             <CloudUpload
               className={`mx-auto h-10 w-10 mb-3 transition-colors ${
-                isDragActive ? "text-brand" : "text-slate-400"
+                isDragActive ? "text-brand" : "text-slate-400 dark:text-slate-500"
               }`}
               aria-hidden="true"
             />
-            <p className="text-sm font-semibold text-slate-600">{placeholder}</p>
-            <p className="mt-1 text-xs text-slate-400">PNG, JPG, WEBP hasta 10MB</p>
+            <p className="text-sm font-semibold text-slate-600 dark:text-slate-200">{placeholder}</p>
+            <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">PNG, JPG, WEBP up to 10MB</p>
           </div>
         </div>
       )}
 
       {error && (
-        <p className="text-xs text-red-600 font-semibold">
+        <p className="text-xs text-red-600 dark:text-red-400 font-semibold">
           {error}
         </p>
       )}

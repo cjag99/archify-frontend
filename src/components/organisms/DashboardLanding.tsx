@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/atoms/Button";
+import { useAuth } from "@/core/context/AuthContext";
 import { ArrowRight, FolderPlus, Layers, Wrench } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -11,6 +12,8 @@ interface DashboardLandingProps {
 
 export const DashboardLanding = ({ projectCount, loading }: DashboardLandingProps) => {
   const router = useRouter();
+  const { user } = useAuth();
+  const canCreateResources = user?.is_authorized;
 
   return (
     <div className="space-y-6">
@@ -63,7 +66,12 @@ export const DashboardLanding = ({ projectCount, loading }: DashboardLandingProp
       </section>
 
       <section className="grid gap-4 md:grid-cols-2">
-        <div className="glass-card rounded-3xl border border-slate-200/80 bg-white/90 dark:bg-slate-900/80 dark:border-slate-700/80 p-5 md:p-6 shadow-sm">
+        <button
+          type="button"
+          aria-label="Open Architectures"
+          onClick={() => router.push('/dashboard/architectures')}
+          className="glass-card text-left rounded-3xl border border-slate-200/80 bg-white/90 dark:bg-slate-900/80 dark:border-slate-700/80 p-5 md:p-6 shadow-sm focus:outline-none hover:shadow-md"
+        >
           <div className="flex items-center justify-between gap-4 mb-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand/10 text-brand">
               <Layers className="w-6 h-6" />
@@ -72,11 +80,18 @@ export const DashboardLanding = ({ projectCount, loading }: DashboardLandingProp
           </div>
           <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">Visualize and build</h3>
           <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-            Create architecture diagrams, connect models and explore system structure from a central place.
+            {canCreateResources
+              ? "Create architecture diagrams, connect models and explore system structure from a central place."
+              : "Browse existing architecture diagrams and review system structure; creation is reserved for authorized users."}
           </p>
-        </div>
+        </button>
 
-        <div className="glass-card rounded-3xl border border-slate-200/80 bg-white/90 dark:bg-slate-900/80 dark:border-slate-700/80 p-5 md:p-6 shadow-sm">
+        <button
+          type="button"
+          aria-label="Open Patterns"
+          onClick={() => router.push('/dashboard/patterns')}
+          className="glass-card text-left rounded-3xl border border-slate-200/80 bg-white/90 dark:bg-slate-900/80 dark:border-slate-700/80 p-5 md:p-6 shadow-sm focus:outline-none hover:shadow-md"
+        >
           <div className="flex items-center justify-between gap-4 mb-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand/10 text-brand">
               <Wrench className="w-6 h-6" />
@@ -85,9 +100,11 @@ export const DashboardLanding = ({ projectCount, loading }: DashboardLandingProp
           </div>
           <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">Design once, reuse everywhere</h3>
           <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-            Save your patterns and code snippets, then reuse them in future projects without losing consistency.
+            {canCreateResources
+              ? "Save your patterns and code snippets, then reuse them in future projects without losing consistency."
+              : "View existing patterns and reusable snippets; creation and editing are restricted to authorized users."}
           </p>
-        </div>
+        </button>
       </section>
     </div>
   );

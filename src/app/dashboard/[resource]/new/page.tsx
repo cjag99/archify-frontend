@@ -120,7 +120,7 @@ export default function NewResourcePage() {
 
     const handleArchitectureBack = () => setStep(1);
 
-    const handleArchitectureFinish = (
+    const handleArchitectureFinish = async (
       schema: { nodes: CanvasNodeData[]; edges: CanvasEdgeData[] },
       payload: ArchitecturePayload | null
     ) => {
@@ -131,7 +131,7 @@ export default function NewResourcePage() {
         base_structure: schema as unknown as JSON,
       };
 
-      void createArchitecture(finalPayload);
+      await createArchitecture(finalPayload);
     };
 
     const handleProjectNext = (payload: ProjectPayload) => {
@@ -160,14 +160,12 @@ export default function NewResourcePage() {
               name: projectPayload?.name || "Untitled Project",
               description: projectPayload?.description || "",
               project_logo: projectPayload?.logo_id as any,
-              architecture: schema as unknown as JSON,
+              architecture: { ...schema, architecture_id } as unknown as JSON, // ✨ Inyectamos el ID
+              architecture_id: architecture_id,
               user_id: user?.id,
             } as const;
             console.log("Creating project payload:", payload);
             await projectService.create(payload as any);
-
-            // Redirect to projects dashboard
-            router.push("/dashboard/projects");
         } catch (err) {
             console.error("Failed to create project:", err);
           setCreateError("Failed to create project. See console for details.");
