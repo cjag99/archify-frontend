@@ -2,7 +2,13 @@
 import { apiClient, type ApiOptions } from "./apiClient";
 
 export class CrudService<T, CreateDto = Partial<T>, UpdateDto = Partial<T>> {
-    constructor(protected endpoint: string) {}
+    constructor(protected endpoint: string) {
+        if (!endpoint.startsWith('/')) {
+            this.endpoint = `/${endpoint}`;
+        } else {
+            this.endpoint = endpoint;
+        }
+    }
 
     getAll(options?: ApiOptions): Promise<T[]> {
         
