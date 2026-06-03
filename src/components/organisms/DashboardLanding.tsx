@@ -18,15 +18,15 @@ export const DashboardLanding = ({ projectCount, loading }: DashboardLandingProp
 
   return (
     <div className="space-y-6">
-      <section className="glass-card rounded-3xl border border-slate-200/80 bg-white/90 dark:bg-slate-900/80 dark:border-slate-700/80 p-6 md:p-8 shadow-lg shadow-slate-900/5">
-        <div className="grid gap-6 lg:grid-cols-[1.3fr_0.9fr] items-center">
-          <div className="space-y-4">
+      <section className="glass-card rounded-3xl border border-slate-200/80 bg-white/90 dark:bg-slate-900/80 p-8 md:p-10 shadow-xl backdrop-blur-md">
+        <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] items-center">
+          <div className="space-y-5">
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Dashboard overview</p>
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-950 dark:text-white">
               Your workspace, simplified.
             </h2>
             <p className="max-w-2xl text-slate-600 dark:text-slate-300 leading-7">
-              Manage projects, architectures and code assets from a clean landing page that helps you move forward quickly.
+              Manage projects, architectures and code assets from a clean dashboard that helps you move forward quickly.
             </p>
             <div className="flex flex-col sm:flex-row items-stretch gap-3">
               <Button

@@ -95,9 +95,9 @@ export const ProfileView = ({
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto overflow-hidden bg-white/60 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 transition-all duration-300 hover:shadow-[0_8px_40px_rgb(0,0,0,0.08)] dark:bg-slate-900/60 dark:border-slate-700/60">
+    <div className="w-full max-w-4xl mx-auto overflow-y-auto max-h-screen bg-white/30 dark:bg-slate-900/30 backdrop-blur-2xl rounded-[2rem] border border-white/20 dark:border-slate-700/20 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_12px_50px_rgba(0,0,0,0.08)]">
       {}
-      <div className="relative h-32 md:h-48 w-full bg-linear-to-br from-brand/10 via-brand/5 to-transparent overflow-hidden">
+      <div className="relative h-24 sm:h-32 md:h-44 w-full bg-linear-to-br from-brand/10 via-brand/5 to-transparent overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
         <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-brand/20 rounded-full blur-3xl"></div>
         <div className="absolute -top-12 -left-12 w-48 h-48 bg-blue-400/10 rounded-full blur-2xl"></div>
@@ -236,7 +236,7 @@ export const ProfileView = ({
                 name="is_authorized" 
                 checked={formData.is_authorized} 
                 onChange={handleChange} 
-                  disabled={hideActions}
+                disabled={!authUser?.is_authorized || hideActions} 
                 className="sr-only peer" 
               />
               <div className="w-14 h-8 bg-slate-200/80 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-linear-to-r peer-checked:from-brand peer-checked:to-brand/80 shadow-inner group-hover:shadow-md transition-all duration-300"></div>

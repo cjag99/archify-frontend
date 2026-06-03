@@ -4,7 +4,7 @@ import type { FC } from "react";
 export const HeroVisual: FC = () => {
   return (
     <div className="relative mx-auto w-full max-w-[36rem] lg:ml-auto">
-      <div className="absolute -top-6 left-0 z-20 hidden w-44 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 shadow-xl md:block lg:-left-6 lg:w-48 lg:p-4 transition-colors duration-300">
+      <div className="absolute -top-6 left-0 z-20 hidden w-44 rounded-xl border border-white/20 bg-white/80 backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/80 p-3 shadow-2xl md:block lg:-left-6 lg:w-48 lg:p-4 transition-colors duration-300 animate-float">
         <p className="mb-2 text-[10px] font-bold uppercase text-slate-400">Pattern</p>
         <div className="mb-2 flex items-center gap-2">
           <div className="h-3 w-3 rounded-full bg-brand" />
@@ -71,7 +71,7 @@ export const HeroVisual: FC = () => {
           </div>
         </div>
       </div>
-      <div className="absolute -bottom-4 right-2 flex items-center gap-2 rounded-lg bg-emerald-500 px-3 py-2 text-white shadow-xl sm:right-8 sm:px-4">
+      <div className="absolute -bottom-4 right-2 flex items-center gap-2 rounded-lg bg-emerald-500 px-3 py-2 text-white shadow-2xl sm:right-8 sm:px-4 animate-float-delayed">
         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"

@@ -1,19 +1,19 @@
-// Page-level UI component that renders the StepSection interface
 import { FC } from "react";
+import { Blocks, Map, Download } from "lucide-react";
 
 const steps = [
   {
-    number: "01",
+    icon: Blocks,
     title: "Choose your pattern",
     text: "Select Clean Architecture, Hexagonal or DDD. Archify prepares the layers and dependency rules automatically.",
   },
   {
-    number: "02",
+    icon: Map,
     title: "Define the domain",
     text: "Navigate the visual map and add entities, services and adapters where they belong.",
   },
   {
-    number: "03",
+    icon: Download,
     title: "Export the scaffolding",
     text: "Keep a project structure ready for coding with folders, interfaces and boilerplate already aligned.",
   },
@@ -24,8 +24,8 @@ export const StepSection: FC = () => {
     <section className="px-4 py-16 sm:px-6 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-7xl">
         <div className="mb-12 text-center sm:mb-14 lg:mb-16">
-          <span className="eyebrow mb-4">Workflow</span>
-          <h2 className="mb-4 text-3xl font-bold text-slate-950 dark:text-slate-100 sm:text-4xl lg:text-5xl">
+          <span className="eyebrow mb-6 uppercase tracking-wider">Workflow</span>
+          <h2 className="mb-6 tracking-tight text-3xl font-extrabold text-slate-950 dark:text-slate-100 sm:text-4xl lg:text-5xl">
             Design your system in 3 steps
           </h2>
           <p className="mx-auto max-w-2xl text-base leading-relaxed text-slate-600 dark:text-slate-400 sm:text-lg">
@@ -33,32 +33,34 @@ export const StepSection: FC = () => {
             configurations.
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3">
-          {steps.map((step, index) => (
+        <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-3">
+          {steps.map((step, index) => {
+            const Icon = step.icon;
+            return (
             <div
-              key={step.number}
-              className={`section-surface p-5 transition-all hover:-translate-y-0.5 hover:border-brand/25 hover:shadow-xl sm:p-6 lg:p-7 ${
-                index === 1 ? "ring-1 ring-brand/20" : ""
+              key={index}
+              className={`glass-card rounded-[2rem] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-brand/30 hover:shadow-[0_8px_30px_rgba(140,3,239,0.1)] sm:p-8 ${
+                index === 1 ? "ring-1 ring-brand/30 bg-white/60 dark:bg-slate-900/60" : ""
               }`}
             >
-              <div className="mb-6 flex items-center justify-between">
+              <div className="mb-8 flex items-center justify-between">
                 <div
-                  className={`flex h-11 w-11 items-center justify-center rounded-xl text-sm font-black ${
-                    index === 1 ? "bg-brand text-white" : "bg-brand/8 text-brand"
+                  className={`flex h-14 w-14 items-center justify-center rounded-2xl ${
+                    index === 1 ? "bg-brand text-white shadow-lg shadow-brand/30" : "bg-brand/10 text-brand"
                   }`}
                 >
-                  {step.number}
+                  <Icon className="h-7 w-7" />
                 </div>
-                <div className="ml-4 h-px flex-1 bg-slate-200 dark:bg-slate-800" />
+                <div className="ml-4 h-px flex-1 bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent" />
               </div>
-              <h3 className="mb-3 text-xl font-bold text-slate-950 dark:text-slate-100">
+              <h3 className="mb-4 text-xl font-bold text-slate-950 dark:text-slate-100">
                 {step.title}
               </h3>
               <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400 sm:text-base">
                 {step.text}
               </p>
             </div>
-          ))}
+          )})}
         </div>
       </div>
     </section>

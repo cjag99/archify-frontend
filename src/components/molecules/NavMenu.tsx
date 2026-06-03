@@ -21,13 +21,7 @@ export const NavMenu: FC<NavMenuProps> = ({ mobile = false, onNavigate }) => {
   }
 
   if (!isAuthenticated) {
-    return (
-      <nav className={navClassName}>
-        <NavLink href={ROUTES.home} onClick={onNavigate} compact={mobile}>
-          Home
-        </NavLink>
-      </nav>
-    );
+    return null;
   }
 
   const menuItems = [

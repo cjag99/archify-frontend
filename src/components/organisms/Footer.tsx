@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export const Footer: FC = () => {
   return (
-    <footer className="border-t border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/90">
+    <footer className="glass-card border-t border-brand/20 dark:border-brand/30">
       <div className="border-b border-slate-100 dark:border-slate-800">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-center gap-5 px-4 py-6 sm:px-6 sm:py-8 lg:flex-row lg:gap-12">
           <span className="text-xs font-bold uppercase text-slate-400">

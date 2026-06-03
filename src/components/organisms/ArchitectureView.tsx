@@ -147,7 +147,7 @@ export function ArchitectureView({ architectureId, hideActions = false }: Archit
         {!hideActions && <BackLink href={ROUTES.architectures} label="Back to Architectures" />}
       </div>
 
-      <div className="max-w-6xl mx-auto overflow-hidden bg-white/60 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 transition-all duration-300 dark:bg-slate-900/60 dark:border-slate-700/60">
+      <div className="max-w-6xl mx-auto overflow-hidden glass-card border border-white/60 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:bg-slate-900/60 dark:border-slate-700/60">
         {}
         <div className="relative h-32 md:h-44 w-full bg-linear-to-br from-brand/10 via-brand/5 to-transparent overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>

@@ -73,13 +73,9 @@ interface ProjectPayload {
   logo_id?: string;
 }
 
-interface ProjectNodeNameMap {
-  [nodeType: string]: string;
-}
-
 export function ProjectView({ projectId, hideActions = false }: ProjectViewProps) {
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
+  const { user } = useAuth();
   const { fetchProjectById, updateProject, deleteProject, downloadProject } = useProject();
   const { fetchImage } = useImage();
   const [project, setProject] = useState<any>(null);
@@ -94,110 +90,81 @@ export function ProjectView({ projectId, hideActions = false }: ProjectViewProps
 
   useEffect(() => {
     let active = true;
-
-    const loadData = async () => {
+    const load = async () => {
       setLoading(true);
       try {
         const data = await fetchProjectById(projectId);
         if (active) {
           setProject(data || null);
           if (data?.project_logo) {
-            const fetchedImage = await fetchImage(data.project_logo as UUID);
-            if (active && fetchedImage) {
-              setImageObj(fetchedImage);
-            }
+            const img = await fetchImage(data.project_logo as UUID);
+            if (active && img) setImageObj(img);
           }
         }
-      } catch (err) {
-        console.error("Error loading project data:", err);
+      } catch (e) {
+        console.error(e);
       } finally {
         if (active) setLoading(false);
       }
     };
-
-    void loadData();
-
-    return () => {
-      active = false;
-    };
+    void load();
+    return () => { active = false; };
   }, [projectId, fetchProjectById, fetchImage]);
 
   const schema = project?.architecture as ProjectSchema | undefined;
   const hasSchema = Boolean(schema?.nodes?.length || schema?.edges?.length);
 
-  const handleProjectEdit = () => {
-    setIsEditing(true);
+  const handleEdit = () => setIsEditing(true);
+  const handleDelete = async () => {
+    const ok = await deleteProject(projectId);
+    if (ok) router.push(ROUTES.projects);
   };
-
-  const handleProjectDelete = async () => {
-    const deleted = await deleteProject(projectId);
-    if (deleted) {
-      router.push(ROUTES.projects);
-    }
-  };
-
-  const handleEditStep1Next = (payload: ProjectPayload) => {
-    setEditPayload(payload);
-  };
-
-  const handleDownloadProject = async () => {
+  const handleDownload = async () => {
     if (!project) return;
     setIsDownloading(true);
-
     await downloadProject(projectId, project.name);
     setIsDownloading(false);
   };
-
-  const handleEditStep2Finish = async (
-    architecture_id: string,
-    nodeNameMap: ProjectNodeNameMap,
-    updatedSchema: { nodes: any[]; edges: any[] }
-  ) => {
+  const nextStep = (payload: ProjectPayload) => setEditPayload(payload);
+  const finishEdit = async (archId: string, _: any, updated: { nodes: any[]; edges: any[] }) => {
     if (!project) return;
-
-    const updateData = {
+    const data = {
       name: editPayload?.name || project.name,
       description: editPayload?.description || project.description,
-      project_logo: editPayload?.logo_id ? (editPayload.logo_id as any) : project.project_logo,
-      architecture: { ...updatedSchema, architecture_id } as unknown as JSON,
-      architecture_id: architecture_id,
+      project_logo: editPayload?.logo_id ? editPayload.logo_id : project.project_logo,
+      architecture: { ...updated, architecture_id: archId } as unknown as JSON,
+      architecture_id: archId,
     };
-
-    const result = await updateProject(projectId, updateData);
-    if (result) {
-      setProject(result);
+    const res = await updateProject(projectId, data);
+    if (res) {
+      setProject(res);
       setIsEditing(false);
       setEditPayload(null);
     }
   };
 
   if (isEditing && project) {
-    const currentEditPayload = editPayload ?? {
+    const cur = editPayload ?? {
       name: decodeHtmlEntities(project.name),
       description: decodeHtmlEntities(project.description || ""),
       logo_id: project.project_logo,
     };
-
     return (
       <div className="app-shell p-6 md:p-12">
         <div className="max-w-5xl mx-auto space-y-8">
           {!hideActions && <BackLink href={ROUTES.projects} label="Back to Projects" />}
           <div className="glass-card rounded-2xl p-8 border border-slate-200 dark:border-slate-800 dark:bg-slate-900/50">
             {!editPayload ? (
-              <ProjectStep1
-                initialName={currentEditPayload.name}
-                initialDescription={currentEditPayload.description}
-                onNext={handleEditStep1Next}
-              />
+              <ProjectStep1 initialName={cur.name} initialDescription={cur.description} onNext={nextStep} />
             ) : (
               <ProjectStep2
-                projectName={currentEditPayload.name}
-                projectDescription={currentEditPayload.description}
-                logo_id={currentEditPayload.logo_id}
+                projectName={cur.name}
+                projectDescription={cur.description}
+                logo_id={cur.logo_id}
                 initialArchitectureId={project.architecture_id || (project.architecture as any)?.architecture_id}
                 initialSchema={schema ? { nodes: schema.nodes || [], edges: schema.edges || [], architecture_id: (schema as any).architecture_id } : undefined}
                 onBack={() => setEditPayload(null)}
-                onFinish={handleEditStep2Finish}
+                onFinish={finishEdit}
               />
             )}
           </div>
@@ -211,25 +178,16 @@ export function ProjectView({ projectId, hideActions = false }: ProjectViewProps
       <div className="max-w-6xl mx-auto mb-6">
         {!hideActions && <BackLink href={ROUTES.projects} label="Back to Projects" />}
       </div>
-
-      <div className="max-w-6xl mx-auto overflow-hidden bg-white/60 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 transition-all duration-300 dark:bg-slate-900/60 dark:border-slate-700/60">
-        {}
+      <div className="max-w-6xl mx-auto overflow-hidden glass-card border border-white/60 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:bg-slate-900/60 dark:border-slate-700/60">
         <div className="relative h-32 md:h-44 w-full bg-linear-to-br from-brand/10 via-brand/5 to-transparent overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
-          <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-brand/20 rounded-full blur-3xl"></div>
-          <div className="absolute -top-12 -left-12 w-48 h-48 bg-blue-400/10 rounded-full blur-2xl"></div>
+          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay" />
+          <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-brand/20 rounded-full blur-3xl animate-float" />
+          <div className="absolute -top-12 -left-12 w-48 h-48 bg-blue-400/10 rounded-full blur-2xl animate-float-delayed" />
         </div>
-
         <Modal isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)}>
-          <DeleteModal
-            id={projectId}
-            onClose={() => setIsDeleteOpen(false)}
-            onConfirm={handleProjectDelete}
-          />
+          <DeleteModal id={projectId} onClose={() => setIsDeleteOpen(false)} onConfirm={handleDelete} />
         </Modal>
-
         <div className="px-6 md:px-10 pb-10 -mt-16 md:-mt-20 relative z-10 space-y-10">
-          {}
           <div className="flex flex-col md:flex-row gap-6 items-center md:items-end justify-between text-center md:text-left">
             <div className="flex-1 space-y-4 w-full">
               <div className="flex flex-col md:flex-row items-center gap-4 md:gap-5">
@@ -246,79 +204,38 @@ export function ProjectView({ projectId, hideActions = false }: ProjectViewProps
                 </p>
               )}
             </div>
-            {!loading && project && isAuthorized && !hideActions && (
+            {isAuthorized && !hideActions && (
               <div className="flex gap-3 pb-2 justify-center md:justify-end">
-                <Button 
-                  variant="success" 
-                  onClick={handleDownloadProject} 
-                  isLoading={isDownloading}
-                  className="rounded-2xl px-6"
-                >
-                  <Download className="w-5 h-5" />
-                  Export ZIP
+                <Button variant="success" onClick={handleDownload} isLoading={isDownloading} className="rounded-2xl px-6 glass-card-hover">
+                  <Download className="w-5 h-5" /> Export ZIP
                 </Button>
-                <Button variant="secondary" onClick={handleProjectEdit} className="rounded-2xl px-6">
-                  Edit
-                </Button>
-                <Button variant="danger" onClick={() => setIsDeleteOpen(true)} className="rounded-2xl px-6">
-                  Delete
-                </Button>
+                <Button variant="secondary" onClick={handleEdit} className="rounded-2xl px-6 glass-card-hover">Edit</Button>
+                <Button variant="danger" onClick={() => setIsDeleteOpen(true)} className="rounded-2xl px-6 glass-card-hover">Delete</Button>
               </div>
             )}
           </div>
-
-          {}
           {imageObj && (
             <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm dark:bg-slate-900/40 dark:border-slate-700/50">
-              <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-3">
-                <div className="w-2 h-8 bg-brand rounded-full"></div>
-                Project Logo
-              </h3>
+              <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-3"><div className="w-2 h-8 bg-brand rounded-full" /> Project Logo</h3>
               <div className="w-full relative h-32 md:h-48 rounded-[2rem] shadow-inner overflow-hidden border border-slate-200 bg-white dark:bg-slate-900/50 dark:border-slate-700 flex items-center justify-center">
-                {imageObj?.url ? (
-                  <Image 
-                    src={imageObj.url} 
-                    alt={project?.name || "Project logo"} 
-                    width={200} 
-                    height={200} 
-                    className="object-contain" 
-                    unoptimized 
-                  />
-                ) : (
-                  <p className="text-slate-400">No logo available</p>
-                )}
+                <Image src={imageObj.url} alt={project?.name || "Project logo"} width={200} height={200} className="object-contain" unoptimized />
               </div>
             </div>
           )}
-
-          {}
           {hasSchema ? (
             <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm dark:bg-slate-900/40 dark:border-slate-700/50">
-              <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-3">
-                <div className="w-2 h-8 bg-brand rounded-full"></div>
-                Architecture Schema
-              </h3>
+              <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-3"><div className="w-2 h-8 bg-brand rounded-full" /> Architecture Schema</h3>
               <div className="w-full h-[350px] sm:h-[500px] md:h-150 border border-slate-200 rounded-[2rem] shadow-inner overflow-hidden bg-slate-50/50 dark:bg-slate-900/50 relative pointer-events-none">
-                <SchemaCanvas
-                  nodes={schema?.nodes || []}
-                  edges={schema?.edges || []}
-                  nodeTypes={projectNodeTypes}
-                  readonly={true}
-                />
+                <SchemaCanvas nodes={schema?.nodes || []} edges={schema?.edges || []} nodeTypes={projectNodeTypes} readonly={true} />
               </div>
             </div>
-          ) : (
-            !loading && (
-              <div className="p-12 bg-white/40 border border-white/50 rounded-3xl text-center shadow-sm">
-                <p className="text-slate-500 font-medium text-lg">
-                  No architecture schema available for this project yet.
-                </p>
-              </div>
-            )
-          )}
+          ) : (!loading && (
+            <div className="p-12 bg-white/40 border border-white/50 rounded-3xl text-center shadow-sm dark:bg-slate-900/40 dark:border-slate-700/50">
+              <p className="text-slate-500 font-medium text-lg dark:text-slate-300">No architecture schema available for this project yet.</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
 }
-
