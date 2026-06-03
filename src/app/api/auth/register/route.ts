@@ -1,12 +1,16 @@
 // API route handler for a backend endpoint
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL;
+const BACKEND_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL;
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
+
+        if (!BACKEND_URL || BACKEND_URL.startsWith("undefined")) {
+            throw new Error("BACKEND_URL is not properly defined in environment variables");
+        }
         
         const response = await fetch(`${BACKEND_URL}/auth/register`, {
             method: "POST",
