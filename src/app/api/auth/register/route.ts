@@ -29,18 +29,8 @@ export async function POST(req: NextRequest) {
         }
 
         const data = await response.json();
-        const { access_token, profile } = data;
 
-        const cookieStore = await cookies();
-        cookieStore.set("auth_token", access_token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            path: "/",
-            maxAge: 60 * 60 * 24 * 7,
-        });
-
-        return NextResponse.json({ profile });
+        return NextResponse.json({ profile: data });
     } catch (error) {
         console.error("[BFF Register Error]:", error);
         return NextResponse.json(

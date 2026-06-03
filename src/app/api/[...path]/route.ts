@@ -2,7 +2,7 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL;
+const BACKEND_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL;
 
 async function handleProxy(req: NextRequest) {
     try {
@@ -12,6 +12,10 @@ async function handleProxy(req: NextRequest) {
 
         const cookieStore = await cookies();
         const token = cookieStore.get("auth_token")?.value;
+
+        if (!BACKEND_URL || BACKEND_URL.startsWith("undefined")) {
+            throw new Error("BACKEND_URL is not properly defined in environment variables");
+        }
 
         const headers = new Headers();
         

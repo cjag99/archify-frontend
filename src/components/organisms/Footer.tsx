@@ -91,17 +91,12 @@ export const Footer: FC = () => {
             </h4>
             <ul className="space-y-4 text-sm text-slate-500 dark:text-slate-400">
               <li>
-                <a href="https://github.com/your-org/archify" target="_blank" rel="noopener noreferrer" className="hover:text-brand transition-colors">
+                <a href="https://github.com/cjag99/archify" target="_blank" rel="noopener noreferrer" className="hover:text-brand transition-colors">
                 GitHub (Contribute)
                 </a>
               </li>
               <li>
-                <a href="https://discord.gg/your-invite" target="_blank" rel="noopener noreferrer" className="hover:text-brand transition-colors">
-                Join Discord
-                </a>
-              </li>
-              <li>
-                <a href="https://github.com/your-org/archify/issues" target="_blank" rel="noopener noreferrer" className="hover:text-brand transition-colors">
+                <a href="https://github.com/cjag99/archify/issues/new" target="_blank" rel="noopener noreferrer" className="hover:text-brand transition-colors">
                 Report an Issue
                 </a>
               </li>
@@ -118,9 +113,6 @@ export const Footer: FC = () => {
             </span>
             <span className="text-xs hover:text-brand cursor-pointer transition-colors">
               LinkedIn
-            </span>
-            <span className="text-xs hover:text-brand cursor-pointer transition-colors">
-              X (Twitter)
             </span>
           </div>
         </div>
