@@ -20,7 +20,9 @@ import { CodeLanguageView } from "./CodeLanguageView";
 import { ImageView } from "./ImageView";
 import { CodeLanguage, Pattern, PatternCode, ImageType, User } from "@/core/types/models";
 import { patternService } from "@/core/api/patterns.service";
+import { userService } from "@/core/api/users.service";
 import { dashboardResourceDetail, dashboardResourceNew } from "@/lib/routes";
+import { useImage } from "@/hooks/useImage";
 
 export const AdminTable: FC = () => {
     const [modalType, setModalType] = useState<string | null>(null);
@@ -34,6 +36,8 @@ export const AdminTable: FC = () => {
     const router = useRouter();
     const { tablename } = useParams();
     const { data, loading, error, currentTable, dropData, refreshData } = useAdminTable(tablename as string);
+    const { createImage } = useImage();
+    const [actionLoading, setActionLoading] = useState(false);
     
     type TableRow = { item: Record<string, unknown>; values: unknown[] };
     let rows: TableRow[] = [];
@@ -120,7 +124,8 @@ export const AdminTable: FC = () => {
         }
 
         if (currentTable === "users") {
-            router.push(dashboardResourceDetail("users", itemId));
+            setSelectedItem(item);
+            setModalType("user-edit");
             return;
         }
 
@@ -219,6 +224,36 @@ export const AdminTable: FC = () => {
                         }
                     }}
                 />
+            )}
+            {modalType === "user-edit" && selectedItem && (
+                <div className="max-h-[80vh] overflow-y-auto overflow-x-hidden p-1">
+                    <ProfileView
+                        user={selectedItem as unknown as User}
+                        isLoading={actionLoading}
+                        onSave={async (updatedData, avatarFile) => {
+                            setActionLoading(true);
+                            try {
+                                let avatarId = (selectedItem as unknown as User).avatar;
+                                if (avatarFile) {
+                                    const imageRes = await createImage(avatarFile, "avatar");
+                                    if (imageRes?.id) {
+                                        avatarId = imageRes.id as string;
+                                    }
+                                }
+                                await userService.update(String(selectedItem.id), {
+                                    ...updatedData,
+                                    avatar: avatarId,
+                                });
+                                closeModal();
+                                await refreshData();
+                            } catch (error) {
+                                console.error("Failed to update user", error);
+                            } finally {
+                                setActionLoading(false);
+                            }
+                        }}
+                    />
+                </div>
             )}
             {modalType === `${singularTable}-delete` && selectedItem && (
                 <DeleteModal
