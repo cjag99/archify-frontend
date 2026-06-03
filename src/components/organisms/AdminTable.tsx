@@ -237,7 +237,7 @@ export const AdminTable: FC = () => {
                                 if (avatarFile) {
                                     const imageRes = await createImage(avatarFile, "avatar");
                                     if (imageRes?.id) {
-                                        avatarId = imageRes.id as string;
+                                        avatarId = imageRes.id as User["avatar"];
                                     }
                                 }
                                 await userService.update(String(selectedItem.id), {
