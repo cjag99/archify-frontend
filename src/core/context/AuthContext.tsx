@@ -42,8 +42,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       Cookies.remove(USER_DATA_COOKIE);
       setUser(null);
-      router.replace("/");
-      router.refresh();
+      window.location.href = "/";
     }
   }, [router]);
 

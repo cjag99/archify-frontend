@@ -14,6 +14,8 @@ import { MobileProfileMenu } from "../molecules/MobileProfileMenu";
 import { AuthQueryHandler } from "../molecules/AuthQueryHandler";
 import { ROUTES } from "@/lib/routes";
 import { Menu, X, Sun, Moon } from "lucide-react";
+import Image from "next/image";
+import logoImg from "@/public/logo.png";
 
 export const Navbar: FC = () => {
   const [modalType, setModalType] = useState<"login" | "register" | null>(null);
@@ -64,8 +66,8 @@ export const Navbar: FC = () => {
             {/* Logo (always visible) */}
             {isAuthenticated ? (
               <Link href={homeLink} onClick={() => setMobileMenuOpen(false)} className="group flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-xl font-bold text-white shadow-sm transition-transform group-hover:scale-105">
-                  A
+                <div className="relative h-10 w-10 rounded-xl overflow-hidden shadow-sm transition-transform group-hover:scale-105">
+                  <Image src={logoImg} alt="Archify Logo" fill sizes="40px" className="object-contain" />
                 </div>
                 <span className="text-xl font-bold text-slate-950 transition-colors dark:text-slate-100 sm:text-2xl">
                   Archify
@@ -73,8 +75,8 @@ export const Navbar: FC = () => {
               </Link>
             ) : (
               <div className="group flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-xl font-bold text-white shadow-sm">
-                  A
+                <div className="relative h-10 w-10 rounded-xl overflow-hidden shadow-sm">
+                  <Image src={logoImg} alt="Archify Logo" fill sizes="40px" className="object-contain" />
                 </div>
                 <span className="text-xl font-bold text-slate-950 dark:text-slate-100 sm:text-2xl">
                   Archify
