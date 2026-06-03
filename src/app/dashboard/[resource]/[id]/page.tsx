@@ -36,12 +36,12 @@ export default function ResourceDetailPage() {
 
         void userService
             .getById(id)
-            .then((result) => {
+            .then((result: User) => {
                 if (active) {
                     setUserDetail(result);
                 }
             })
-            .catch((err) => {
+            .catch((err: unknown) => {
                 if (active) {
                     setUserError(err instanceof Error ? err.message : "Unable to fetch user.");
                 }

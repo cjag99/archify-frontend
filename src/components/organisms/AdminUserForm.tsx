@@ -101,6 +101,10 @@ export const AdminUserForm = ({ user, onCompleted }: AdminUserFormProps) => {
                 });
             }
 
+            if (isEditMode && formData.password) {
+                await (userService as any).updatePassword(String(targetUserId), { password: formData.password });
+            }
+
             success = true;
         } catch (err: any) {
             console.error("User save error:", err);
@@ -167,6 +171,19 @@ export const AdminUserForm = ({ user, onCompleted }: AdminUserFormProps) => {
                     required
                 />
             </div>
+            {/* Optional Password Field for Admin Edit */}
+            {isEditMode && (
+                <>
+                    <Input
+                        label="Password (optional)"
+                        name="password"
+                        type="password"
+                        placeholder="Leave empty to keep current"
+                        value={formData.password}
+                        onChange={handleChange}
+                    />
+                </>
+            )}
             <Input
                 label="Username"
                 name="username"

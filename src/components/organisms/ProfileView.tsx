@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from "react";
 import { User } from "@/core/types/auth";
+import { userService } from '@/core/api/users.service';
 import { Input } from "../atoms/Input";
 import { Button } from "../atoms/Button";
 import { FileInput } from "../molecules/FileInput";
@@ -25,10 +26,77 @@ export const ProfileView = ({
   isLoading = false 
   , hideActions = false
 }: ProfileViewProps) => {
-  const { user: authUser } = useAuth();
-  
+  const { user: authUser, logout } = useAuth();
+  const [showPasswordEdit, setShowPasswordEdit] = useState(false);
+  const [passwordData, setPasswordData] = useState({ password: '', confirmPassword: '' });
 
   const currentUser = propUser || authUser;
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setPasswordData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!passwordData.password || passwordData.password !== passwordData.confirmPassword) {
+          alert('Passwords do not match or are empty.');
+          return;
+      }
+      try {
+          if (currentUser?.id) {
+              // @ts-ignore - userService has custom method
+              await (userService as any).updatePassword(String(currentUser.id), { password: passwordData.password });
+              // Logout to force re-login with new credentials
+              await logout();
+          }
+      } catch (err: any) {
+          console.error('Password update error', err);
+          alert(err.message || 'Failed to update password');
+      }
+  };
+
+  // render password edit section conditionally
+  const renderPasswordSection = () => {
+      if (!currentUser || currentUser.is_authorized) return null; // admins don't need this extra UI
+      if (!showPasswordEdit) {
+          return (
+              <Button type="button" variant="secondary" onClick={() => setShowPasswordEdit(true)} className="w-full sm:w-auto">
+                  Change Password
+              </Button>
+          );
+      }
+      return (
+          <form onSubmit={handlePasswordSubmit} className="space-y-4 mt-4">
+              <Input
+                  label="New Password"
+                  name="password"
+                  type="password"
+                  placeholder="********"
+                  value={passwordData.password}
+                  onChange={handlePasswordChange}
+                  required
+              />
+              <Input
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  type="password"
+                  placeholder="********"
+                  value={passwordData.confirmPassword}
+                  onChange={handlePasswordChange}
+                  required
+              />
+              <div className="flex gap-2">
+                  <Button type="submit" variant="primary" className="flex-1">
+                      Update Password
+                  </Button>
+                  <Button type="button" variant="danger" onClick={() => setShowPasswordEdit(false)} className="flex-1">
+                      Cancel
+                  </Button>
+              </div>
+          </form>
+      );
+  };
 
   const [formData, setFormData] = useState({
     first_name: "",
