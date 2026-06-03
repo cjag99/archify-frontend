@@ -12,6 +12,7 @@ import { CodeLanguageForm } from "./CodeLanguageForm";
 import { DeleteModal } from "./DeleteModal";
 import { NoTableSelected } from "@/components/molecules/NoTableSelected";
 import { ProfileView } from "./ProfileView";
+import { AdminUserForm } from "./AdminUserForm";
 import { ProjectView } from "./ProjectView";
 import { PatternView } from "./PatternView";
 import { ArchitectureView } from "./ArchitectureView";
@@ -225,31 +226,26 @@ export const AdminTable: FC = () => {
                     }}
                 />
             )}
-            {modalType === "user-edit" && selectedItem && (
+            {modalType === "user-create" && (
                 <div className="max-h-[80vh] overflow-y-auto overflow-x-hidden p-1">
-                    <ProfileView
-                        user={selectedItem as unknown as User}
-                        isLoading={actionLoading}
-                        onSave={async (updatedData, avatarFile) => {
-                            setActionLoading(true);
-                            try {
-                                let avatarId = (selectedItem as unknown as User).avatar;
-                                if (avatarFile) {
-                                    const imageRes = await createImage(avatarFile, "avatar");
-                                    if (imageRes?.id) {
-                                        avatarId = imageRes.id as User["avatar"];
-                                    }
-                                }
-                                await userService.update(String(selectedItem.id), {
-                                    ...updatedData,
-                                    avatar: avatarId,
-                                });
+                    <AdminUserForm
+                        onCompleted={async (success) => {
+                            if (success) {
                                 closeModal();
                                 await refreshData();
-                            } catch (error) {
-                                console.error("Failed to update user", error);
-                            } finally {
-                                setActionLoading(false);
+                            }
+                        }}
+                    />
+                </div>
+            )}
+            {modalType === "user-edit" && selectedItem && (
+                <div className="max-h-[80vh] overflow-y-auto overflow-x-hidden p-1">
+                    <AdminUserForm
+                        user={selectedItem as unknown as User}
+                        onCompleted={async (success) => {
+                            if (success) {
+                                closeModal();
+                                await refreshData();
                             }
                         }}
                     />
