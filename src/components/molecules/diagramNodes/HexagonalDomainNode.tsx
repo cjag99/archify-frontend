@@ -14,7 +14,6 @@ export const HexagonalDomainNode: React.FC<{ node: Node }> = ({ node }) => (
     defaultDescription="Domain core with entities and rules in hexagonal architecture."
     title="Hexagonal Domain"
     tag="Core"
-    variant="hex"
   />
 );
 
