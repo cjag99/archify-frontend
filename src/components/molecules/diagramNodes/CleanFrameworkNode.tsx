@@ -9,7 +9,7 @@ import { DiagramNodeCard } from "./DiagramNodeCard";
 export const CleanFrameworkNode: React.FC<{ node: Node }> = ({ node }) => (
   <DiagramNodeCard
     node={node}
-    icon={<HardDrive size={24} className="text-brand" />}
+    icon={<HardDrive size={24} className="text-slate-100" />}
     defaultLabel="Frameworks"
     defaultDescription="Includes infrastructure, UI, and external controllers in Clean Architecture."
     title="Clean Framework"

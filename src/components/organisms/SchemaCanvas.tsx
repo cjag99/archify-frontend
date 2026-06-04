@@ -23,8 +23,15 @@ const PortalProvider = getProvider();
 export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNodesChange, onEdgesChange, onConnect, readonly = false }: SchemaCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const graphRef = useRef<Graph | null>(null);
-  const { resolvedTheme } = useTheme();
+  const { theme, resolvedTheme } = useTheme();
   const [isCollapsedViewport, setIsCollapsedViewport] = useState(false);
+
+  const currentTheme = resolvedTheme ?? theme ?? (typeof window !== "undefined" && document.documentElement.classList.contains("dark") ? "dark" : "light");
+  const isDarkMode = currentTheme === "dark";
+  const backgroundColor = isDarkMode ? "#020617" : "#f8fafc";
+  const gridColor = isDarkMode ? "#1f2937" : "#e2e8f0";
+  const edgeStrokeColor = isDarkMode ? "#7c3aed" : "#22d3ee";
+  const portStrokeColor = isDarkMode ? "#7c3aed" : "#22d3ee";
 
   useEffect(() => {
     const check = () => {
@@ -46,24 +53,24 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const isDarkMode = resolvedTheme === "dark" || document.documentElement.classList.contains("dark");
-    const backgroundColor = isDarkMode ? "#0f172a" : "#f8fafc";
-    const gridColor = isDarkMode ? "#475569" : "#e2e8f0";
-    const edgeStrokeColor = isDarkMode ? "#64748b" : "#94a3b8";
-
 
     Object.entries(nodeTypes).forEach(([type, component]) => {
       try {
         register({
           shape: `custom-${type}`,
-          width: 96,
-          height: 96,
+          width: 108,
+          height: 108,
           component: component as CustomNodeComponent,
         });
       } catch {
 
       }
     });
+
+    const getLiveEdgeStrokeColor = () => {
+      if (typeof window === "undefined") return edgeStrokeColor;
+      return document.documentElement.classList.contains("dark") ? "#7c3aed" : "#22d3ee";
+    };
 
     const graph = new Graph({
       container: containerRef.current,
@@ -89,14 +96,25 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
           name: 'manhattan',
         },
         anchor: 'center',
-        connectionPoint: 'boundary',
+        connectionPoint: 'anchor',
         createEdge() {
+          const color = getLiveEdgeStrokeColor();
           return new Shape.Edge({
             shape: 'edge',
+            connector: { name: 'rounded' },
             attrs: {
               line: {
-                stroke: edgeStrokeColor,
-                strokeWidth: 2,
+                class: 'tech-edge-line',
+                stroke: color,
+                strokeWidth: 3,
+                strokeLinecap: 'round',
+                targetMarker: {
+                  name: 'classic',
+                  size: 12,
+                  attrs: {
+                    fill: color,
+                  },
+                },
               },
             },
             zIndex: -1,
@@ -124,8 +142,21 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
       }
     });
 
+    graph.on("node:change:size", () => {
+      graph.getEdges().forEach((edge) => {
+        const view = graph.findViewByCell(edge);
+        if (view) (view as any).update();
+      });
+    });
+
 
     graph.on("edge:connected", ({ edge }) => {
+      const view = graph.findViewByCell(edge);
+      const color = getLiveEdgeStrokeColor();
+      edge.attr('line/stroke', color);
+      edge.attr('line/targetMarker/fill', color);
+      if (view) (view as any).update();
+
       if (onConnect) {
         onConnect({
           id: edge.id,
@@ -171,23 +202,6 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
               graphRef.current.grid.update({ color: gridColor } as any);
             } catch {}
 
-
-            const isSmall = c.clientWidth < 640;
-            const targetW = isSmall ? 64 : 96;
-            const targetH = isSmall ? 64 : 96;
-
-
-            graphRef.current.getNodes().forEach((n) => {
-              try {
-                n.resize(targetW, targetH);
-                const view = graphRef.current!.findViewByCell(n);
-                if (view) (view as any).update();
-              } catch (e) {
-
-              }
-            });
-
-
             graphRef.current.getEdges().forEach((e) => {
               try {
                 const view = graphRef.current!.findViewByCell(e);
@@ -213,7 +227,7 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
         graph.dispose();
       }
     };
-  }, [nodeTypes, onConnect, onEdgesChange, onNodesChange, readonly]);
+  }, [nodeTypes, onConnect, onEdgesChange, onNodesChange, readonly, backgroundColor, gridColor, edgeStrokeColor]);
 
 
   useEffect(() => {
@@ -226,11 +240,8 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
       const shapeName = `custom-${node.type}`;
       if (nodeTypes[node.type] && !graph.getCellById(node.id)) {
         try {
-          const cwidth = containerRef.current?.clientWidth || window.innerWidth || 1024;
-          const small = cwidth < 640;
-          const nodeW = small ? 64 : 96;
-          const nodeH = small ? 64 : 96;
-
+          const nodeW = 108;
+          const nodeH = 108;
 
           const rect = containerRef.current?.getBoundingClientRect();
           const centerX = rect ? Math.floor(rect.width / 2 - nodeW / 2) : (node.position?.x ?? 0);
@@ -246,10 +257,10 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
             data: node.data,
             ports: {
               groups: {
-                top: { position: 'top', attrs: { circle: { r: 5, magnet: true, stroke: '#94a3b8', fill: '#fff', strokeWidth: 2 } } },
-                bottom: { position: 'bottom', attrs: { circle: { r: 5, magnet: true, stroke: '#94a3b8', fill: '#fff', strokeWidth: 2 } } },
-                left: { position: 'left', attrs: { circle: { r: 5, magnet: true, stroke: '#94a3b8', fill: '#fff', strokeWidth: 2 } } },
-                right: { position: 'right', attrs: { circle: { r: 5, magnet: true, stroke: '#94a3b8', fill: '#fff', strokeWidth: 2 } } },
+                top: { position: 'top', attrs: { circle: { r: 7, magnet: true, stroke: portStrokeColor, fill: '#fff', strokeWidth: 3 } } },
+                bottom: { position: 'bottom', attrs: { circle: { r: 7, magnet: true, stroke: portStrokeColor, fill: '#fff', strokeWidth: 3 } } },
+                left: { position: 'left', attrs: { circle: { r: 7, magnet: true, stroke: portStrokeColor, fill: '#fff', strokeWidth: 3 } } },
+                right: { position: 'right', attrs: { circle: { r: 7, magnet: true, stroke: portStrokeColor, fill: '#fff', strokeWidth: 3 } } },
               },
               items: [
                 { id: 'port-top', group: 'top' },
@@ -260,6 +271,8 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
             },
           });
 
+          const addedView = graph.findViewByCell(added);
+          if (addedView) (addedView as any).update();
 
           if (typeof node.position?.x !== 'number' || typeof node.position?.y !== 'number') {
             try {
@@ -311,21 +324,17 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
       };
     }
 
-  }, [nodes, edges, nodeTypes, readonly]);
+  }, [nodes, edges, nodeTypes, readonly, portStrokeColor]);
 
 
   useEffect(() => {
     const graph = graphRef.current;
     if (!graph) return;
 
-    const isDarkMode = resolvedTheme === "dark";
-    const edgeStrokeColor = isDarkMode ? "#64748b" : "#94a3b8";
-
     edges.forEach((edge) => {
       if (!graph.getCellById(edge.id)) {
         try {
-
-          graph.addEdge({
+          const addedEdge = graph.addEdge({
             id: edge.id,
             source: edge.source_port ? { cell: edge.source, port: edge.source_port } : edge.source,
             target: edge.target_port ? { cell: edge.target, port: edge.target_port } : edge.target,
@@ -333,34 +342,60 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
             router: { name: 'manhattan' },
             attrs: {
               line: {
+                class: 'tech-edge-line',
                 stroke: edgeStrokeColor,
-                strokeWidth: 2,
+                strokeWidth: 3,
+                strokeLinecap: 'round',
+                targetMarker: {
+                  name: 'classic',
+                  size: 12,
+                  attrs: {
+                    fill: edgeStrokeColor,
+                  },
+                },
               },
             },
           });
+
+          const edgeView = graph.findViewByCell(addedEdge);
+          if (edgeView) (edgeView as any).update();
         } catch (error) {
           console.warn(`Error adding edge ${edge.id}:`, error);
         }
       }
     });
-  }, [edges]);
+  }, [edges, edgeStrokeColor]);
 
 
   useEffect(() => {
     const graph = graphRef.current;
     if (!graph) return;
 
-    const isDarkMode = resolvedTheme === "dark";
-    const backgroundColor = isDarkMode ? "#0f172a" : "#f8fafc";
-    const gridColor = isDarkMode ? "#475569" : "#e2e8f0";
-    const edgeStrokeColor = isDarkMode ? "#64748b" : "#94a3b8";
-
     graph.drawBackground({ color: backgroundColor });
     graph.grid.update({ color: gridColor } as any);
+    if ((graph as any).container) {
+      ((graph as any).container as HTMLElement).style.setProperty("background-color", backgroundColor);
+    }
+    if (containerRef.current) {
+      containerRef.current.style.setProperty("background-color", backgroundColor);
+    }
+
     graph.getEdges().forEach(edge => {
       edge.attr('line/stroke', edgeStrokeColor);
+      edge.attr('line/targetMarker/fill', edgeStrokeColor);
+      const view = graph.findViewByCell(edge);
+      if (view) (view as any).update();
     });
-  }, [resolvedTheme]);
+
+    graph.getNodes().forEach(node => {
+      const ports = (node as any).getPorts?.() || [];
+      ports.forEach((port: any) => {
+        (node as any).portProp?.(port.id, 'attrs/circle/stroke', portStrokeColor);
+      });
+      const view = graph.findViewByCell(node);
+      if (view) (view as any).update();
+    });
+  }, [backgroundColor, gridColor, edgeStrokeColor, portStrokeColor]);
 
   if (isCollapsedViewport) {
     return (
@@ -382,8 +417,40 @@ export default function SchemaCanvas({ nodes = [], edges = [], nodeTypes, onNode
           .x6-graph-svg {
             overflow: visible !important;
           }
+
+          .tech-edge-line {
+            stroke-dasharray: 12 8;
+            stroke-dashoffset: 0;
+            animation: tech-dash 1.3s linear infinite, tech-glow 3.5s ease-in-out infinite alternate;
+            vector-effect: non-scaling-stroke;
+            stroke-opacity: 0.95;
+            filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.45));
+          }
+
+          .dark .tech-edge-line {
+            filter: drop-shadow(0 0 12px rgba(124, 58, 237, 0.55));
+          }
+
+          @keyframes tech-dash {
+            to {
+              stroke-dashoffset: -20;
+            }
+          }
+
+          @keyframes tech-glow {
+            from {
+              opacity: 0.85;
+            }
+            to {
+              opacity: 1;
+            }
+          }
         `}</style>
-        <div ref={containerRef} className="w-full h-full" />
+        <div
+          ref={containerRef}
+          className="w-full h-full"
+          style={{ backgroundColor }}
+        />
       </div>
     </>
   );

@@ -53,6 +53,28 @@ interface ArchitectureStep2Props {
   ) => Promise<void> | void;
 }
 
+const getDefaultNodePosition = (type: string, nodes: CanvasNodeData[]) => {
+  const count = nodes.filter((node) => node.type === type).length;
+
+  if (type === "user") {
+    return { x: 60 + count * 120, y: 80 };
+  }
+
+  if (type.startsWith("mvc-")) {
+    return { x: 80 + count * 120, y: 120 };
+  }
+
+  if (type.startsWith("clean-")) {
+    return { x: 80 + (count % 2) * 160, y: 260 + Math.floor(count / 2) * 140 };
+  }
+
+  if (type.startsWith("hex-")) {
+    return { x: 140 + (count % 3) * 140, y: 100 + Math.floor(count / 3) * 150 };
+  }
+
+  return { x: 220 + (count % 3) * 120, y: 200 + Math.floor(count / 3) * 120 };
+};
+
 const architectureNodeTypes = {
   user: UserNode,
   "mvc-view": MVCViewNode,
@@ -93,17 +115,15 @@ export const ArchitectureStep2: React.FC<ArchitectureStep2Props> = ({
 
   const handleAddNode = useCallback((type: string, label: string) => {
     const id = crypto.randomUUID();
+    const position = getDefaultNodePosition(type, nodes);
     const newNode: CanvasNodeData = {
       id,
       type,
-      position: {
-        x: 220 + Math.random() * 120,
-        y: 180 + Math.random() * 120,
-      },
+      position,
       data: { label },
     };
     setNodes((current) => current.concat(newNode));
-  }, []);
+  }, [nodes]);
 
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {

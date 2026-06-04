@@ -63,19 +63,39 @@ export default function SchemeEditor({
   }, []);
 
 
+  const getDefaultNodePosition = (type: string, nodes: CanvasNodeData[]) => {
+    const count = nodes.filter((node) => node.type === type).length;
+
+    if (type === "user") {
+      return { x: 60 + count * 120, y: 80 };
+    }
+
+    if (type.startsWith("mvc-")) {
+      return { x: 80 + count * 120, y: 120 };
+    }
+
+    if (type.startsWith("clean-")) {
+      return { x: 80 + (count % 2) * 160, y: 260 + Math.floor(count / 2) * 140 };
+    }
+
+    if (type.startsWith("hex-")) {
+      return { x: 140 + (count % 3) * 140, y: 100 + Math.floor(count / 3) * 150 };
+    }
+
+    return { x: 220 + (count % 3) * 120, y: 200 + Math.floor(count / 3) * 120 };
+  };
+
   const handleAddNodeClick = useCallback((type: string, label: string) => {
     const id = crypto.randomUUID();
+    const position = getDefaultNodePosition(type, nodes);
     const newNode: CanvasNodeData = {
       id,
       type,
-      position: {
-        x: 250 + Math.random() * 100,
-        y: 200 + Math.random() * 100,
-      },
+      position,
       data: { label },
     };
     setNodes((nds) => nds.concat(newNode));
-  }, []);
+  }, [nodes]);
 
 
   const onDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
