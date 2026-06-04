@@ -1,76 +1,119 @@
 # Archify Frontend
 
-Archify Frontend is a modern web application designed for architectural visualization and diagramming. Built with Next.js and powered by AntV X6, it provides a robust, interactive canvas for creating and managing architectural graphs and models.
+Archify Frontend is the user-facing application for Archify. It is a Next.js project built with TypeScript, designed to provide a responsive and interactive interface for designing software architecture diagrams.
 
-## 🚀 Features
+## Overview
 
-- **Interactive Diagramming**: Leverages `@antv/x6` for advanced node-based graph rendering and diagramming.
-- **Modern Framework**: Built on [Next.js](https://nextjs.org/) (App Router/Pages) for optimal performance and server-side rendering capabilities.
-- **Styling & UI**: Styled with modern CSS utilizing [Tailwind CSS v4](https://tailwindcss.com/) for rapid, utility-first design.
-- **Icons**: Uses `lucide-react` and `devicon` for clean, scalable, and recognizable UI icons.
-- **Theming**: Supports light and dark mode switching via `next-themes`.
-- **Type Safety**: Fully written in TypeScript for an excellent developer experience and code reliability.
+The frontend offers:
 
-## 🛠️ Tech Stack
+- an interactive diagram editor based on `@antv/x6`
+- responsive UI components built with Tailwind CSS
+- client-side authentication and API integration
+- support for light/dark mode via `next-themes`
+- a modular component structure for scalability and maintenance
 
-- **Framework**: Next.js 16 / React 19
-- **Diagramming Engine**: AntV X6 (`@antv/x6`, `@antv/x6-react-shape`)
-- **Styling**: Tailwind CSS
-- **Language**: TypeScript
-- **Icons**: Lucide React & Devicon
+## Technology stack
 
-## 📦 Getting Started
+- **Next.js 16**
+- **React 19**
+- **TypeScript**
+- **Tailwind CSS v4**
+- **AntV X6** (`@antv/x6`, `@antv/x6-react-shape`)
+- **Theme handling**: `next-themes`
+- **Icons**: `lucide-react`, `devicon`
+
+## Project structure
+
+```text
+archify-frontend/
+├── src/
+│   ├── app/              # Next.js app router pages and layouts
+│   ├── components/       # Reusable UI components
+│   ├── core/             # API clients, context, types, utilities
+│   ├── hooks/            # Custom React hooks
+│   ├── lib/              # Shared route definitions and libraries
+│   ├── public/           # Static assets
+│   └── types/            # TypeScript declarations
+├── next.config.ts
+├── package.json
+├── tailwind.config.ts
+└── tsconfig.json
+```
+
+## Setup
 
 ### Prerequisites
 
-Ensure you have Node.js installed (LTS recommended).
+- Node.js (recommended LTS)
+- npm
 
-### Installation
-
-1. Clone the repository and navigate to the project directory:
+### Install dependencies
 
 ```bash
 cd archify-frontend
-```
-
-2. Install the dependencies:
-
-```bash
 npm install
 ```
 
-## 💻 Development
+## Configuration
 
-To start the development server:
+The frontend requires a backend API URL to operate. Set one of the following environment variables:
+
+- `API_URL`
+- `NEXT_PUBLIC_API_URL`
+
+The application uses an internal Next.js proxy under `/api` to forward requests to the backend and attach the authentication token stored as `auth_token` in cookies.
+
+## Development
+
+Start the development server:
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000` in your browser.
 
-### Linting and Formatting
+## Scripts
 
-We maintain strict coding standards. To check the project for linting errors using ESLint:
+- `npm run dev` — start local development server
+- `npm run build` — create production build
+- `npm run start` — run production build
+- `npm run lint` — run ESLint analysis
 
-```bash
-npm run lint
-```
+## Deployment
 
-## 🏗️ Build for Production
-
-To create an optimized production build:
+1. Build the application:
 
 ```bash
 npm run build
 ```
 
-And to start the production server:
+2. Run the optimized production server:
 
 ```bash
 npm run start
 ```
 
-## 📄 License
+## Authentication and routing
+
+Authentication is managed through an `auth_token` cookie. Protected areas are enforced by middleware, including:
+
+- `/dashboard`
+- `/admin`
+- `/profile`
+- `/settings`
+
+Unauthenticated users are redirected to the home page with the login flow.
+
+## Notes
+
+This frontend is intended to work alongside the `archify-backend` API. The backend must provide:
+
+- authentication endpoints
+- project and architecture persistence
+- image upload and storage support
+- authorization for admin and user roles
+
+## License
 
 This project is licensed under the MIT License.
