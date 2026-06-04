@@ -34,7 +34,7 @@ export const useImage = () => {
         }
     }, []);
 
-    const createImage = useCallback(async (file: File, usage_type: string) => {
+    const createImage = useCallback(async (file: File, usage_type: string, userId?: string) => {
         if (!user) return;
         Promise.resolve().then(() => {
             setLoading(true);
@@ -45,7 +45,8 @@ export const useImage = () => {
         formData.append("image", file);
 
         try {
-            const endpoint = `/images?usage_type=${encodeURIComponent(usage_type)}`;
+            const targetId = userId || user.id;
+            const endpoint = `/images?usage_type=${encodeURIComponent(usage_type)}&user_id=${encodeURIComponent(targetId)}`;
             const result = await apiClient.post<ImageType>(endpoint, formData);
             setImages((prevImages) => [...prevImages, result]);
             return result;

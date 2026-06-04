@@ -85,7 +85,7 @@ export const AdminUserForm = ({ user, onCompleted }: AdminUserFormProps) => {
 
             let avatarId = user?.avatar;
             if (avatarFile) {
-                const imageRes = await createImage(avatarFile, "avatar");
+                const imageRes = await createImage(avatarFile, "avatar", String(targetUserId));
                 if (imageRes?.id) {
                     avatarId = imageRes.id as User["avatar"];
                 }
