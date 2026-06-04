@@ -85,11 +85,15 @@ export const Navbar: FC = () => {
             )}
           </div>
 
+          {/* Center menu (desktop) */}
+          <div className="hidden md:flex flex-1 justify-center">
+            {isAuthenticated && <NavMenu />}
+          </div>
+
           {/* Right side (desktop) */}
-          <div className="ml-auto hidden md:flex items-center gap-2 sm:gap-3">
+          <div className="hidden md:flex items-center gap-2 sm:gap-3">
             {isAuthenticated ? (
               <>
-                <NavMenu />
                 <ProfileMenu />
                 {/* Theme toggle */}
                 <button
