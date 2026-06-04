@@ -4,7 +4,7 @@
 import { FC, useEffect, useState } from "react";
 import { useAuth } from "@/core/context/AuthContext";
 import { useImage } from "@/hooks/useImage";
-import { User, LogOut } from "lucide-react";
+import { User, LogOut, Settings } from "lucide-react";
 import Link from "next/link";
 
 interface ProfileDropdownProps {
