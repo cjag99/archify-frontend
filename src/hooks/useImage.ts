@@ -43,10 +43,12 @@ export const useImage = () => {
 
         const formData = new FormData();
         formData.append("image", file);
+        
+        const targetId = userId || user.id;
+        formData.append("target_user_id", targetId);
 
         try {
-            const targetId = userId || user.id;
-            const endpoint = `/images?usage_type=${encodeURIComponent(usage_type)}&user_id=${encodeURIComponent(targetId)}`;
+            const endpoint = `/images?usage_type=${encodeURIComponent(usage_type)}`;
             const result = await apiClient.post<ImageType>(endpoint, formData);
             setImages((prevImages) => [...prevImages, result]);
             return result;
