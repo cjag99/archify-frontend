@@ -38,8 +38,7 @@ export const ProfileView = ({
       setPasswordData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handlePasswordSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
+  const handlePasswordSubmit = async () => {
       if (!passwordData.password || passwordData.password !== passwordData.confirmPassword) {
           alert('Passwords do not match or are empty.');
           return;
@@ -71,7 +70,7 @@ export const ProfileView = ({
           );
       }
       return (
-          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+          <div className="space-y-4">
               <Input
                   label="New Password"
                   name="password"
@@ -79,7 +78,6 @@ export const ProfileView = ({
                   placeholder="Enter new password"
                   value={passwordData.password}
                   onChange={handlePasswordChange}
-                  required
               />
               <Input
                   label="Confirm Password"
@@ -88,12 +86,12 @@ export const ProfileView = ({
                   placeholder="Confirm new password"
                   value={passwordData.confirmPassword}
                   onChange={handlePasswordChange}
-                  required
               />
-              <div className="flex flex-col sm:flex-row gap-3 pt-4">
+              <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:items-center sm:justify-start">
                   <Button 
-                      type="submit" 
+                      type="button" 
                       variant="primary" 
+                      onClick={handlePasswordSubmit}
                       className="w-full sm:w-auto"
                   >
                       Update Password
@@ -110,7 +108,7 @@ export const ProfileView = ({
                       Cancel
                   </Button>
               </div>
-          </form>
+          </div>
       );
   };
 
