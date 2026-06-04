@@ -147,7 +147,7 @@ export function ArchitectureView({ architectureId, hideActions = false }: Archit
         {!hideActions && <BackLink href={ROUTES.architectures} label="Back to Architectures" />}
       </div>
 
-      <div className="max-w-6xl mx-auto overflow-hidden glass-card border border-white/60 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:bg-slate-900/60 dark:border-slate-700/60">
+      <div className="max-w-6xl mx-auto overflow-hidden glass-card border border-white/60 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:bg-slate-950/80 dark:border-slate-700/80">
         {}
         <div className="relative h-32 md:h-44 w-full bg-linear-to-br from-brand/10 via-brand/5 to-transparent overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
@@ -200,12 +200,12 @@ export function ArchitectureView({ architectureId, hideActions = false }: Archit
 
           {}
           {hasSchema ? (
-            <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm dark:bg-slate-900/40 dark:border-slate-700/50">
+            <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm dark:bg-slate-950/70 dark:border-slate-700/80">
               <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
                 <div className="w-2 h-8 bg-brand rounded-full"></div>
                 Schema
               </h3>
-              <div className="w-full h-[350px] sm:h-[500px] md:h-150 border border-slate-200 rounded-[2rem] shadow-inner overflow-hidden bg-slate-50/50 dark:bg-slate-900/50 relative pointer-events-none">
+              <div className="w-full h-[350px] sm:h-[500px] md:h-150 border border-slate-700/60 rounded-[2rem] shadow-inner overflow-hidden bg-slate-50/50 dark:bg-slate-950/70 relative pointer-events-none">
                 <SchemaCanvas
                   nodes={schema?.nodes || []}
                   edges={schema?.edges || []}
@@ -216,7 +216,7 @@ export function ArchitectureView({ architectureId, hideActions = false }: Archit
             </div>
           ) : (
             !loading && (
-              <div className="p-12 bg-white/40 border border-white/50 rounded-3xl text-center shadow-sm dark:bg-slate-900/40 dark:border-slate-700/50">
+              <div className="p-12 bg-white/40 border border-white/50 rounded-3xl text-center shadow-sm dark:bg-slate-950/70 dark:border-slate-700/80">
                 <p className="text-slate-500 font-medium text-lg dark:text-slate-300">
                   No schema available for this architecture yet.
                 </p>

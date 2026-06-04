@@ -217,7 +217,7 @@ export function PatternView({ patternId, hideActions = false }: PatternViewProps
         {!hideActions && <BackLink href={ROUTES.patterns} label="Back to Patterns" />}
       </div>
 
-      <div className="max-w-6xl mx-auto overflow-hidden bg-white/60 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 transition-all duration-300 dark:bg-slate-900/60 dark:border-slate-700/60">
+      <div className="max-w-6xl mx-auto overflow-hidden bg-white/60 backdrop-blur-2xl rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 transition-all duration-300 dark:bg-slate-950/80 dark:border-slate-700/80">
         {}
         <div className="relative h-32 md:h-44 w-full bg-linear-to-br from-brand/10 via-brand/5 to-transparent overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
@@ -275,7 +275,7 @@ export function PatternView({ patternId, hideActions = false }: PatternViewProps
                 <div className="w-2 h-8 bg-brand rounded-full"></div>
                 Schema
               </h3>
-              <div className="w-full h-[350px] sm:h-[500px] md:h-150 border border-slate-200 rounded-[2rem] shadow-inner overflow-hidden bg-slate-50/50 dark:bg-slate-900/50 relative pointer-events-none">
+              <div className="w-full h-[350px] sm:h-[500px] md:h-150 border border-slate-700/60 rounded-[2rem] shadow-inner overflow-hidden bg-slate-50/50 dark:bg-slate-950/70 relative pointer-events-none">
                 <SchemaCanvas
                   nodes={patternSchema?.nodes || []}
                   edges={patternSchema?.edges || []}
@@ -286,7 +286,7 @@ export function PatternView({ patternId, hideActions = false }: PatternViewProps
             </div>
           ) : (
             !loading && (
-              <div className="p-12 bg-white/40 border border-white/50 rounded-3xl text-center shadow-sm dark:bg-slate-900/40 dark:border-slate-700/50">
+              <div className="p-12 bg-white/40 border border-white/50 rounded-3xl text-center shadow-sm dark:bg-slate-950/70 dark:border-slate-700/80">
                 <p className="text-slate-500 font-medium text-lg dark:text-slate-300">
                   No schema available for this pattern yet.
                 </p>
@@ -295,19 +295,19 @@ export function PatternView({ patternId, hideActions = false }: PatternViewProps
           )}
 
           {pattern?.image_id && imageObj && (
-            <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm dark:bg-slate-900/40 dark:border-slate-700/50">
+            <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm dark:bg-slate-950/70 dark:border-slate-700/80">
               <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
                 <div className="w-2 h-8 bg-brand rounded-full"></div>
                 Graphic Representation
               </h3>
-              <div className="w-full relative h-100 md:h-150 rounded-[2rem] shadow-inner overflow-hidden border border-slate-200 bg-white dark:bg-slate-900/50 dark:border-slate-700">
+              <div className="w-full relative h-100 md:h-150 rounded-[2rem] shadow-inner overflow-hidden border border-slate-700/60 bg-white dark:bg-slate-950/80 dark:border-slate-700">
                 <Image src={imageObj.url} alt={pattern.name} fill className="object-contain" unoptimized />
               </div>
             </div>
           )}
           
           {}
-          <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm">
+          <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm dark:bg-slate-950/70 dark:border-slate-700/80">
             <div className="flex items-center justify-between">
               <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
                 <div className="w-2 h-8 bg-brand rounded-full"></div>
@@ -319,7 +319,7 @@ export function PatternView({ patternId, hideActions = false }: PatternViewProps
                 <div className="relative z-20">
                   <button 
                     onClick={() => setIsSelectOpen(!isSelectOpen)}
-                    className="flex items-center gap-3 px-5 py-2.5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-brand transition-all active:scale-95"
+                    className="flex items-center gap-3 px-5 py-2.5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-brand transition-all active:scale-95 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700"
                   >
                     {selectedLang && selectedLogoUrl && (
                       <LanguageLogo src={selectedLogoUrl} alt={selectedLang.name} size={20} />
@@ -331,7 +331,7 @@ export function PatternView({ patternId, hideActions = false }: PatternViewProps
                   </button>
 
                   {isSelectOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-100 rounded-xl shadow-lg overflow-hidden py-1">
+                    <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-100 rounded-xl shadow-lg overflow-hidden py-1 dark:bg-slate-950 dark:border-slate-700">
                       {patternCodes.map((pc, idx) => {
                         const lang = codeLanguages.find(l => String(l.id) === String(pc.code_id));
                         return (
@@ -378,7 +378,7 @@ export function PatternView({ patternId, hideActions = false }: PatternViewProps
                 </div>
               </div>
             ) : (
-              <div className="p-8 bg-white/40 border border-white/50 rounded-2xl text-center shadow-sm dark:bg-slate-900/40 dark:border-slate-700/50">
+              <div className="p-8 bg-white/40 border border-white/50 rounded-2xl text-center shadow-sm dark:bg-slate-950/70 dark:border-slate-700/80">
                 <p className="text-slate-500 font-medium text-lg dark:text-slate-300">
                   {codesError || languagesError
                     ? "An error occurred or you are not authorized to view code snippets." 
