@@ -45,14 +45,16 @@ export const ProfileView = ({
           return;
       }
       try {
-          if (currentUser?.id) {
-              // @ts-ignore - userService has custom method
-              await (userService as any).updatePassword(String(currentUser.id), { password: passwordData.password });
-              // Logout to force re-login with new credentials
-              await logout();
+          if (!currentUser?.id) {
+              throw new Error("User ID not found");
           }
+          // @ts-ignore - userService has custom method
+          await (userService as any).updatePassword(String(currentUser.id), { password: passwordData.password });
+          alert('Password updated successfully. Please log in again.');
+          // Logout to force re-login with new credentials
+          await logout();
       } catch (err: any) {
-          console.error('Password update error', err);
+          console.error('Password update error:', err);
           alert(err.message || 'Failed to update password');
       }
   };
@@ -70,26 +72,15 @@ export const ProfileView = ({
       }
       return (
           <form onSubmit={handlePasswordSubmit} className="space-y-4">
-              <div className="flex flex-col sm:flex-row gap-4">
-                  <Input
-                      label="New Password"
-                      name="password"
-                      type="password"
-                      placeholder="Enter new password"
-                      value={passwordData.password}
-                      onChange={handlePasswordChange}
-                      required
-                      className="flex-1"
-                  />
-                  <div className="flex gap-2 sm:pt-7">
-                      <Button type="submit" variant="primary" className="flex-1 sm:flex-none">
-                          Update Password
-                      </Button>
-                      <Button type="button" variant="secondary" onClick={() => {setShowPasswordEdit(false); setPasswordData({ password: '', confirmPassword: '' });}} className="flex-1 sm:flex-none">
-                          Cancel
-                      </Button>
-                  </div>
-              </div>
+              <Input
+                  label="New Password"
+                  name="password"
+                  type="password"
+                  placeholder="Enter new password"
+                  value={passwordData.password}
+                  onChange={handlePasswordChange}
+                  required
+              />
               <Input
                   label="Confirm Password"
                   name="confirmPassword"
@@ -99,6 +90,26 @@ export const ProfileView = ({
                   onChange={handlePasswordChange}
                   required
               />
+              <div className="flex flex-col sm:flex-row gap-3 pt-4">
+                  <Button 
+                      type="submit" 
+                      variant="primary" 
+                      className="w-full sm:w-auto"
+                  >
+                      Update Password
+                  </Button>
+                  <Button 
+                      type="button" 
+                      variant="secondary" 
+                      onClick={() => {
+                          setShowPasswordEdit(false); 
+                          setPasswordData({ password: '', confirmPassword: '' });
+                      }} 
+                      className="w-full sm:w-auto"
+                  >
+                      Cancel
+                  </Button>
+              </div>
           </form>
       );
   };
