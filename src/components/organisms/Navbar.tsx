@@ -89,6 +89,7 @@ export const Navbar: FC = () => {
           <div className="ml-auto hidden md:flex items-center gap-2 sm:gap-3">
             {isAuthenticated ? (
               <>
+                <NavMenu />
                 <ProfileMenu />
                 {/* Theme toggle */}
                 <button
