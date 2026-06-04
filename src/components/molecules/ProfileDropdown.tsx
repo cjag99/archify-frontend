@@ -4,7 +4,7 @@
 import { FC, useEffect, useState } from "react";
 import { useAuth } from "@/core/context/AuthContext";
 import { useImage } from "@/hooks/useImage";
-import { User, Settings, LogOut } from "lucide-react";
+import { User, LogOut } from "lucide-react";
 import Link from "next/link";
 
 interface ProfileDropdownProps {
@@ -64,15 +64,6 @@ export const ProfileDropdown: FC<ProfileDropdownProps> = ({ onClose }) => {
                     <span>My Profile</span>
                 </Link>
                 
-                <Link
-                    href="/settings"
-                    onClick={() => onClose()}
-                    className="flex items-center gap-3 px-3 py-2 text-sm text-slate-600 dark:text-slate-400 font-semibold rounded-xl hover:bg-brand/5 dark:hover:bg-brand/10 hover:text-brand transition-all duration-150 group"
-                >
-                    <Settings className="w-4 h-4 shrink-0 text-slate-400 group-hover:text-brand transition-colors" />
-                    <span>Settings</span>
-                </Link>
-
                 {user.is_authorized && (
                     <Link
                         href="/admin"

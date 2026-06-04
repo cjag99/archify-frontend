@@ -7,7 +7,7 @@ import { useAuth } from "@/core/context/AuthContext";
 import { useImage } from "@/hooks/useImage";
 import { useTheme } from "@/core/context/ThemeContext";
 import Image from "next/image";
-import { Moon, Sun, Settings, LogOut } from "lucide-react";
+import {  Settings, LogOut } from "lucide-react";
 import Link from "next/link";
 import { NavMenu } from "../molecules/NavMenu";
 
