@@ -44,8 +44,9 @@ export const useImage = () => {
         const formData = new FormData();
         formData.append("image", file);
         
-        const targetId = userId || user.id;
-        formData.append("target_user_id", targetId);
+        if (userId) {
+            formData.append("target_user_id", userId);
+        }
 
         try {
             const endpoint = `/images?usage_type=${encodeURIComponent(usage_type)}`;

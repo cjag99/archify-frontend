@@ -271,7 +271,7 @@ export function PatternView({ patternId, hideActions = false }: PatternViewProps
           {}
           {hasSchema ? (
             <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm dark:bg-slate-900/40 dark:border-slate-700/50">
-              <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
+              <h3 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-3">
                 <div className="w-2 h-8 bg-brand rounded-full"></div>
                 Schema
               </h3>
@@ -296,7 +296,7 @@ export function PatternView({ patternId, hideActions = false }: PatternViewProps
 
           {pattern?.image_id && imageObj && (
             <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm dark:bg-slate-950/70 dark:border-slate-700/80">
-              <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
+              <h3 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-3">
                 <div className="w-2 h-8 bg-brand rounded-full"></div>
                 Graphic Representation
               </h3>
@@ -309,7 +309,7 @@ export function PatternView({ patternId, hideActions = false }: PatternViewProps
           {}
           <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm dark:bg-slate-950/70 dark:border-slate-700/80">
             <div className="flex items-center justify-between">
-              <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
+              <h3 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-3">
                 <div className="w-2 h-8 bg-brand rounded-full"></div>
                 Code Snippets
               </h3>
@@ -319,12 +319,12 @@ export function PatternView({ patternId, hideActions = false }: PatternViewProps
                 <div className="relative z-20">
                   <button 
                     onClick={() => setIsSelectOpen(!isSelectOpen)}
-                    className="flex items-center gap-3 px-5 py-2.5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-brand transition-all active:scale-95 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700"
+                    className="flex items-center gap-3 px-5 py-2.5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-brand transition-all active:scale-95 dark:bg-brand/80 dark:text-white dark:border-brand/70"
                   >
                     {selectedLang && selectedLogoUrl && (
                       <LanguageLogo src={selectedLogoUrl} alt={selectedLang.name} size={20} />
                     )}
-                    <span className="font-bold text-slate-700 text-sm">
+                    <span className="font-bold text-slate-700 text-sm dark:text-white">
                       {selectedLang ? selectedLang.name : "Select Language"}
                     </span>
                     <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${isSelectOpen ? 'rotate-180' : ''}`} />

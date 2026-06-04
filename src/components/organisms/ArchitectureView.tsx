@@ -201,7 +201,7 @@ export function ArchitectureView({ architectureId, hideActions = false }: Archit
           {}
           {hasSchema ? (
             <div className="space-y-6 bg-white/40 p-6 md:p-8 rounded-3xl border border-white/50 shadow-sm dark:bg-slate-950/70 dark:border-slate-700/80">
-              <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
+              <h3 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-3">
                 <div className="w-2 h-8 bg-brand rounded-full"></div>
                 Schema
               </h3>
