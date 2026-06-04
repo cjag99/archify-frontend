@@ -54,7 +54,7 @@ export function PatternView({ patternId, hideActions = false }: PatternViewProps
   const router = useRouter();
   const { loading: authLoading, user } = useAuth();
   const isAuthorized = user?.is_authorized || user?.role === "admin";
-  const canLoadCodeLanguages = Boolean(isAuthorized);
+  const canLoadCodeLanguages = Boolean(user);
   const { codeLanguages, fetchCodeLanguage, error: languagesError, loading: languagesLoading } = useCodeLanguage({
     autoFetch: canLoadCodeLanguages,
     logErrors: canLoadCodeLanguages,
@@ -152,7 +152,7 @@ export function PatternView({ patternId, hideActions = false }: PatternViewProps
     lang ? (lang.icon_url ?? languageImages[lang.id]) : undefined;
 
   const selectedSnippet = (Array.isArray(patternCodes) && patternCodes.length > 0) ? patternCodes[selectedSnippetIndex] : null;
-  const selectedLang = selectedSnippet ? codeLanguages.find(l => l.id === selectedSnippet.code_id) : null;
+  const selectedLang = selectedSnippet ? codeLanguages.find(l => String(l.id) === String(selectedSnippet.code_id)) : null;
   const selectedLogoUrl = getLogoUrl(selectedLang);
   const patternSchema = pattern?.base_structure as { 
     nodes?: any[]; 
@@ -333,7 +333,7 @@ export function PatternView({ patternId, hideActions = false }: PatternViewProps
                   {isSelectOpen && (
                     <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-100 rounded-xl shadow-lg overflow-hidden py-1">
                       {patternCodes.map((pc, idx) => {
-                        const lang = codeLanguages.find(l => l.id === pc.code_id);
+                        const lang = codeLanguages.find(l => String(l.id) === String(pc.code_id));
                         return (
                           <button
                             key={idx}
