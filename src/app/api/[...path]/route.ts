@@ -39,7 +39,7 @@ async function handleProxy(req: NextRequest) {
         });
 
         if (response.status === 204) {
-            return NextResponse.json({}, { status: response.status });
+            return new NextResponse(null, { status: 204 });
         }
 
         const responseContentType = response.headers.get("content-type") ?? "";
