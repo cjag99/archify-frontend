@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { User } from "@/core/types/auth";
 import { userService } from '@/core/api/users.service';
+import Modal from "@/components/organisms/Modal";
 import { Input } from "../atoms/Input";
 import { Button } from "../atoms/Button";
 import { FileInput } from "../molecules/FileInput";
@@ -29,6 +30,8 @@ export const ProfileView = ({
   const { user: authUser, logout } = useAuth();
   const [showPasswordEdit, setShowPasswordEdit] = useState(false);
   const [passwordData, setPasswordData] = useState({ password: '', confirmPassword: '' });
+  const [messageModal, setMessageModal] = useState<null | { title: string; message: string; type: 'success' | 'error' }>(null);
+  const [logoutAfterClose, setLogoutAfterClose] = useState(false);
 
   const currentUser = propUser || authUser;
   const isMyAccount = !propUser || propUser.id === authUser?.id;
@@ -40,7 +43,7 @@ export const ProfileView = ({
 
   const handlePasswordSubmit = async () => {
       if (!passwordData.password || passwordData.password !== passwordData.confirmPassword) {
-          alert('Passwords do not match or are empty.');
+          setMessageModal({ title: 'Password Error', message: 'Passwords do not match or are empty.', type: 'error' });
           return;
       }
       try {
@@ -49,12 +52,19 @@ export const ProfileView = ({
           }
           // @ts-ignore - userService has custom method
           await (userService as any).updatePassword(String(currentUser.id), { password: passwordData.password });
-          alert('Password updated successfully. Please log in again.');
-          // Logout to force re-login with new credentials
-          await logout();
+          setLogoutAfterClose(true);
+          setMessageModal({ title: 'Password Updated', message: 'Your password was updated successfully. Please log in again.', type: 'success' });
       } catch (err: any) {
           console.error('Password update error:', err);
-          alert(err.message || 'Failed to update password');
+          setMessageModal({ title: 'Update Failed', message: err.message || 'Failed to update password', type: 'error' });
+      }
+  };
+
+  const closeMessageModal = async () => {
+      setMessageModal(null);
+      if (logoutAfterClose) {
+          setLogoutAfterClose(false);
+          await logout();
       }
   };
 
@@ -64,7 +74,12 @@ export const ProfileView = ({
       
       if (!showPasswordEdit) {
           return (
-              <Button type="button" variant="secondary" onClick={() => setShowPasswordEdit(true)} className="w-full sm:w-auto">
+              <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setShowPasswordEdit(true)}
+                  className="w-full sm:w-auto bg-slate-700 text-white hover:bg-slate-600 dark:bg-slate-700 dark:hover:bg-slate-600"
+              >
                   Change Password
               </Button>
           );
@@ -103,7 +118,7 @@ export const ProfileView = ({
                           setShowPasswordEdit(false); 
                           setPasswordData({ password: '', confirmPassword: '' });
                       }} 
-                      className="w-full sm:w-auto"
+                      className="w-full sm:w-auto bg-slate-600 text-white hover:bg-slate-500 dark:bg-slate-600 dark:hover:bg-slate-500"
                   >
                       Cancel
                   </Button>
@@ -178,6 +193,17 @@ export const ProfileView = ({
 
   return (
     <div className="w-full max-w-4xl mx-auto overflow-y-auto max-h-screen bg-white/30 dark:bg-slate-900/30 backdrop-blur-2xl rounded-[2rem] border border-white/20 dark:border-slate-700/20 shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_12px_50px_rgba(0,0,0,0.08)]">
+      {messageModal && (
+        <Modal isOpen={!!messageModal} onClose={closeMessageModal}>
+          <div className="space-y-4 text-center">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{messageModal.title}</h2>
+            <p className="text-slate-600 dark:text-slate-300">{messageModal.message}</p>
+            <Button type="button" variant="primary" onClick={closeMessageModal} className="mx-auto mt-4">
+              OK
+            </Button>
+          </div>
+        </Modal>
+      )}
       {}
       <div className="relative h-24 sm:h-32 md:h-44 w-full bg-linear-to-br from-brand/10 via-brand/5 to-transparent overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
