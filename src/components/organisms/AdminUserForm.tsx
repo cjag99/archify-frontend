@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { User, RegisterCredentials } from "@/core/types/auth";
 import { authService } from "@/core/api/auth.service";
-import { userService } from "@/core/api/users.service";
+import { userService, updateUserAdmin } from "@/core/api/users.service";
+
 import { useImage } from "@/hooks/useImage";
 import { Input } from "../atoms/Input";
 import { Button } from "../atoms/Button";
@@ -91,15 +92,14 @@ export const AdminUserForm = ({ user, onCompleted }: AdminUserFormProps) => {
             }
 
             if (targetUserId) {
-                await userService.update(String(targetUserId), {
+                await updateUserAdmin(String(targetUserId), {
                     first_name: formData.first_name,
                     last_name: formData.last_name,
                     username: formData.username,
                     email: formData.email,
                     is_authorized: formData.is_authorized,
                     avatar: avatarId,
-                });
-            }
+                });            }
 
             if (isEditMode && formData.password) {
                 await (userService as any).updatePassword(String(targetUserId), { password: formData.password });
