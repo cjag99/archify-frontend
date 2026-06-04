@@ -31,6 +31,7 @@ export const ProfileView = ({
   const [passwordData, setPasswordData] = useState({ password: '', confirmPassword: '' });
 
   const currentUser = propUser || authUser;
+  const isMyAccount = !propUser || propUser.id === authUser?.id;
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
@@ -58,7 +59,8 @@ export const ProfileView = ({
 
   // render password edit section conditionally
   const renderPasswordSection = () => {
-      if (!currentUser || currentUser.is_authorized) return null; // admins don't need this extra UI
+      if (!isMyAccount) return null;
+      
       if (!showPasswordEdit) {
           return (
               <Button type="button" variant="secondary" onClick={() => setShowPasswordEdit(true)} className="w-full sm:w-auto">
@@ -67,33 +69,36 @@ export const ProfileView = ({
           );
       }
       return (
-          <form onSubmit={handlePasswordSubmit} className="space-y-4 mt-4">
-              <Input
-                  label="New Password"
-                  name="password"
-                  type="password"
-                  placeholder="********"
-                  value={passwordData.password}
-                  onChange={handlePasswordChange}
-                  required
-              />
+          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+              <div className="flex flex-col sm:flex-row gap-4">
+                  <Input
+                      label="New Password"
+                      name="password"
+                      type="password"
+                      placeholder="Enter new password"
+                      value={passwordData.password}
+                      onChange={handlePasswordChange}
+                      required
+                      className="flex-1"
+                  />
+                  <div className="flex gap-2 sm:pt-7">
+                      <Button type="submit" variant="primary" className="flex-1 sm:flex-none">
+                          Update Password
+                      </Button>
+                      <Button type="button" variant="secondary" onClick={() => {setShowPasswordEdit(false); setPasswordData({ password: '', confirmPassword: '' });}} className="flex-1 sm:flex-none">
+                          Cancel
+                      </Button>
+                  </div>
+              </div>
               <Input
                   label="Confirm Password"
                   name="confirmPassword"
                   type="password"
-                  placeholder="********"
+                  placeholder="Confirm new password"
                   value={passwordData.confirmPassword}
                   onChange={handlePasswordChange}
                   required
               />
-              <div className="flex gap-2">
-                  <Button type="submit" variant="primary" className="flex-1">
-                      Update Password
-                  </Button>
-                  <Button type="button" variant="danger" onClick={() => setShowPasswordEdit(false)} className="flex-1">
-                      Cancel
-                  </Button>
-              </div>
           </form>
       );
   };
@@ -310,6 +315,16 @@ export const ProfileView = ({
               <div className="w-14 h-8 bg-slate-200/80 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-linear-to-r peer-checked:from-brand peer-checked:to-brand/80 shadow-inner group-hover:shadow-md transition-all duration-300"></div>
             </label>
           </div>
+          
+          {isMyAccount && (
+            <div className="bg-blue-50/50 p-6 rounded-3xl border border-blue-100 dark:bg-blue-900/20 dark:border-blue-800">
+              <h4 className="font-bold text-slate-800 dark:text-slate-100 mb-4">
+                Security
+              </h4>
+              {renderPasswordSection()}
+            </div>
+          )}
+
           {!hideActions && (
             <div className="flex flex-col sm:flex-row items-center justify-between pt-8 gap-4">
               <Button 
