@@ -3,7 +3,7 @@
 
 import { FC, useState, FormEvent } from "react";
 import { Button } from "@/components/atoms/Button";
-import { Input } from "@/components/atoms/Input";
+import { Input } from "@/components/molecules/Input";
 import { Textarea } from "@/components/atoms/Textarea";
 
 interface ArchitectureStep1Props {

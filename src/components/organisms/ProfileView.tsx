@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import { User } from "@/core/types/auth";
 import { userService } from '@/core/api/users.service';
 import Modal from "@/components/organisms/Modal";
-import { Input } from "../atoms/Input";
+import { Input } from "../molecules/Input";
 import { Button } from "../atoms/Button";
 import { FileInput } from "../molecules/FileInput";
 import { useAuth } from "@/core/context/AuthContext";

@@ -4,7 +4,7 @@
 import { Suspense } from "react";
 import { useLoginForm } from "@/hooks/useLoginForm";
 import { Button } from "@/components/atoms/Button";
-import { Input } from "@/components/atoms/Input";
+import { Input } from "@/components/molecules/Input";
 import { AlertCircle } from "lucide-react";
 
 interface LoginFormProps {
@@ -35,7 +35,7 @@ function LoginFormInner({ onSwitch, onSuccess }: LoginFormProps) {
         label="Password"
         name="password"
         type="password"
-        placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+        placeholder="••••••••"
         error={formError?.password || ""}
       />
       <Button type="submit" variant="primary" isLoading={loading} fullWidth>

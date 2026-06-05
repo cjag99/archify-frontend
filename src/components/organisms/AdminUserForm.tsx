@@ -6,7 +6,7 @@ import { authService } from "@/core/api/auth.service";
 import { userService, updateUserAdmin } from "@/core/api/users.service";
 
 import { useImage } from "@/hooks/useImage";
-import { Input } from "../atoms/Input";
+import { Input } from "../molecules/Input";
 import { Button } from "../atoms/Button";
 import { FileInput } from "../molecules/FileInput";
 import { AlertCircle, User as UserIcon, Shield, Camera } from "lucide-react";

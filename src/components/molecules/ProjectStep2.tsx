@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/atoms/Button";
-import { Input } from "@/components/atoms/Input";
+import { Input } from "@/components/molecules/Input";
 import { Select } from "@/components/atoms/Select";
 import { useArchitecture } from "@/hooks/useArchitecture";
 import { architectureList } from "@/core/nodeList/architectureList";

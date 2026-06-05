@@ -3,7 +3,7 @@
 
 import { useRegisterForm } from "@/hooks/useRegisterForm";
 import { Button } from "@/components/atoms/Button";
-import { Input } from "@/components/atoms/Input";
+import { Input } from "@/components/molecules/Input";
 import { AlertCircle } from "lucide-react";
 
 interface RegisterFormProps {

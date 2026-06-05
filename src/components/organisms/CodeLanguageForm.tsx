@@ -7,7 +7,7 @@ import { useCodeLanguage } from "@/hooks/useCodeLanguage";
 import { useImage } from "@/hooks/useImage";
 import { CodeLanguage } from "@/core/types/models";
 import { Button } from "../atoms/Button";
-import { Input } from "../atoms/Input";
+import { Input } from "../molecules/Input";
 import { FileInput } from "../molecules/FileInput";
 
 interface CodeLanguageFormProps {
